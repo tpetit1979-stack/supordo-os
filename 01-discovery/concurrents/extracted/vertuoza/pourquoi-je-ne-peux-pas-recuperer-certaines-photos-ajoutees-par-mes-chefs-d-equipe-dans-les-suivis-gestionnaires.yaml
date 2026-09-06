@@ -1,0 +1,76 @@
+parcours:
+  origine: inconnu
+  nature: installation
+
+interactions:
+  - acteur:
+      role_brut: chefs d'équipe
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: titre,
+               citation: "photos ajoutées par mes chefs d'équipe dans les suivis gestionnaires"}
+    destinataire:
+      role_brut: gestionnaire
+      role_canonique: bureau
+      preuve: {niveau: contextuel, source: titre,
+               citation: "dans les suivis gestionnaires"}
+    perimetre: interne
+    relation: inconnu
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "seules les photos prises dans ce délai seront disponibles"}
+
+transitions_objet:
+  - objet_source: photo ajoutée par un chef d'équipe
+    etat_entree: null
+    action: récupération dans un suivi gestionnaire
+    objet_resultat: suivi de chantier gestionnaire
+    etat_sortie: null
+    owner_avant:
+      role: chef d'équipe
+      preuve: {niveau: explicite, source: titre,
+               citation: "photos ajoutées par mes chefs d'équipe"}
+    owner_apres:
+      role: gestionnaire
+      preuve: {niveau: contextuel, source: titre,
+               citation: "dans les suivis gestionnaires"}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "Si les photos datent de plus de 20 jours, elles ne seront plus sélectionnables."}
+    preuve: {niveau: explicite, source: texte,
+             citation: "cela peut être lié à vos paramètres de chantier"}
+
+regles_operationnelles:
+  - description_brute: la récupération des photos dans un suivi gestionnaire est limitée
+                       à un nombre de jours configuré dans les préférences de chantier
+    objet_concerne: photo de suivi de chantier
+    condition: photo prise dans le délai configuré
+    consequence: la photo est disponible et sélectionnable ; au-delà du délai elle ne
+                 l'est plus
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez vérifier le nombre de jours que vous avez configuré"}
+    resolution_documentee:
+      action: ajuster le paramètre de durée de récupération des photos dans les
+              préférences de chantier
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il est donc essentiel de bien ajuster ce paramètre en fonction de vos besoins"}
+
+signaux_emergents:
+  - description_brute: la disponibilité d'une photo prise sur le chantier est bornée par
+                       un réglage de durée, et l'éditeur nomme explicitement la
+                       conséquence possible comme une « perte de données »
+    pourquoi_notable: ce n'est ni un droit d'accès ni une transmission ratée mais une
+                      péremption paramétrée ; le contenu produit par le terrain cesse
+                      d'être exploitable par le bureau au bout d'un délai que personne
+                      ne rappelle. Aucun des trois types de rupture ne décrit une
+                      information qui expire, et aucun champ ne représente un réglage
+                      dont l'effet est différé dans le temps
+    termes_source: ["nombre de jours", "ne seront plus sélectionnables", "perte de données"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "en fonction de vos besoins pour éviter toute perte de données"}

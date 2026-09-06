@@ -1,0 +1,101 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: responsable d'interventions (ouvrier ou indépendant)
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Ces responsables correspondent à ouvriers/indépendants habilités"}
+    perimetre: interne
+    relation: inconnu
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "sélectionnez parmi votre liste d’ouvriers votre responsable d’interventions"}
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous avez la possibilité de personnaliser les autorisations pour chaque responsable"}
+
+transitions_objet:
+  - objet_source: liste d'ouvriers
+    etat_entree: null
+    action: créer et configurer un responsable d'interventions
+    objet_resultat: responsable d'interventions paramétré
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "sélectionnez parmi votre liste d’ouvriers votre responsable d’interventions"}
+
+regles_operationnelles:
+  - description_brute: la planification d'interventions suppose d'avoir créé et configuré
+                       des responsables d'interventions
+    objet_concerne: intervention
+    condition: responsables d'interventions créés et configurés
+    consequence: les interventions peuvent être planifiées
+    preuve: {niveau: explicite, source: texte,
+             citation: "Afin de pouvoir planifier des interventions, il est nécessaire de créer"}
+    resolution_documentee: null
+
+  - description_brute: un responsable peut être assigné à un type d'intervention qui ne
+                       figure pas sur sa fiche
+    objet_concerne: responsable d'interventions
+    condition: type d'intervention non listé sur la fiche du responsable
+    consequence: l'assignation reste possible si nécessaire
+    preuve: {niveau: explicite, source: texte,
+             citation: "pourra tout de même être assigné à un type d’intervention non listé"}
+    resolution_documentee: null
+
+  - description_brute: les autorisations d'un responsable couvrent la facturation, la
+                       création d'interventions, la modification des coordonnées client,
+                       la visualisation des prix des frais et coûts, le choix du modèle
+                       de devis et l'accès à l'historique des factures
+    objet_concerne: autorisations du responsable d'interventions
+    condition: personnalisation des autorisations
+    consequence: chaque responsable dispose d'un périmètre d'action et de visibilité propre
+    preuve: {niveau: explicite, source: texte,
+             citation: "la faculté de facturer les interventions, de créer de nouvelles interventions"}
+    resolution_documentee: null
+
+  - description_brute: un responsable peut se voir attribuer des accompagnants, un
+                       véhicule et un chauffeur par défaut
+    objet_concerne: responsable d'interventions
+    condition: éléments applicables renseignés
+    consequence: ces valeurs s'appliquent par défaut aux interventions du responsable
+    preuve: {niveau: explicite, source: texte,
+             citation: "le ou les accompagnants par défaut, le véhicule par défaut et le chauffeur"}
+    resolution_documentee: null
+
+  - description_brute: les types d'intervention et les compétences spécifiques doivent
+                       avoir été encodés dans les paramètres au préalable
+    objet_concerne: types d'intervention et compétences
+    condition: encodage préalable dans les paramètres
+    consequence: ils deviennent sélectionnables sur la fiche du responsable
+    preuve: {niveau: explicite, source: texte,
+             citation: "que vous aurez encodé au préalable dans vos paramètres"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: le « responsable d'interventions » n'est pas un compte utilisateur
+                       mais un objet de configuration qui agrège une personne, des
+                       accompagnants, un véhicule, un chauffeur, des types d'intervention,
+                       des compétences et six autorisations distinctes
+    pourquoi_notable: c'est un profil de rôle métier constitué au niveau du produit, qui
+                      mêle des ressources matérielles et des droits ; le schéma dispose
+                      d'un `role_canonique` et de la forme `permission`, mais d'aucun
+                      emplacement pour un rôle qui est lui-même un objet paramétrable
+                      portant des ressources
+    termes_source: ["responsable d'interventions", "accompagnants par défaut", "véhicule par défaut", "compétences spécifiques"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "si applicables, le ou les accompagnants par défaut, le véhicule par défaut"}

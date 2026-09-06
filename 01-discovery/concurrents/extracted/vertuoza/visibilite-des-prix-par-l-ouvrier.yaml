@@ -1,0 +1,46 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: ouvrier
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: titre,
+               citation: "Visibilité des prix par l’ouvrier"}
+    perimetre: interne
+    relation: inconnu
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "paramétrer la visibilité des prix de votre ouvrier"}
+
+transitions_objet: []
+
+regles_operationnelles:
+  - description_brute: la visibilité des prix pour l'ouvrier se règle dans les paramètres
+                       du responsable d'intervention
+    objet_concerne: visibilité des prix
+    condition: paramétrage dans Paramètres > Interventions > Responsable d'intervention
+    consequence: l'ouvrier voit ou ne voit pas les prix
+    preuve: {niveau: explicite, source: texte,
+             citation: "Paramètres > Interventions > Responsable d’intervention"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la visibilité des prix n'est pas un attribut du document mais un
+                       attribut du rôle, réglé dans la fiche du responsable d'intervention
+    pourquoi_notable: c'est le même objet métier qui se présente avec ou sans son
+                      contenu financier selon la personne qui l'ouvre, et le réglage vit
+                      dans la définition du rôle et non dans le document ; le schéma sait
+                      dire qu'un accès est accordé ou refusé, pas qu'un objet change de
+                      contenu selon son lecteur
+    termes_source: ["Visibilité des prix par l’ouvrier", "Responsable d’intervention"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous avez la possibilité de paramétrer la visibilité des prix de votre ouvrier"}

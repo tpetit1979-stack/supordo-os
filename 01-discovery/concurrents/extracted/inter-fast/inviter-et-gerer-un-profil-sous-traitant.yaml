@@ -1,0 +1,258 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: sous-traitant / prestataire externe
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous faites appel à des prestataires externes pour réaliser certaines interventions"}
+    perimetre: partenaire
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Votre sous-traitant recevra une invitation (par email ou SMS)"}
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Aucun accès au Web, au CRM ou aux feuilles d'heures."}
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "sélectionnez votre sous-traitant dans le champ intervenants"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il recevra une notification sur son mobile l'informant de la nouvelle mission."}
+
+  - acteur:
+      role_brut: sous-traitant
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Une fois l'intervention terminée par le sous-traitant"}
+    destinataire:
+      role_brut: entreprise donneuse d'ordre
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "le rapport remonte instantanément dans votre interface web"}
+    perimetre: partenaire
+    relation: autre
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "le rapport remonte instantanément dans votre interface web pour que vous puissiez le facturer"}
+
+  - acteur:
+      role_brut: sous-traitant
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il remplit son rapport, ajoute des photos et fait signer le client"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "fait signer le client sur son téléphone"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes: []
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: support
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous devez contacter le support via le tchat en ligne"}
+    perimetre: editeur
+    relation: autre
+    canal: interface
+    dans_logiciel: partiel
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous devez contacter le support via le tchat en ligne pour effectuer cette modification."}
+
+transitions_objet:
+  - objet_source: nouvelle licence de type Sous-Traitant
+    etat_entree: null
+    action: invitation par email ou SMS puis activation du compte
+    objet_resultat: compte sous-traitant actif
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: sous-traitant
+      preuve: {niveau: explicite, source: texte,
+               citation: "pour définir son mot de passe et activer son compte"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous pourrez suivre sa connexion à InterFast depuis la fiche collaborateur"}
+
+  - objet_source: intervention assignée au sous-traitant
+    etat_entree: assignée
+    action: réalisation et remplissage du rapport sur mobile
+    objet_resultat: rapport d'intervention disponible sur l'interface web
+    etat_sortie: terminée
+    owner_avant:
+      role: sous-traitant
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il remplit son rapport, ajoute des photos"}
+    owner_apres:
+      role: entreprise donneuse d'ordre
+      preuve: {niveau: explicite, source: texte,
+               citation: "remonte instantanément dans votre interface web pour que vous puissiez le facturer"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le rapport remonte instantanément dans votre interface web"}
+
+  - objet_source: profil payant (ex. Technicien)
+    etat_entree: payant
+    action: conversion vers un profil gratuit Sous-Traitant
+    objet_resultat: profil Sous-Traitant
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: sortie_logiciel
+          preuve: {niveau: explicite, source: texte,
+                   citation: "Vous devez contacter le support via le tchat en ligne"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne peut pas être fait manuellement car cela impacte votre facturation"}
+
+regles_operationnelles:
+  - description_brute: le profil Sous-Traitant est une licence gratuite
+    objet_concerne: licence sous-traitant
+    condition: type de licence « Sous-Traitant » sélectionné
+    consequence: le profil ne génère aucun coût
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le profil Sous-Traitant ne vous coûte rien."}
+    resolution_documentee: null
+
+  - description_brute: la coordonnée renseignée à la création devient l'identifiant de
+                       connexion unique
+    objet_concerne: compte sous-traitant
+    condition: email ou téléphone renseigné
+    consequence: cette coordonnée sert d'identifiant de connexion
+    preuve: {niveau: explicite, source: texte,
+             citation: "La coordonnée renseignée deviendra l'identifiant de connexion."}
+    resolution_documentee: null
+
+  - description_brute: le sous-traitant n'a accès qu'à l'application mobile
+    objet_concerne: accès du sous-traitant
+    condition: profil Sous-Traitant
+    consequence: aucun accès à l'application web
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le sous-traitant n'a accès qu'à l'application mobile (pas d'accès Web)."}
+    resolution_documentee: null
+
+  - description_brute: il ne peut consulter et remplir que les interventions qui lui sont
+                       assignées
+    objet_concerne: intervention
+    condition: intervention assignée au sous-traitant
+    consequence: il peut la consulter et remplir son rapport
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il peut consulter et remplir les rapports des interventions qui lui sont assignées"}
+    resolution_documentee: null
+
+  - description_brute: son accès à l'historique des interventions passées est limité à
+                       l'adresse de l'intervention en cours, en lecture seule
+    objet_concerne: historique des interventions
+    condition: intervention en cours à une adresse donnée
+    consequence: seul l'historique de cette adresse est consultable
+    preuve: {niveau: explicite, source: texte,
+             citation: "uniquement à l'adresse de l'intervention en cours. (Lecture seule)"}
+    resolution_documentee: null
+
+  - description_brute: l'accès aux documents du chantier suppose une autorisation
+                       explicite dans les paramètres d'entreprise
+    objet_concerne: documents du chantier
+    condition: rôle Sous-traitant autorisé dans Paramètres > Chantiers
+    consequence: il peut consulter les documents du chantier associé, en lecture seule
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez donner cette permission dans vos paramètres d'Entreprise"}
+    resolution_documentee: null
+
+  - description_brute: le sous-traitant n'a aucun accès au CRM, aux feuilles d'heures, et
+                       ne peut rien créer de lui-même
+    objet_concerne: profil sous-traitant
+    condition: profil Sous-Traitant
+    consequence: pas de base clients, pas de déclaration d'heures, pas de création de
+                 clients ni d'interventions
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il ne peut pas créer de nouveaux clients ou de nouvelles interventions"}
+    resolution_documentee: null
+
+  - description_brute: le passage d'un profil payant vers le profil gratuit ne peut pas
+                       être fait manuellement
+    objet_concerne: licence
+    condition: conversion d'un profil payant en profil gratuit
+    consequence: la modification impacte la facturation et n'est pas accessible à
+                 l'utilisateur
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne peut pas être fait manuellement car cela impacte votre facturation"}
+    resolution_documentee:
+      action: contacter le support via le tchat en ligne
+      acteur: support
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous devez contacter le support via le tchat en ligne"}
+
+  - description_brute: le sous-traitant voit les prix de vente de la bibliothèque lors de
+                       la saisie sur mobile, et cette visibilité n'est pas entièrement
+                       masquable
+    objet_concerne: prix de vente
+    condition: ajout d'articles dans une intervention depuis le mobile
+    consequence: les prix de vente restent visibles à la saisie ; ils sont masquables sur
+                 le PDF final
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il est possible de masquer les prix sur le PDF final, mais pas totalement"}
+    resolution_documentee: null
+
+  - description_brute: un même sous-traitant peut appartenir à plusieurs entreprises et
+                       basculer entre elles
+    objet_concerne: compte utilisateur
+    condition: même adresse email que son compte existant
+    consequence: il bascule d'un espace entreprise à l'autre en un clic, sans se
+                 reconnecter
+    preuve: {niveau: explicite, source: texte,
+             citation: "basculer de son espace au vôtre en un clic"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la confidentialité des prix envers le sous-traitant est décrite
+                       comme partielle et assumée — masquable sur le document final, mais
+                       pas au moment de la saisie sur mobile
+    pourquoi_notable: la frontière commerciale annoncée comme une « étanchéité totale »
+                      comporte une fuite documentée à l'endroit précis où le partenaire
+                      travaille ; le schéma enregistre les permissions comme binaires et
+                      n'a pas d'emplacement pour une étanchéité qui vaut à la lecture mais
+                      pas à l'écriture
+    termes_source: ["étanchéité totale", "pas totalement lors de la saisie sur mobile actuellement"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "le sous-traitant peut voir les prix de vente affichés dans la bibliothèque"}
+
+  - description_brute: un sous-traitant invité avec l'adresse email de son propre compte
+                       bascule entre son espace et celui du donneur d'ordre en un clic
+    pourquoi_notable: la même personne physique travaille simultanément dans plusieurs
+                      entreprises du logiciel, dont potentiellement plusieurs de vos
+                      concurrents ; le schéma raisonne par entreprise et n'a aucun
+                      emplacement pour un acteur qui appartient à plusieurs périmètres à
+                      la fois
+    termes_source: ["multi-entreprise", "basculer de son espace au vôtre en un clic"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "renseignez exactement la même adresse email que celle qu'il utilise"}

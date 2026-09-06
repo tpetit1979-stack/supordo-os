@@ -1,0 +1,118 @@
+parcours:
+  origine: inconnu
+  nature: installation
+
+interactions:
+  - acteur:
+      role_brut: gestionnaire
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "une communication efficace entre le gestionnaire et le client final"}
+    destinataire:
+      role_brut: client final
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "entre le gestionnaire et le client final"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous ne pourrez pas l’envoyer par mail au client final"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Indiquez si c'est un avancement interne."}
+
+  - acteur:
+      role_brut: gestionnaire
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Indiquez le responsable de la réclamation."}
+    destinataire:
+      role_brut: responsable de la réclamation
+      role_canonique: inconnu
+      preuve: {niveau: explicite, source: texte,
+               citation: "Indiquez le responsable de la réclamation."}
+    perimetre: inconnu
+    relation: inconnu
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Indiquez le responsable de la réclamation."}
+
+transitions_objet:
+  - objet_source: photos prises depuis l'appareil et description
+    etat_entree: null
+    action: créer un suivi de chantier gestionnaire de type avancement
+    objet_resultat: suivi de chantier gestionnaire
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: gestionnaire
+      preuve: {niveau: contextuel, source: titre,
+               citation: "Suivi de chantier gestionnaire"}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ajoutez une ou plusieurs photos depuis l'appareil."}
+
+  - objet_source: photo du suivi
+    etat_entree: null
+    action: annoter et dessiner sur la photo
+    objet_resultat: photo annotée
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous pouvez annoter et dessiner sur les photos pour mettre en évidence"}
+
+regles_operationnelles:
+  - description_brute: un avancement marqué comme interne ne peut pas être envoyé par
+                       mail au client final
+    objet_concerne: suivi de chantier gestionnaire
+    condition: avancement marqué « interne »
+    consequence: l'envoi par mail au client final devient impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "si vous cliquez sur ‘interne’, vous ne pourrez pas l’envoyer par mail"}
+    resolution_documentee: null
+
+  - description_brute: sans responsable sélectionné sur une réclamation, la réclamation
+                       ne pourra pas être exploitée par la suite
+    objet_concerne: réclamation
+    condition: aucun responsable sélectionné
+    consequence: les réclamations ne pourront pas être utilisées pour la suite
+    preuve: {niveau: explicite, source: texte,
+             citation: "si un responsable n’est pas sélectionné, alors vous ne saurez pas utiliser"}
+    resolution_documentee:
+      action: indiquer le responsable de la réclamation à la création
+      acteur: gestionnaire
+      preuve: {niveau: explicite, source: texte,
+               citation: "Indiquez le responsable de la réclamation."}
+
+  - description_brute: un suivi gestionnaire est de type avancement et/ou réclamation
+    objet_concerne: suivi de chantier gestionnaire
+    condition: création d'un suivi
+    consequence: le type avancement, réclamation, ou les deux, doit être indiqué
+    preuve: {niveau: explicite, source: texte,
+             citation: "Indiquez s'il s'agit d'un avancement et/ou d'une réclamation."}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: un même suivi de chantier peut être marqué « interne », ce qui le
+                       rend définitivement non transmissible au client, sans que rien
+                       n'indique qu'un suivi non marqué le soit automatiquement
+    pourquoi_notable: le destinataire potentiel d'un objet est décidé à sa création par
+                      une case, et ce choix conditionne toute la suite de sa vie ; le
+                      schéma représente une transmission qui a lieu, pas une
+                      transmissibilité décidée à l'avance et irréversible
+    termes_source: ["avancement interne", "vous ne pourrez pas l’envoyer par mail au client final"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Indiquez si c'est un avancement interne."}

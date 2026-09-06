@@ -1,0 +1,212 @@
+parcours:
+  origine: inconnu
+  nature: installation
+
+interactions:
+  - acteur:
+      role_brut: personnes ayant accès au chantier
+      role_canonique: inconnu
+      preuve: {niveau: explicite, source: texte,
+               citation: "il permet à toutes les personnes ayant accès au chantier de communiquer"}
+    destinataire:
+      role_brut: technicien / membre de l'équipe
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "poser une question à un technicien"}
+    perimetre: interne
+    relation: inconnu
+    canal: fil_activite
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Cela permet d'adresser clairement une demande à une personne précise."}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Le fil est accessible aux personnes ayant accès au chantier."}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "lorsqu'une intervention est créée depuis le chantier, une activité est automatiquement ajoutée"}
+
+  - acteur:
+      role_brut: personnes ayant accès au chantier
+      role_canonique: inconnu
+      preuve: {niveau: explicite, source: texte,
+               citation: "toutes les personnes ayant accès au chantier"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le message est alors configuré pour être visible par le client."}
+    perimetre: client
+    relation: autre
+    canal: fil_activite
+    dans_logiciel: oui
+    mecanismes:
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous pouvez choisir s'il s'agit d'un échange interne à l'équipe ou d'un message visible par le client"}
+
+transitions_objet:
+  - objet_source: intervention créée depuis le chantier
+    etat_entree: null
+    action: ajout automatique d'une activité au fil
+    objet_resultat: événement du fil du chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "IN00251 · Intervention « Installation d'une pompe » créée · 15:18"}
+
+  - objet_source: intervention terminée
+    etat_entree: terminée
+    action: ajout automatique d'une activité nominative au fil
+    objet_resultat: événement du fil mentionnant l'auteur
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Intervention « Installation d'une pompe » terminée par Kevin Saint Fort"}
+
+  - objet_source: raccourci « Créer une intervention » du fil
+    etat_entree: null
+    action: créer une intervention depuis le fil
+    objet_resultat: intervention rattachée au chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'intervention créée est automatiquement rattachée au chantier."}
+
+  - objet_source: fichier ou photo envoyé dans le fil
+    etat_entree: null
+    action: aucune reprise documentée vers l'onglet Documents
+    objet_resultat: onglet Documents du chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "n'est pas automatiquement ajouté(e) dans l'onglet Documents du chantier"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le fil et l'onglet Documents restent donc deux espaces distincts."}
+
+  - objet_source: devis ou facture créé sur le chantier
+    etat_entree: null
+    action: aucune remontée documentée dans le fil
+    objet_resultat: fil du chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "La création d'un devis ou d'une facture (...) n'apparaît pas automatiquement dans le fil."}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le fil ne remonte pas automatiquement toutes les actions réalisées sur un chantier."}
+
+regles_operationnelles:
+  - description_brute: le fil du chantier est disponible à partir de l'abonnement Pro,
+                       en bêta, et nécessite une activation préalable par le support
+    objet_concerne: fil du chantier
+    condition: abonnement Pro et activation demandée au support
+    consequence: l'accès au fil devient possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "nécessite une activation préalable par l'équipe support"}
+    resolution_documentee:
+      action: contacter le support client pour demander l'activation sur le compte
+      acteur: support
+      preuve: {niveau: explicite, source: texte,
+               citation: "Contactez votre support client pour demander son activation"}
+
+  - description_brute: la modification d'une intervention existante ne génère pas
+                       d'événement dans le fil
+    objet_concerne: fil du chantier
+    condition: intervention existante simplement modifiée
+    consequence: aucun nouvel événement n'apparaît
+    preuve: {niveau: explicite, source: texte,
+             citation: "cette modification n'est pas ajoutée comme nouvel événement dans le fil"}
+    resolution_documentee: null
+
+  - description_brute: seules les interventions liées au chantier remontent
+                       automatiquement dans le fil
+    objet_concerne: fil du chantier
+    condition: intervention liée au chantier
+    consequence: elle remonte automatiquement
+    preuve: {niveau: explicite, source: texte,
+             citation: "Seules les interventions liées au chantier remontent automatiquement"}
+    resolution_documentee: null
+
+  - description_brute: un message envoyé dans le fil peut être modifié ou supprimé après
+                       son envoi
+    objet_concerne: message du fil
+    condition: message déjà envoyé
+    consequence: la correction et la suppression restent possibles
+    preuve: {niveau: explicite, source: texte,
+             citation: "peut être modifié ou supprimé après son envoi"}
+    resolution_documentee: null
+
+  - description_brute: un fichier ou une photo envoyé dans le fil ne peut pas être
+                       supprimé
+    objet_concerne: fichier du fil
+    condition: fichier ou photo envoyé
+    consequence: la suppression n'est pas possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il n'est pas possible de supprimer un fichier envoyer ou une photo envoyer"}
+    resolution_documentee: null
+
+  - description_brute: la visibilité d'un message, interne ou visible par le client, se
+                       choisit avant l'envoi au moyen d'une icône
+    objet_concerne: message du fil
+    condition: icône cadenas ou planète sélectionnée avant l'envoi
+    consequence: le message est interne à l'équipe ou visible par le client
+    preuve: {niveau: explicite, source: texte,
+             citation: "cadenas pour un message interne et planète pour un message visible par le client"}
+    resolution_documentee: null
+
+  - description_brute: le fil ne prend pas en compte la planification de rendez-vous
+    objet_concerne: fil du chantier
+    condition: planification de rendez-vous
+    consequence: elle n'apparaît pas dans le fil
+    preuve: {niveau: explicite, source: texte,
+             citation: "il ne prend pas en compte la planification de rendez-vous"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: un fil unique réunit l'équipe interne et le client, et l'audience
+                       se choisit message par message au moyen d'un cadenas ou d'une
+                       planète
+    pourquoi_notable: l'arbitrage entre interne et externe descend au niveau de chaque
+                      message, dans un espace commun, et la documentation prévient de
+                      « vérifier la visibilité du message » avant l'envoi ; le schéma
+                      représente une interaction par destinataire, pas un canal unique
+                      dont le public bascule à chaque prise de parole
+    termes_source: ["cadenas", "planète", "message interne", "visible par le client"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "la visibilité du message (interne ou visible par le client)"}
+
+  - description_brute: le fil documente explicitement ses propres angles morts — ni les
+                       devis, ni les factures, ni les modifications d'intervention, ni la
+                       planification n'y apparaissent, et les fichiers qu'il contient ne
+                       rejoignent pas l'onglet Documents
+    pourquoi_notable: un espace présenté comme centralisant le suivi énumère lui-même
+                      quatre catégories d'événements qu'il ne capte pas ; le schéma sait
+                      enregistrer une rupture par transition, pas le fait qu'un objet se
+                      présente comme un historique tout en étant partiel par conception
+    termes_source: ["Le fil ne remonte pas automatiquement toutes les actions", "deux espaces distincts"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le fil et l'onglet Documents restent donc deux espaces distincts."}

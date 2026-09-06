@@ -1,0 +1,582 @@
+parcours:
+  origine: vente
+  nature: installation
+
+interactions:
+  - acteur:
+      role_brut: gérant (au bureau comme sur le terrain)
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "une entreprise de 3 personnes avec 1 gérant (au bureau comme sur le terrain)"}
+    destinataire:
+      role_brut: technicien / collaborateur
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "celui-ci reçoit immédiatement une notification sur son smartphone"}
+    perimetre: interne
+    relation: hierarchique
+    canal: push
+    dans_logiciel: oui
+    mecanismes:
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Désignez-vous en tant qu'intervenant et ajoutez vos techniciens prévus"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "dès que l'intervention est planifiée ou modifiée, le technicien reçoit une notification"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vos techniciens y auront accès depuis leur application mobile."}
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "un utilisateur \"Technicien\" n'a pas accès aux montants financiers"}
+
+  - acteur:
+      role_brut: technicien
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Dès que votre technicien termine son rapport sur l'Application mobile"}
+    destinataire:
+      role_brut: bureau / équipes administratives
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "l'information remonte automatiquement dans l'Application web"}
+    perimetre: interne
+    relation: inconnu
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "le rapport et les photos sont instantanément consultables sur l'application Web"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "l'intervention se repositionne automatiquement avec les heures réelles"}
+
+  - acteur:
+      role_brut: technicien
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous ou vos équipes pouvez valider facilement la réception d'une commande"}
+    destinataire:
+      role_brut: équipes administratives
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "les équipes administratives voient immédiatement que le matériel est prêt"}
+    perimetre: interne
+    relation: inconnu
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Ces fichiers seront immédiatement consultables au bureau."}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "l'information est synchronisée pour tous les utilisateurs de votre compte"}
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: Client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Votre Client reçoit instantanément un lien sécurisé pour signer le devis"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "choisissez l'option À un contact pour signature électronique"}
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Le Client peut consulter, valider ou refuser le document depuis n'importe quel appareil."}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Le devis passe automatiquement du statut Finalisé à Accepté"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "InterFast intègre un tracker d'emails qui vous indique précisément l'heure"}
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: Client (Portail)
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "en lui créant un Portail d'accès, vous lui permettez de suivre l'avancée"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Dans la section \"Contacts\", sélectionner \"Autoriser l'accès au portail\""}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il ne voit que les éléments opérationnels et financiers qui le concernent"}
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: fournisseur
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Votre fournisseur reçoit alors un e-mail professionnel contenant votre Bon de commande"}
+    perimetre: partenaire
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Une interface d'e-mail pré-remplie apparaît, adressée au contact de votre fournisseur."}
+
+  - acteur:
+      role_brut: technicien principal
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "En tant que Technicien principal, signez le rapport d'intervention"}
+    destinataire:
+      role_brut: Client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "demandez-lui de signer le rapport sur votre téléphone"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes: []
+
+transitions_objet:
+  - objet_source: appel téléphonique d'un prospect
+    etat_entree: null
+    action: créer la fiche CRM depuis la fenêtre de planification et planifier la visite
+    objet_resultat: intervention « Visite avant devis »
+    etat_sortie: planifiée
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: intervenant principal
+      preuve: {niveau: explicite, source: texte,
+               citation: "Sélectionnez-vous en tant qu'Intervenant principal."}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "créer une fiche CRM sans quitter votre fenêtre de planification"}
+
+  - objet_source: rapport de visite avant devis terminé avec la case « Prévoir un devis »
+    etat_entree: terminée
+    action: filtrer les interventions à devis
+    objet_resultat: liste des interventions restant à chiffrer
+    etat_sortie: null
+    owner_avant:
+      role: technicien
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Cochez la case Prévoir un devis."}
+    owner_apres:
+      role: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "assurez-vous que le bureau sera alerté de la suite à donner"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "filtrer toutes les interventions qui sont terminées avec la case cochée"}
+
+  - objet_source: rapport de visite avant devis
+    etat_entree: terminé et signé
+    action: cliquer sur [Créer un devis] depuis la fiche de synthèse de l'intervention
+    objet_resultat: brouillon de devis
+    etat_sortie: Brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "un brouillon de devis lié à votre fiche client et à l'intervention technique"}
+
+  - objet_source: devis
+    etat_entree: Finalisé
+    action: signature électronique par le client
+    objet_resultat: devis accepté et copie certifiée archivée
+    etat_sortie: Accepté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "une copie signée et certifiée est automatiquement archivée dans les Pièces jointes"}
+
+  - objet_source: devis
+    etat_entree: Accepté
+    action: Transformer en chantier
+    objet_resultat: chantier
+    etat_sortie: Non commencé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "les heures prévues sont automatiquement récupérées depuis le devis"}
+
+  - objet_source: devis
+    etat_entree: Accepté
+    action: Générer une commande fournisseur
+    objet_resultat: bon de commande
+    etat_sortie: Brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "récupère automatiquement tous les articles présents au devis, incluant les références fournisseurs"}
+
+  - objet_source: commande fournisseur
+    etat_entree: envoyée
+    action: réception validée depuis le mobile avec photo du bon de livraison
+    objet_resultat: commande reçue et dépense engagée
+    etat_sortie: Reçu
+    owner_avant:
+      role: technicien
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous ou vos équipes pouvez valider facilement la réception"}
+    owner_apres:
+      role: équipes administratives
+      preuve: {niveau: explicite, source: texte,
+               citation: "les équipes administratives voient immédiatement que le matériel est prêt"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'onglet Dépenses > Commandes de votre fiche chantier est mis à jour"}
+
+  - objet_source: chantier et dates sélectionnées
+    etat_entree: null
+    action: planifier plusieurs jours consécutifs
+    objet_resultat: série d'interventions d'avancement
+    etat_sortie: planifiées
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast créera ainsi une série d'interventions associées les unes aux autres"}
+
+  - objet_source: rapport « Fin d'installation »
+    etat_entree: null
+    action: créer les équipements et générer un CERFA par équipement
+    objet_resultat: fiches équipement et CERFA 15497
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "sections Opérateur et Détenteur sont remplies automatiquement grâce aux informations"}
+
+  - objet_source: facture fournisseur PDF ou image
+    etat_entree: null
+    action: dépôt du fichier et extraction automatique par intelligence artificielle
+    objet_resultat: dépense rapprochée de la commande
+    etat_sortie: Reçue et Facturée
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'intelligence artificielle analysera instantanément le document pour extraire"}
+
+  - objet_source: devis
+    etat_entree: Accepté
+    action: décrémentation automatique du stock des produits associés
+    objet_resultat: mouvement de stock
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "tous les produits qui y sont associés sont automatiquement décrémentés de votre stock"}
+
+  - objet_source: matériel supplémentaire non prévu au devis
+    etat_entree: null
+    action: enregistrement manuel de la sortie de stock
+    objet_resultat: mouvement de stock affecté au chantier
+    etat_sortie: null
+    owner_avant:
+      role: technicien
+      preuve: {niveau: explicite, source: texte,
+               citation: "dès que vos techniciens signalent l'utilisation du matériel"}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: ressaisie
+          preuve: {niveau: explicite, source: texte,
+                   citation: "vous devez enregistrer cette sortie manuellement"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "notamment par un commentaire dans les rapports d'intervention"}
+
+  - objet_source: intervention démarrée sur le chantier
+    etat_entree: En cours
+    action: aucune propagation documentée vers le statut du chantier
+    objet_resultat: chantier
+    etat_sortie: Non commencé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "le passage du Chantier vers l'étape \"En cours\" reste aujourd'hui une action manuelle"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Bien que l'intervention soit terminée"}
+
+  - objet_source: Synthèse des Chantiers
+    etat_entree: null
+    action: copier-coller vers un tableur puis nettoyage manuel des données
+    objet_resultat: fichier Excel ou Google Sheets exploitable
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: sortie_logiciel
+          preuve: {niveau: explicite, source: texte,
+                   citation: "InterFast ne permet pas encore l'export de la Synthèse des Chantiers."}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ouvrez un fichier Excel ou Google Sheets et collez vos données."}
+
+regles_operationnelles:
+  - description_brute: le modèle de rapport est lié au type d'intervention choisi au bureau
+    objet_concerne: type d'intervention
+    condition: type d'intervention sélectionné à la planification
+    consequence: il conditionne le rapport que le technicien remplira sur le terrain
+    preuve: {niveau: explicite, source: texte,
+             citation: "cela conditionnera le rapport que vous remplirez sur le terrain"}
+    resolution_documentee:
+      action: modifier l'intervention sur l'application Web avant que le technicien ait
+              commencé à remplir son rapport
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "veillez à ce que le technicien n'ait pas encore commencé à remplir son rapport"}
+
+  - description_brute: un seul collaborateur remplit le rapport pour toute l'équipe
+    objet_concerne: rapport d'intervention
+    condition: plusieurs intervenants sur une même intervention
+    consequence: un seul rapport est rempli, la co-rédaction n'est pas possible sur mobile
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il n'est pas encore possible de remplir un rapport à plusieurs sur l'Application mobile."}
+    resolution_documentee: null
+
+  - description_brute: un rapport signé ne peut plus être modifié
+    objet_concerne: rapport d'intervention
+    condition: rapport signé
+    consequence: aucune modification n'est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "un rapport signé ne peut plus être modifié"}
+    resolution_documentee:
+      action: ajouter un commentaire ou créer une nouvelle intervention de correction
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous pouvez ajouter un commentaire ou créer une nouvelle intervention de correction"}
+
+  - description_brute: un rapport d'intervention ne peut être associé qu'à un seul
+                       équipement
+    objet_concerne: rapport d'intervention
+    condition: plusieurs équipements installés
+    consequence: un seul équipement peut être rattaché au rapport
+    preuve: {niveau: explicite, source: texte,
+             citation: "un rapport d'intervention ne peut être associé qu'à un seul équipement"}
+    resolution_documentee: null
+
+  - description_brute: un CERFA doit être généré pour chaque équipement contenant du
+                       fluide frigorigène
+    objet_concerne: CERFA 15497
+    condition: équipement contenant du fluide frigorigène
+    consequence: autant de CERFA que d'unités concernées dans le rapport final
+    preuve: {niveau: explicite, source: texte,
+             citation: "Un CERFA doit être généré pour chaque équipement contenant du fluide"}
+    resolution_documentee: null
+
+  - description_brute: le passage du chantier au statut « En cours » est une action
+                       manuelle, choisie comme telle par l'éditeur
+    objet_concerne: statut du chantier
+    condition: intervention démarrée ou terminée
+    consequence: le statut du chantier ne change pas automatiquement
+    preuve: {niveau: explicite, source: texte,
+             citation: "Nous avons choisi de laisser cette étape manuelle"}
+    resolution_documentee:
+      action: glisser-déposer la carte du chantier vers la colonne En cours, ou modifier
+              l'étiquette de statut depuis le dossier
+      acteur: tout utilisateur ayant accès à l'application web
+      preuve: {niveau: explicite, source: texte,
+               citation: "Cette action est possible pour l'ensemble des profils Utilisateurs"}
+
+  - description_brute: un chantier ne peut pas être supprimé définitivement
+    objet_concerne: chantier
+    condition: chantier existant
+    consequence: la suppression définitive n'est pas possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "il n’est pas possible de supprimer définitivement un chantier"}
+    resolution_documentee:
+      action: archiver le chantier pour le retirer de la liste active en conservant
+              l'historique complet
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez archiver le chantier pour le retirer de votre liste active"}
+
+  - description_brute: une seule facture d'acompte peut être émise sur un devis
+    objet_concerne: facture d'acompte
+    condition: une facture d'acompte existe déjà
+    consequence: aucune seconde facture d'acompte n'est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Puis-je facturer plusieurs acomptes ? Non."}
+    resolution_documentee:
+      action: poursuivre avec des factures de situation jusqu'à la facture de solde
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "poursuivre avec des factures de situation selon l'avancement"}
+
+  - description_brute: la Synthèse des Chantiers ne peut pas être exportée
+    objet_concerne: Synthèse des Chantiers
+    condition: besoin de calculs personnalisés
+    consequence: aucun export n'est disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast ne permet pas encore l'export de la Synthèse des Chantiers."}
+    resolution_documentee:
+      action: copier les lignes, coller dans un tableur, supprimer les symboles € et les
+              espaces par Rechercher-Remplacer, puis reformater les cellules en Devise
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Utilisez la fonction \"Rechercher et Remplacer\" pour supprimer le symbole \"€\""}
+
+  - description_brute: les documents du chantier ne sont pas consultables sans réseau
+    objet_concerne: documents du chantier
+    condition: absence de réseau sur le chantier
+    consequence: l'accès aux documents n'est pas possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Puis-je accéder aux documents si je n'ai pas de réseau sur le chantier ? Non."}
+    resolution_documentee:
+      action: télécharger les documents importants sur le téléphone lorsqu'il y a du réseau
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il est conseillé de télécharger les documents importants"}
+
+  - description_brute: par défaut un utilisateur Technicien n'a pas accès aux montants
+                       financiers
+    objet_concerne: montants financiers
+    condition: rôle Technicien
+    consequence: il voit les quantités à réceptionner mais pas les prix unitaires
+    preuve: {niveau: explicite, source: texte,
+             citation: "un utilisateur \"Technicien\" n'a pas accès aux montants financiers"}
+    resolution_documentee: null
+
+  - description_brute: à la transformation du devis en chantier, une option permet de
+                       joindre la liste d'articles sans les prix
+    objet_concerne: liste d'articles du chantier
+    condition: case « Inclure la liste d'articles (sans les prix) » cochée
+    consequence: les techniciens disposent de la liste du matériel sans voir les
+                 conditions commerciales
+    preuve: {niveau: explicite, source: texte,
+             citation: "sans voir vos conditions commerciales"}
+    resolution_documentee: null
+
+  - description_brute: les heures validées sur l'intervention sont transmises au bureau,
+                       mais les feuilles d'heures font l'objet d'une validation distincte
+    objet_concerne: heures d'intervention
+    condition: heures validées sur une intervention
+    consequence: elles remontent au bureau, sans se confondre avec la validation des
+                 feuilles d'heures
+    preuve: {niveau: explicite, source: texte,
+             citation: "les feuilles d'heure font l'objet d'une validation distincte"}
+    resolution_documentee: null
+
+  - description_brute: dans la synthèse du devis, seuls les en-têtes de section doivent
+                       être comptabilisés
+    objet_concerne: synthèse du devis
+    condition: lecture des colonnes Coût, Vente et Marge
+    consequence: additionner les sous-sections produit des erreurs de calcul
+    preuve: {niveau: explicite, source: texte,
+             citation: "comptabilisez uniquement les en-têtes de section"}
+    resolution_documentee: null
+
+  - description_brute: le client peut se voir retirer l'accès au portail ou au partage
+                       d'un chantier
+    objet_concerne: Portail client
+    condition: décision de l'entreprise
+    consequence: l'accès au portail ou le partage d'un chantier peut être révoqué
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous pouvez révoquer l'accès au Portail Client ou cesser le partage"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: l'analyse consolidée des chantiers ne s'exporte pas ; la
+                       documentation enseigne une procédure manuelle complète — copier
+                       les lignes, coller dans un tableur, supprimer les symboles « € » et
+                       les espaces par Rechercher-Remplacer, puis reformater les cellules
+                       en Devise
+    pourquoi_notable: l'éditeur documente pas à pas un nettoyage de données que
+                      l'utilisateur doit exécuter à la main pour exploiter ses propres
+                      chiffres ; la rupture sortie_logiciel enregistre le fait de sortir
+                      de l'outil, mais aucun champ ne représente le travail de remise en
+                      forme que cette sortie impose
+    termes_source: ["ne permet pas encore l'export", "Rechercher et Remplacer", "reformatez les cellules"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'export se fait via un copier-coller pour vous garantir un contrôle total"}
+
+  - description_brute: la facture fournisseur déposée en PDF ou en image est lue par une
+                       intelligence artificielle qui en extrait le fournisseur, la date et
+                       les montants, à charge pour l'utilisateur de vérifier
+    pourquoi_notable: le mode d'entrée de la donnée est une lecture automatique de
+                      document, avec une étape de vérification humaine explicite ; la
+                      transition enregistre le résultat sans représenter que la saisie a
+                      été remplacée par une extraction dont la fiabilité est supposée
+                      imparfaite
+    termes_source: ["L'intelligence artificielle analysera instantanément le document", "Vérifiez les informations extraites"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "pour extraire le nom du fournisseur, la date de la facture, ainsi que les montants"}
+
+  - description_brute: l'éditeur explique avoir délibérément laissé manuel le passage du
+                       chantier au statut « En cours », au motif que l'ordre réel des
+                       opérations dépend de l'organisation interne de chaque entreprise
+    pourquoi_notable: c'est un refus assumé d'automatiser, justifié par la diversité des
+                      organisations clientes ; le schéma enregistre l'absence de
+                      propagation comme une rupture, sans pouvoir distinguer une lacune
+                      d'un choix de conception explicitement motivé
+    termes_source: ["Nous avons choisi de laisser cette étape manuelle", "selon votre propre organisation interne"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "car un chantier peut nécessiter des préparations administratives"}
+
+  - description_brute: le client dispose d'un espace distinct où il consulte devis,
+                       factures, documents de chantier, rapports et photos, mais jamais la
+                       rentabilité, les prix d'achat ni le suivi de temps interne — et cet
+                       accès est révocable
+    pourquoi_notable: la frontière entre ce que voit l'entreprise et ce que voit le client
+                      devient un espace applicatif à part entière, dont l'ouverture et la
+                      fermeture sont des actes de gestion de la relation ; le schéma
+                      représente le client comme un destinataire de documents, pas comme
+                      un utilisateur doté d'un environnement propre
+    termes_source: ["Portail Client", "espace distinct de votre environnement de travail", "révoquer l'accès"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Votre client n'a jamais accès à votre suivi de rentabilité, à vos prix d'achat"}

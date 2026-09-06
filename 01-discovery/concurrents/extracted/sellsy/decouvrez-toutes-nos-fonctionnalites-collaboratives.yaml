@@ -1,0 +1,115 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Une notification est transmise à votre collaborateur"}
+    perimetre: interne
+    relation: pair
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "mentionner un collaborateur dans un commentaire, sur les différentes fiches"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Une notification est transmise à votre collaborateur directement sur l'interface"}
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: tous les collaborateurs
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "permettra à tous vos collaborateurs de retrouver facilement un élément"}
+    perimetre: interne
+    relation: pair
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "la possibilité d'épingler un commentaire, une tâche, un email, un événement"}
+
+  - acteur:
+      role_brut: Sellsy (connecteur natif)
+      role_canonique: inconnu
+      preuve: {niveau: explicite, source: texte,
+               citation: "Nous proposons un connecteur natif disponible depuis Sellsy."}
+    destinataire:
+      role_brut: collaborateurs sur Slack
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "en recevant un message Slack"}
+    perimetre: partenaire
+    relation: autre
+    canal: interface
+    dans_logiciel: non
+    mecanismes:
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il vous permet d'automatiser la remontée d'information en recevant un message Slack."}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous pouvez ainsi être alerté en temps réel des mises à jour sur Sellsy."}
+
+transitions_objet:
+  - objet_source: événement Sellsy (exemple : création d'un client)
+    etat_entree: null
+    action: remontée automatique via le connecteur Slack
+    objet_resultat: message Slack
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous pourrez recevoir un message lorsqu'un client a été créé"}
+
+regles_operationnelles:
+  - description_brute: la mention d'un collaborateur se fait dans un commentaire, sur les
+                       fiches clients, prospects, sociétés, documents de vente et
+                       opportunités
+    objet_concerne: commentaire
+    condition: collaborateur mentionné dans un commentaire d'une fiche
+    consequence: une notification lui est transmise sur l'interface Sellsy
+    preuve: {niveau: explicite, source: texte,
+             citation: "sur les différentes fiches Sellsy (clients, prospects, sociétés"}
+    resolution_documentee: null
+
+  - description_brute: l'épinglage rend un élément retrouvable par l'ensemble des
+                       collaborateurs sur la fiche
+    objet_concerne: élément épinglé
+    condition: commentaire, tâche, email, événement ou appel épinglé
+    consequence: tous les collaborateurs le retrouvent facilement sur la fiche
+    preuve: {niveau: explicite, source: texte,
+             citation: "permettra à tous vos collaborateurs de retrouver facilement un élément important"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: pour l'échange direct entre collaborateurs, l'article recommande
+                       explicitement une messagerie externe — « Si vous avez besoin d'une
+                       alternative pour continuer à échanger directement avec vos
+                       collaborateurs, nous vous recommandons Slack version gratuite » —
+                       et propose un connecteur pour y faire remonter les événements
+    pourquoi_notable: dans un article intitulé « Découvrez toutes nos fonctionnalités
+                      collaboratives », l'éditeur oriente la conversation d'équipe hors de
+                      son produit et se positionne en source d'alertes plutôt qu'en lieu
+                      d'échange ; le schéma enregistre le connecteur comme une
+                      automatisation vers un partenaire, sans pouvoir représenter que
+                      l'éditeur délègue délibérément une fonction qu'il annonce couvrir
+    termes_source: ["alternative pour continuer à échanger", "Slack version gratuite", "connecteur natif"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "nous vous recommandons l'utilisation de la messagerie interne Slack version gratuite"}

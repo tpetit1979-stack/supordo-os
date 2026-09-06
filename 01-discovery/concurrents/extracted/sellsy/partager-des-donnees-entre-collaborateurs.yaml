@@ -1,0 +1,131 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: propriétaire de l'objet
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Chaque objet dispose d'un propriétaire, qui est modifiable"}
+    destinataire:
+      role_brut: collaborateurs et groupes
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "les collaborateurs et les groupes qui peuvent voir et modifier l’élément"}
+    perimetre: interne
+    relation: pair
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "les collaborateurs et les groupes qui peuvent voir et modifier l’élément"}
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "permet donc d'attribuer facilement le propriétaire de l'objet concerné"}
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "les réglages de partage interviennent après les réglages individuels"}
+
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Pour autoriser le partage pour un collaborateur"}
+    perimetre: interne
+    relation: hierarchique
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "cochez l'option \"Autoriser l’édition du partage sur les fiches\""}
+
+transitions_objet:
+  - objet_source: objet créé par un collaborateur
+    etat_entree: null
+    action: application automatique des réglages de partage du créateur
+    objet_resultat: objet partagé avec le groupe du créateur
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: créateur de l'objet
+      preuve: {niveau: explicite, source: texte,
+               citation: "ce sont les réglages du créateur qui s'appliquent"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "tout objet créé sera directement partagé avec son groupe"}
+
+  - objet_source: liste filtrée d'objets
+    etat_entree: null
+    action: modifier les options de partage en masse
+    objet_resultat: objets repartagés
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "sélectionnez \"Modifier les options de partage\" puis “Valider”"}
+
+regles_operationnelles:
+  - description_brute: chaque objet dispose d'un propriétaire modifiable
+    objet_concerne: objet partageable (contact, opportunité, document)
+    condition: objet existant
+    consequence: son propriétaire peut être réattribué
+    preuve: {niveau: explicite, source: texte,
+             citation: "Chaque objet dispose d'un propriétaire, qui est modifiable"}
+    resolution_documentee: null
+
+  - description_brute: à la création, les réglages de partage du créateur s'appliquent
+                       automatiquement
+    objet_concerne: objet nouvellement créé
+    condition: aucune option de partage définie à la création
+    consequence: l'objet est partagé selon les réglages du créateur, groupe compris
+    preuve: {niveau: explicite, source: texte,
+             citation: "lors de la création, ce sont les réglages du créateur qui s'appliquent"}
+    resolution_documentee: null
+
+  - description_brute: les réglages de partage s'appliquent après les privilèges
+                       individuels du collaborateur
+    objet_concerne: partage d'un objet
+    condition: le collaborateur n'a pas le privilège d'accès au type d'objet
+    consequence: l'objet ne peut pas lui être partagé
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si par exemple, l'utilisateur n'a pas accès aux devis, vous ne pourrez pas partager"}
+    resolution_documentee: null
+
+  - description_brute: l'édition du partage sur les fiches doit être autorisée dans le
+                       profil de privilèges du collaborateur
+    objet_concerne: profil de privilèges
+    condition: option « Autoriser l'édition du partage sur les fiches » cochée
+    consequence: le collaborateur peut modifier le partage des fiches
+    preuve: {niveau: explicite, source: texte,
+             citation: "Dans la section \"Fonctionnalités diverses\", cochez l'option"}
+    resolution_documentee:
+      action: modifier le profil de privilèges depuis Réglages > Profils de privilèges
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous devez vous rendre sur vos réglages puis sur “Profils de privilèges”"}
+
+signaux_emergents:
+  - description_brute: l'accès à un objet résulte de trois couches superposées et
+                       ordonnées — la licence, le profil de privilèges, puis le partage
+                       objet par objet — la dernière ne pouvant jamais dépasser la
+                       précédente
+    pourquoi_notable: qui voit quoi n'est pas une propriété d'un rôle mais le résultat
+                      d'une composition à trois niveaux dont l'ordre d'application est
+                      documenté ; le schéma dispose de la forme `permission` comme d'un
+                      fait unique et ne peut pas représenter une hiérarchie de règles
+                      d'accès qui se subordonnent
+    termes_source: ["les réglages de partage interviennent après les réglages individuels", "propriétaire", "groupes"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "les réglages de partage interviennent après les réglages individuels du collaborateur"}

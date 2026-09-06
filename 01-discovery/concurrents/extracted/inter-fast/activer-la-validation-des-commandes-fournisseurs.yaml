@@ -1,0 +1,177 @@
+parcours:
+  origine: interne
+  nature: administratif
+
+interactions:
+  - acteur:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Lorsqu'un collaborateur prépare une commande"}
+    destinataire:
+      role_brut: décideur / validateur (Propriétaire, Administrateur)
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Sélectionnez les rôles habilités à approuver les dépenses"}
+    perimetre: interne
+    relation: hierarchique
+    canal: push
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "alors l'utilisateur doit l'envoyer en validation"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Le décideur reçoit une notification et la commande apparaît dans son tableau de bord"}
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "2 options sont possibles : valider ou refuser la commande"}
+
+  - acteur:
+      role_brut: validateur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le validateur doit obligatoirement saisir un motif de refus"}
+    destinataire:
+      role_brut: demandeur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le demandeur reçoit une notification avec le motif du refus."}
+    perimetre: interne
+    relation: hierarchique
+    canal: push
+    dans_logiciel: oui
+    mecanismes:
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Le demandeur reçoit une notification avec le motif du refus."}
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il peut alors modifier la commande (...) et la soumettre à nouveau"}
+
+transitions_objet:
+  - objet_source: commande fournisseur dépassant le seuil
+    etat_entree: préparée
+    action: envoyer en validation
+    objet_resultat: commande fournisseur
+    etat_sortie: A valider
+    owner_avant:
+      role: collaborateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Lorsqu'un collaborateur prépare une commande"}
+    owner_apres:
+      role: décideur
+      preuve: {niveau: explicite, source: texte,
+               citation: "la commande apparaît dans son tableau de bord, pour vérification"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "La commande passe alors au statut \"A valider\""}
+
+  - objet_source: commande fournisseur
+    etat_entree: A valider
+    action: valider la commande
+    objet_resultat: commande envoyable au fournisseur
+    etat_sortie: validée
+    owner_avant:
+      role: décideur
+      preuve: {niveau: contextuel, source: texte,
+               citation: "valider ou refuser la commande"}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "La commande peut désormais être envoyée au fournisseur par email."}
+
+  - objet_source: commande fournisseur
+    etat_entree: A valider
+    action: refuser avec motif obligatoire
+    objet_resultat: commande fournisseur
+    etat_sortie: Refusée
+    owner_avant:
+      role: validateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le validateur doit obligatoirement saisir un motif de refus"}
+    owner_apres:
+      role: demandeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il peut alors modifier la commande"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il peut alors modifier la commande (...) et la soumettre à nouveau pour validation."}
+
+  - objet_source: commande fournisseur sous le seuil
+    etat_entree: préparée
+    action: envoi direct au fournisseur
+    objet_resultat: commande envoyée
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "celle-ci peut être envoyée directement, sans besoin de validation au préalable"}
+
+regles_operationnelles:
+  - description_brute: la validation des commandes fait partie de l'abonnement Business
+                       et n'est incluse ni dans Starter ni dans Pro
+    objet_concerne: validation des commandes
+    condition: abonnement Business
+    consequence: la fonctionnalité est disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "La validation des commandes fait partie de l'abonnement Business."}
+    resolution_documentee: null
+
+  - description_brute: la configuration du système exige les droits de Propriétaire ou
+                       d'Administrateur
+    objet_concerne: paramétrage de la validation
+    condition: droits Propriétaire ou Administrateur
+    consequence: le mécanisme peut être activé et paramétré
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez disposer des droits de Propriétaire ou d'Administrateur"}
+    resolution_documentee: null
+
+  - description_brute: un montant minimum déclenche ou non le circuit de validation
+    objet_concerne: commande fournisseur
+    condition: montant de la commande comparé au seuil paramétré
+    consequence: en dessous, envoi direct ; au-dessus, déclenchement automatique du
+                 processus de validation
+    preuve: {niveau: explicite, source: texte,
+             citation: "Au-dessus de ce seuil : Le processus de validation se déclenche automatiquement."}
+    resolution_documentee: null
+
+  - description_brute: le validateur doit obligatoirement saisir un motif lorsqu'il refuse
+    objet_concerne: refus de commande
+    condition: refus d'une commande
+    consequence: un motif de refus est exigé
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le validateur doit obligatoirement saisir un motif de refus"}
+    resolution_documentee: null
+
+  - description_brute: les profils configurés comme validateurs ne sont pas soumis au
+                       plafond
+    objet_concerne: commande fournisseur
+    condition: commande émise par un profil validateur
+    consequence: elle peut être envoyée instantanément au fournisseur
+    preuve: {niveau: explicite, source: texte,
+             citation: "les profils configurés comme \"Validateurs\" (souvent le Propriétaire) ne sont pas soumis au plafond"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: le circuit hiérarchique n'est pas attaché à un rôle ou à un type
+                       de commande mais à un montant en euros, défini par l'entreprise,
+                       au-delà duquel une seconde personne doit intervenir
+    pourquoi_notable: c'est le seul mécanisme du corpus où la coordination entre deux
+                      rôles s'active à partir d'un seuil chiffré paramétrable — la
+                      structure hiérarchique se met en marche à un prix. Le schéma
+                      représente une relation hiérarchique comme un état permanent, pas
+                      comme un circuit qui s'ouvre conditionnellement
+    termes_source: ["Montant minimum", "plafond de tolérance (ex: 500 €)", "Validateurs"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Définissez votre plafond de tolérance (ex: 500 €)"}
