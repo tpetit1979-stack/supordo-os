@@ -1,0 +1,9 @@
+01-discovery/concurrents/sources/*/site_marketing/
+01-discovery/concurrents/sources/*/centre_aide/
+**/cache/
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store
+.env
+*.key
