@@ -1,0 +1,91 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/creer-une-facture-un-devis-un-document-de-vente.md
+  rubrique_originale: "Documents de vente "
+  titre: Créer une facture, un devis, un document de vente
+
+metier:
+  moments:
+    - devis
+    - facturation
+    - parametrage
+  roles_bruts:
+    - commercial
+    - contact interne
+    - referent
+    - client
+  roles_canoniques:
+    - bureau
+    - client
+  actions:
+    - parametrer
+    - creer
+    - saisir
+    - dupliquer
+    - convertir
+    - enregistrer
+    - envoyer
+  objets:
+    - devis
+    - facture
+    - document de vente
+    - ligne
+    - catalogue
+    - produit
+    - modele de document
+    - apparence de document
+    - categorie tarifaire
+    - societe
+    - cycle de vente
+  job_to_be_done: editer rapidement un document de vente conforme a partir de donnees deja parametrees
+
+coordination:
+  niveau: 2
+  justification: >-
+    Un referent interne en charge du devis peut etre designe et le document est destine au
+    client, mais aucune transmission entre roles n'est decrite comme un mecanisme : l'article
+    s'arrete a "l'enregistrer (en brouillon) ou l'envoyer directement par email".
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: document de vente (devis pris en exemple)
+  prochaine_etape: enregistrer en brouillon ou envoyer directement par email
+
+complexite:
+  preconditions:
+    - informations de la societe a jour dans les reglages du compte
+    - catalogue de produits et services deja parametre
+  nb_etapes: 3
+  etats:
+    - brouillon
+  exceptions:
+    - un document duplique n'est pas rattache au cycle de vente du document d'origine
+    - lier deux documents apres leur creation est impossible, il faut utiliser "Convertir"
+    - certaines colonnes sont masquables mais leur ordre est fige
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "définir le contact interne à votre société ou le référent en charge du devis"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    "commercial" n'apparait qu'entre parentheses dans un exemple ("par exemple : vous, en
+    tant que commercial") : c'est une illustration, pas une attribution de role. Je l'ai
+    conserve en roles_bruts mais c'est un cas limite qui montre que roles_bruts capte aussi
+    bien un role documente qu'une simple tournure d'exemple. Aucun article consacre au
+    chantier n'existe dans le corpus Sellsy analyse ici : le vocabulaire est celui d'un ERP
+    generaliste (societe, cycle de vente, catalogue).

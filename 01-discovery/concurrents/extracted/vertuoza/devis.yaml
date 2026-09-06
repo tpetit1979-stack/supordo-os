@@ -1,0 +1,88 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/devis/devis.md
+  rubrique_originale: Devis
+  titre: Devis
+
+metier:
+  moments:
+    - devis
+  roles_bruts:
+    - client
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - creer
+    - encoder
+    - importer
+    - enregistrer
+    - envoyer
+    - accepter
+    - refuser
+    - dupliquer
+    - exporter
+  objets:
+    - devis
+    - ligne de devis
+    - poste libre
+    - ouvrage
+    - composant
+    - bibliotheque de prix
+    - marge
+    - remise
+    - chantier
+  job_to_be_done: chiffrer une offre et la faire accepter par le client pour ouvrir un chantier
+
+coordination:
+  niveau: 4
+  justification: >-
+    L'article documente l'envoi du devis au client puis l'action du client (acceptation
+    ou refus) qui fait changer l'objet d'etat et le transforme en chantier.
+  niveau_infere: false
+  de: utilisateur Vertuoza (role non nomme dans l'article)
+  vers: client
+  objet: devis
+
+resultat:
+  objet_produit: devis
+  prochaine_etape: envoyer le devis au client, puis le transformer en chantier s'il est accepte
+
+complexite:
+  preconditions:
+    - option "Import Excel" activee dans Parametres > Proprietes pour importer un devis
+    - champs disponibles dependants de Parametres > General > Preferences d'affichage
+  nb_etapes: 5
+  etats:
+    - Draft
+    - A envoyer
+    - Envoye
+    - Chantier en cours
+    - Refuse
+  exceptions:
+    - l'import Excel ne reprend que les lignes de postes, pas les informations generales
+    - types de lignes et tableau de marges restreints selon le pack (PRO / PRO+ / Expert)
+  systemes_externes:
+    - excel
+
+contexte:
+  dispositif: null
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel:
+    - excel
+    - email
+
+preuve:
+  statut: documented
+  citation: "le devis a été accepté par le client et transformé en chantier"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+    - coordination.de
+  ambiguite: faible
+  note: >-
+    L'article ne nomme jamais le role de la personne qui cree le devis : seul le client
+    est nomme. Le dispositif (bureau / mobile) n'est jamais precise, d'ou null. La notion de
+    "pack" (PRO / PRO+ / Expert) conditionne l'acces a certaines fonctions ; faute de champ
+    dedie dans le schema, elle est rangee en exceptions. Le mot "Draft" est laisse tel quel (anglais dans une doc francaise).

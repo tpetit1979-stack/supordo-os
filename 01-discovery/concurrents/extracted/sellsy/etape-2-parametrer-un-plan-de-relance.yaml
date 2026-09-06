@@ -1,0 +1,86 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/etape-2-parametrer-un-plan-de-relance.md
+  rubrique_originale: "Documents de vente "
+  titre: "Étape 2 : paramétrer un plan de relance"
+
+metier:
+  moments:
+    - relance
+    - recouvrement
+    - parametrage
+  roles_bruts:
+    - referent interne du document
+    - proprietaire du document
+    - collaborateur interne
+    - contact de relance du client
+    - contact du document
+    - contact principal
+    - contact de facturation
+  roles_canoniques:
+    - bureau
+    - client
+    - comptabilite
+  actions:
+    - parametrer
+    - definir
+    - ajouter
+    - envoyer
+    - relancer
+  objets:
+    - plan de relance
+    - relance
+    - email
+    - delai d'envoi
+    - expediteur
+    - destinataire
+    - facture
+    - abonnement
+  job_to_be_done: automatiser la relance des factures impayees sans avoir a y penser
+
+coordination:
+  niveau: 3
+  justification: >-
+    L'article definit explicitement un couple expediteur / destinataire configurable, et le
+    destinataire peut etre un collaborateur interne autant qu'un contact client. Mais aucune
+    action du destinataire n'est decrite : le mecanisme s'arrete a l'envoi.
+  niveau_infere: false
+  de: referent interne, proprietaire du document ou collaborateur interne
+  vers: contact de relance, contact du document, contact principal, contact de facturation ou collaborateur interne
+  objet: email de relance
+
+resultat:
+  objet_produit: plan de relance
+  prochaine_etape: consulter les relances associees a un document (etape 3)
+
+complexite:
+  preconditions:
+    - les emails de relance doivent etre rediges au prealable dans Reglages > Emails personnalises
+    - la relance automatique doit avoir ete activee (etape 1)
+  nb_etapes: 4
+  etats: []
+  exceptions:
+    - option specifique pour activer ou desactiver les relances des factures avec abonnement
+    - un nombre minimum de jours entre relances est parametrable
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "L'expéditeur de l'email : à choisir entre le référent interne du document"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Article le plus riche en roles_bruts de tout le lot Sellsy — sept — alors que ce sont des
+    roles de PARAMETRAGE, pas des personnes qui travaillent : "contact de facturation" ou
+    "proprietaire du document" designent des emplacements dans une configuration. Le schema
+    ne distingue pas un role vecu d'un role configure, et ce type d'article va donc gonfler
+    artificiellement les statistiques de roles sur les 1 494 articles. Signal important.

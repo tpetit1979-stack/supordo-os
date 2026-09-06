@@ -1,0 +1,100 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/application-mobile/remplir-ses-feuilles-de-temps-app-mobile.md
+  rubrique_originale: Application Mobile
+  titre: Remplir ses Feuilles de temps (App Mobile)
+
+metier:
+  moments:
+    - suivi des heures
+    - pointage
+    - validation
+    - paie
+  roles_bruts:
+    - Employeur
+    - administrateur
+    - technicien
+    - stagiaire
+    - alternant
+    - sous-traitant
+    - Support
+  roles_canoniques:
+    - terrain
+    - patron
+    - bureau
+    - externe
+  actions:
+    - saisir
+    - declarer
+    - enregistrer
+    - valider
+    - soumettre
+    - refuser
+    - corriger
+    - consulter
+  objets:
+    - feuille de temps
+    - plage horaire
+    - heure supplementaire
+    - astreinte
+    - intervention
+    - zone
+    - prime panier repas
+    - propriete personnalisee
+    - historique
+  job_to_be_done: declarer ses heures pour justifier sa remuneration et alimenter la rentabilite de l'entreprise
+
+coordination:
+  niveau: 5
+  justification: >-
+    Circuit de validation complet et bidirectionnel, explicitement nomme : le salarie valide
+    et "La feuille de temps est alors transmise à votre Employeur pour validation depuis son
+    application web", avec trois statuts de retour (En attente, Validee, Refusee) et une
+    boucle de correction — un refus "repasse parmi les déclarations à saisir / modifiables".
+  niveau_infere: false
+  de: technicien (salarie)
+  vers: Employeur
+  objet: feuille de temps validee
+
+resultat:
+  objet_produit: feuille de temps validee
+  prochaine_etape: approbation par l'Employeur depuis son application web
+
+complexite:
+  preconditions:
+    - plages horaires pre-parametrees par l'Employeur depuis l'application web
+    - proprietes personnalisees configurees par l'administrateur pour la zone et le panier repas
+  nb_etapes: 6
+  etats:
+    - brouillon
+    - En attente
+    - Validee
+    - Refusee
+  exceptions:
+    - une feuille validee n'est plus modifiable, seul l'Employeur peut la refuser pour la rouvrir
+    - une intervention realisee apres l'enregistrement en brouillon n'apparait pas, il faut "Reinitialiser"
+    - deux feuilles de temps pour la meme date sont impossibles
+    - si la feuille est deja validee, l'Employeur doit solliciter le Support pour la rouvrir
+    - la fonctionnalite est reservee aux salaries, un sous-traitant n'y a pas acces
+  systemes_externes: []
+
+contexte:
+  dispositif: mobile
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "La feuille de temps est alors transmise à votre Employeur pour validation"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Le seul article du lot A qui documente un retour explicite vers l'emetteur ET une rupture
+    du circuit (astreinte du soir sur une journee deja validee : il faut passer par
+    l'Employeur, voire par le Support de l'editeur). Le schema A n'a aucun champ pour ce
+    dernier point, qui est pourtant le plus revelateur : le workflow deborde du logiciel et
+    remonte jusqu'a l'editeur. Consigne ici et en exceptions faute de mieux.
+    "Employeur" avec majuscule est un vocabulaire propre a InterFast, conserve tel quel.

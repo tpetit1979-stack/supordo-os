@@ -1,0 +1,80 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/application-mobile/utiliser-l-application-mobile-sans-reseau-mode-hors-ligne.md
+  rubrique_originale: Application Mobile
+  titre: Utiliser l'application mobile sans réseau (Mode hors ligne)
+
+metier:
+  moments:
+    - intervention
+    - rapport d'intervention
+    - travail en zone sans reseau
+  roles_bruts:
+    - client
+  roles_canoniques:
+    - terrain
+    - client
+  actions:
+    - precharger
+    - demarrer
+    - remplir
+    - cocher
+    - photographier
+    - synchroniser
+    - terminer
+  objets:
+    - intervention
+    - rapport d'intervention
+    - liste de controle
+    - photo
+    - equipement
+    - client
+  job_to_be_done: continuer a documenter une intervention dans une cave ou une zone blanche sans perdre sa saisie
+
+coordination:
+  niveau: 1
+  justification: >-
+    Le client et l'equipement apparaissent comme des donnees a precharger, et le texte evoque
+    "une synchronisation instantanée entre le terrain et le bureau", mais aucun role
+    destinataire n'agit dans l'article : il porte sur la contrainte technique, pas sur un relais.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: rapport d'intervention
+  prochaine_etape: attendre le retour du reseau avant de cliquer sur "Terminer l'intervention"
+
+complexite:
+  preconditions:
+    - avoir precharge la fiche d'intervention avec une connexion active
+    - avoir clique sur "Demarrer l'intervention" avant de perdre le reseau
+  nb_etapes: 3
+  etats: []
+  exceptions:
+    - le mode hors ligne est partiel, une intervention non prechargee est inutilisable
+    - ne pas terminer l'intervention tant que le reseau n'est pas revenu
+  systemes_externes: []
+
+contexte:
+  dispositif: chantier
+  temporalite: pendant
+  recovery: false
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "Vous devez obligatoirement avoir chargé l'intervention au préalable"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.dispositif
+  ambiguite: moyenne
+  note: >-
+    dispositif code "chantier" plutot que "mobile" : c'est une inference discutable, l'outil
+    est le mobile mais le sujet de l'article est le lieu (caves, sous-sols, zones blanches).
+    Le schema force a choisir alors que les deux sont vrais — "mobile" et "chantier" ne sont
+    pas sur le meme axe (support materiel contre lieu). Defaut a signaler.
+    Le sujet reel — la degradation du service et ce que l'utilisateur doit anticiper — n'a
+    aucun champ dedie.

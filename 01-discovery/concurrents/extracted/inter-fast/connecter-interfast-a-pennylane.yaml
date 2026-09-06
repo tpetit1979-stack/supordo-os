@@ -1,0 +1,116 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/mon-entreprise/connecter-interfast-a-pennylane.md
+  rubrique_originale: Mon Entreprise
+  titre: Connecter InterFast à Pennylane
+
+metier:
+  moments:
+    - parametrage
+    - integration comptable
+    - conformite reglementaire
+    - facturation
+  roles_bruts:
+    - Dirigeant
+    - Administrateur
+    - Gestionnaire
+    - Collaborateur
+    - comptable
+    - expert-comptable
+    - support
+    - representant legal
+    - equipe Care
+  roles_canoniques:
+    - patron
+    - comptabilite
+    - externe
+    - bureau
+  actions:
+    - connecter
+    - autoriser
+    - designer
+    - exporter
+    - importer
+    - filtrer
+    - fusionner
+    - relancer
+    - verifier
+  objets:
+    - facture de vente
+    - facture d'achat
+    - avoir fournisseur
+    - depense
+    - Factur-X
+    - Plateforme Agreee
+    - identifiant Pennylane
+    - SIREN
+    - SIRET
+    - journal des ventes
+    - filtre
+  job_to_be_done: automatiser le transfert des factures vers la comptabilite et se mettre en conformite avec la facturation electronique
+
+coordination:
+  niveau: 4
+  justification: >-
+    Transmission explicite et automatique vers un systeme et un role externes, avec action du
+    destinataire documentee : "la facture part quand même dans Pennylane et votre comptable
+    pourra la rattacher manuellement". Le flux est bidirectionnel pour les achats.
+  niveau_infere: false
+  de: InterFast (entreprise)
+  vers: Pennylane / comptable
+  objet: facture de vente au format Factur-X
+
+resultat:
+  objet_produit: facture exportee vers Pennylane
+  prochaine_etape: rattachement au bon client Pennylane, manuellement par le comptable si necessaire
+
+complexite:
+  preconditions:
+    - entreprise basee en France
+    - profil Dirigeant ou Administrateur sur Pennylane
+    - options Factur-X et Pennylane activees par le support InterFast
+    - connexion via OAuth depuis Parametres > Integrations
+  nb_etapes: 7
+  etats:
+    - envoye
+    - Non exporte
+    - Exporte
+    - PA en cours d'activation
+  exceptions:
+    - la recherche du client par nom est sensible a la casse, elle peut creer des doublons
+    - la synchronisation des achats ne peut pas etre desactivee separement des ventes
+    - l'information de paiement ne redescend pas encore, la synchronisation bidirectionnelle est en developpement
+    - les devis et avenants ne sont pas transmis a Pennylane
+    - une adresse email saisie a tort n'est plus corrigeable, InterFast ne peut pas intervenir
+    - un profil "Gestionnaire" ne suffit pas a autoriser la liaison
+  systemes_externes:
+    - Pennylane
+    - Factur-X
+    - Portail Public de l'Etat
+    - annuaire officiel des entreprises
+
+contexte:
+  dispositif: bureau
+  temporalite: indifferent
+  recovery: true
+  sortie_du_logiciel:
+    - email
+    - pdf
+    - excel
+
+preuve:
+  statut: documented
+  citation: "votre comptable pourra la rattacher manuellement"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.dispositif
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Article ou le role "comptable / expert-comptable" est enfin explicitement nomme comme
+    destinataire agissant — c'est rare dans le corpus lu. Difficulte : les roles cites sont
+    pour moitie des roles Pennylane (Dirigeant, Gestionnaire, Collaborateur) et non des roles
+    de l'entreprise BTP. roles_bruts les melange sans pouvoir dire a quel systeme ils
+    appartiennent. Le champ recovery est mis a true pour les procedures de doublons et de
+    reexport, mais il s'agit de rattraper une erreur du systeme autant qu'une erreur humaine :
+    la definition du champ ne tranche pas.

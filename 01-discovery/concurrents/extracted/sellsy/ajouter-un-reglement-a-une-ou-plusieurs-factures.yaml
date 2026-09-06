@@ -1,0 +1,90 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/paiements/ajouter-un-reglement-a-une-ou-plusieurs-factures.md
+  rubrique_originale: Paiements
+  titre: Ajouter un règlement à une ou plusieurs factures
+
+metier:
+  moments:
+    - encaissement
+    - facturation
+    - rapprochement bancaire
+  roles_bruts:
+    - client
+    - prospect
+    - fournisseur
+    - administrateur
+  roles_canoniques:
+    - client
+    - externe
+    - patron
+    - inconnu
+  actions:
+    - enregistrer
+    - saisir
+    - rattacher
+    - solder
+    - lier
+    - editer
+    - supprimer
+    - envoyer
+  objets:
+    - reglement
+    - paiement
+    - facture
+    - facture d'acompte
+    - remise en banque
+    - mode de reglement
+    - email de remerciement
+    - profil de privileges
+  job_to_be_done: enregistrer l'argent recu et le rattacher aux bonnes factures
+
+coordination:
+  niveau: 3
+  justification: >-
+    Une transmission explicite est prevue vers le client : l'option "Envoyer un email de
+    remerciement au client" declenche un accuse de reception. Aucune action du client en
+    retour n'est documentee. La coordination interne se limite a une dependance de droits.
+  niveau_infere: false
+  de: utilisateur Sellsy (role non nomme)
+  vers: client
+  objet: email de remerciement / accuse de reception du paiement
+
+resultat:
+  objet_produit: reglement
+  prochaine_etape: null
+
+complexite:
+  preconditions:
+    - disposer des droits necessaires dans son profil de privileges
+    - pour un reglement multi-factures, l'enregistrer d'abord depuis le menu Banque
+  nb_etapes: 4
+  etats: []
+  exceptions:
+    - par defaut le reglement solde la facture, decocher l'ajustement pour un reglement partiel
+    - la date et le montant d'un paiement ne sont pas modifiables, il faut supprimer puis recreer
+    - la liste n'affiche que les reglements des clients auxquels on a acces
+    - pour des acomptes lies a un devis, utiliser plutot "Emettre une facture d'acompte"
+  systemes_externes:
+    - banque
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "vous pourrez envoyer automatiquement un email de remerciement ou un accusé de réception"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Le niveau 3 repose sur un email automatique vers le client, ce qui est une transmission
+    faible : discutable, et symptomatique du fait que l'echelle ne distingue pas une
+    notification sortante d'un veritable relais de travail. L'article documente aussi une
+    coordination indirecte forte — la visibilite des reglements depend du perimetre client de
+    chacun — que le schema ne sait pas representer.

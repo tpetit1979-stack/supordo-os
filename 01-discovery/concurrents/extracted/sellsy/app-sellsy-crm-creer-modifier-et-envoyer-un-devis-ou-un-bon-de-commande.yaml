@@ -1,0 +1,78 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/app-mobile-sellsy-crm/app-sellsy-crm-creer-modifier-et-envoyer-un-devis-ou-un-bon-de-commande.md
+  rubrique_originale: App mobile Sellsy CRM
+  titre: App Sellsy CRM - Créer, modifier et envoyer un devis ou un bon de commande
+
+metier:
+  moments:
+    - devis
+    - vente en deplacement
+  roles_bruts:
+    - destinataire
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - creer
+    - modifier
+    - ajouter
+    - enregistrer
+    - envoyer
+  objets:
+    - devis
+    - bon de commande
+    - ligne vierge
+    - catalogue
+    - modele
+    - remise
+    - frais de port
+    - frais d'emballage
+    - repertoire
+  job_to_be_done: produire et envoyer un devis depuis le terrain sans repasser par le bureau
+
+coordination:
+  niveau: 2
+  justification: >-
+    Le document est destine a un "destinataire" et envoye par email, mais l'article ne decrit
+    ni le role de l'expediteur, ni aucune action du destinataire, ni de relais interne.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: devis ou bon de commande
+  prochaine_etape: envoyer le document par email apres verification du destinataire et du contenu
+
+complexite:
+  preconditions:
+    - un catalogue de produits est disponible
+    - une societe ou un particulier a associer au document
+  nb_etapes: 4
+  etats: []
+  exceptions:
+    - un devis ou un bon de commande reste modifiable apres enregistrement
+  systemes_externes: []
+
+contexte:
+  dispositif: mobile
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "gérer les devis et bons de commande lorsque vous êtes en déplacement"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Contraste net avec les applications mobiles de Vertuoza et InterFast : ici le mobile sert
+    un usage commercial en deplacement, pas un usage terrain avec relais vers le bureau.
+    Le moment "vente en deplacement" a du etre invente. Aucun etat de document n'est
+    mentionne, alors que l'equivalent web en decrit plusieurs : le schema enregistre donc un
+    etats: [] qui refletе le silence de cet article, non une absence de statuts dans Sellsy.

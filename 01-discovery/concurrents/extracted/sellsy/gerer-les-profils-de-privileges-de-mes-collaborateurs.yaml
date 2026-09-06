@@ -1,0 +1,80 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/configuration-du-compte/gerer-les-profils-de-privileges-de-mes-collaborateurs.md
+  rubrique_originale: Configuration du compte
+  titre: Gérer les profils de privilèges de mes collaborateurs
+
+metier:
+  moments:
+    - administration de l'entreprise
+    - permissions
+    - parametrage
+  roles_bruts:
+    - collaborateur
+    - administrateur
+  roles_canoniques:
+    - bureau
+    - patron
+  actions:
+    - creer
+    - definir
+    - modifier
+    - appliquer
+    - comparer
+    - consulter
+  objets:
+    - profil de privileges
+    - licence
+    - droit d'acces
+    - module
+    - collaborateur
+    - pipeline
+    - devis
+    - bon de commande
+  job_to_be_done: donner a chaque collaborateur exactement les acces necessaires a ses missions, sans plus
+
+coordination:
+  niveau: 3
+  justification: >-
+    Une demande explicite est prevue d'un role vers un autre : "nous vous invitons à vous
+    rapprocher de votre administrateur afin qu'il vous donne les droits nécessaires". C'est
+    une transmission nommee entre deux roles, mais le mecanisme reste hors logiciel — aucune
+    demande n'est outillee.
+  niveau_infere: false
+  de: collaborateur bloque
+  vers: administrateur
+  objet: demande de droits dans le profil de privileges
+
+resultat:
+  objet_produit: profil de privileges
+  prochaine_etape: appliquer le profil de privileges au collaborateur
+
+complexite:
+  preconditions:
+    - etre administrateur pour creer ou modifier un profil
+  nb_etapes: 4
+  etats: []
+  exceptions:
+    - un droit accorde ne suffit pas si la licence de l'utilisateur n'inclut pas la fonctionnalite
+    - un meme profil de privileges peut etre applique a plusieurs collaborateurs
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: indifferent
+  recovery: false
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "vous rapprocher de votre administrateur afin qu'il vous donne les droits nécessaires"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Article d'administration pure, hors cycle client, mais qui contient un vrai handoff — et
+    un handoff non outille : le collaborateur doit sortir du logiciel pour demander des
+    droits. C'est exactement le type de rupture que le schema A ne peut pas qualifier : le
+    champ coordination.niveau 3 ne dit pas si la transmission passe par le produit ou par un
+    coup de telephone. sortie_du_logiciel reste vide car aucun canal n'est nomme.

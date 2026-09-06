@@ -1,0 +1,86 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/app-mobile-sellsy-crm/app-sellsy-crm-le-journal-des-appels.md
+  rubrique_originale: App mobile Sellsy CRM
+  titre: App Sellsy CRM - Le journal des appels
+
+metier:
+  moments:
+    - prospection
+    - suivi client
+    - vente en deplacement
+  roles_bruts:
+    - collaborateur
+    - administrateur
+    - contact
+  roles_canoniques:
+    - bureau
+    - patron
+    - client
+  actions:
+    - activer
+    - appeler
+    - saisir
+    - dicter
+    - enregistrer
+    - creer
+    - consulter
+  objets:
+    - appel sortant
+    - fil d'activites
+    - note
+    - tache
+    - evenement
+    - opportunite
+    - document de vente
+    - profil de privileges
+  job_to_be_done: garder une trace de ce qui s'est dit au telephone et ne pas oublier la suite a donner
+
+coordination:
+  niveau: 1
+  justification: >-
+    Le contact appele et l'administrateur qui accorde les droits apparaissent, mais tout le
+    travail decrit reste celui d'une seule personne : le fil d'activites est un journal
+    personnel, aucun destinataire interne n'est nomme.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: entree d'appel dans le fil d'activites
+  prochaine_etape: creer une tache, un evenement, une opportunite ou un document de vente pour donner suite a l'appel
+
+complexite:
+  preconditions:
+    - droit "Acces au module" dans la section "Suivi des appels" du profil de privileges
+    - fonctionnalite "Ajout des appels sortants" activee
+  nb_etapes: 5
+  etats: []
+  exceptions:
+    - la creation d'une activite liee apres un appel n'est pas obligatoire
+  systemes_externes:
+    - telephone mobile
+
+contexte:
+  dispositif: mobile
+  temporalite: indifferent
+  recovery: false
+  sortie_du_logiciel:
+    - telephone
+
+preuve:
+  statut: documented
+  citation: "capturer automatiquement les détails de l'appel dans le fil d'activités"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Le "fil d'activites" est un canal potentiel de coordination — chez InterFast un objet du
+    meme nom sert explicitement au relais — mais ici rien ne dit qu'un autre collaborateur le
+    consulte. J'ai donc refuse de monter le niveau, alors que la tentation etait forte : cas
+    concret ou ma connaissance d'un autre concurrent aurait pu contaminer la lecture.
+    sortie_du_logiciel: telephone est un cas limite, l'appel etant a la fois hors du logiciel
+    et capture par lui.

@@ -1,0 +1,88 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/equipe/resoudre-un-ajout-d-utilisateur-par-erreur.md
+  rubrique_originale: Équipe
+  titre: Résoudre un ajout d’Utilisateur par erreur
+
+metier:
+  moments:
+    - administration de l'entreprise
+    - gestion des utilisateurs
+    - correction d'erreur
+    - abonnement et facturation editeur
+  roles_bruts:
+    - utilisateur
+    - collaborateur
+    - collaborateur sortant
+    - support
+  roles_canoniques:
+    - patron
+    - externe
+    - inconnu
+  actions:
+    - ajouter
+    - archiver
+    - contacter
+    - inviter
+    - creer
+  objets:
+    - utilisateur
+    - licence
+    - prorata
+    - facture d'abonnement
+    - credit
+    - avoir
+    - profil
+    - CGV
+  job_to_be_done: annuler les frais declenches par l'ajout d'un utilisateur cree par erreur
+
+coordination:
+  niveau: 3
+  justification: >-
+    Transmission explicite du client vers l'editeur, presentee comme une etape obligatoire :
+    "Contactez le support depuis le tchat ou par mail (...) pour valider la conversion du
+    montant en crédit". L'action du support n'est pas decrite au-dela de cette validation.
+  niveau_infere: false
+  de: administrateur du compte
+  vers: support InterFast
+  objet: demande de conversion du montant en credit
+
+resultat:
+  objet_produit: credit d'abonnement
+  prochaine_etape: le credit est deduit automatiquement de la prochaine facture
+
+complexite:
+  preconditions:
+    - un utilisateur payant a ete ajoute et la licence activee
+  nb_etapes: 2
+  etats:
+    - archive
+  exceptions:
+    - les frais ne sont pas remboursables en numeraire, uniquement convertis en credit
+    - la facture emise reste comptablement valide, elle est neutralisee par l'avoir
+    - pour un remplacement, archiver d'abord le sortant pour liberer la licence
+    - ne pas modifier un profil errone mais l'archiver puis en creer un nouveau
+    - si l'archivage a lieu juste avant la date anniversaire, le credit reste sur le compte
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "Contactez le support (...) pour valider la conversion du montant en crédit"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Article d'administration qui ne releve pas du cycle client mais de la relation
+    commerciale avec l'editeur. Le moment "abonnement et facturation editeur" a du etre
+    invente. Probleme de fond : le seul "handoff" de l'article est client vers editeur, pas
+    entre deux roles de l'entreprise. Si l'on compte mecaniquement les handoffs, ce type
+    d'article gonflera artificiellement le score de coordination sans rien dire de la
+    coordination interne. Le champ coordination ne distingue pas les deux natures.

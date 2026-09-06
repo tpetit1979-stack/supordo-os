@@ -1,0 +1,86 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/configuration-du-compte/donner-un-acces-sellsy-a-mon-expert-comptable.md
+  rubrique_originale: Configuration du compte
+  titre: Donner un accès Sellsy à mon expert comptable
+
+metier:
+  moments:
+    - administration de l'entreprise
+    - permissions
+    - cloture comptable
+  roles_bruts:
+    - expert-comptable
+    - collaborateur
+  roles_canoniques:
+    - comptabilite
+    - externe
+    - patron
+  actions:
+    - donner acces
+    - soumettre
+    - ajuster
+    - consulter
+    - modifier
+    - comptabiliser
+    - exporter
+    - desactiver
+    - supprimer
+  objets:
+    - acces expert-comptable
+    - profil de privileges
+    - facture
+    - achat
+    - document comptable
+    - export comptable
+    - fichier PDF
+  job_to_be_done: laisser le comptable travailler directement dans l'outil sans lui donner un acces de collaborateur
+
+coordination:
+  niveau: 3
+  justification: >-
+    Transmission explicite d'un acces vers un role externe nomme, avec validation par un
+    tiers : "Une fois les informations validées par Sellsy, il recevra par la suite un email
+    afin de se connecter". Ce que le comptable fait ensuite de cet acces est liste en
+    capacites, mais aucune action precise n'est declenchee ni tracee.
+  niveau_infere: false
+  de: administrateur du compte
+  vers: expert-comptable
+  objet: acces dedie au compte Sellsy
+
+resultat:
+  objet_produit: acces expert-comptable
+  prochaine_etape: le comptable recoit un email pour se connecter a son acces
+
+complexite:
+  preconditions:
+    - les modules concernes (achats, comptabilisation, export) doivent etre actives sur le compte
+    - validation des informations par Sellsy
+  nb_etapes: 3
+  etats: []
+  exceptions:
+    - l'acces expert-comptable est reserve a une personne externe, pas a un collaborateur
+    - sans le droit "Acces aux fichiers", le comptable ne peut pas telecharger les PDF
+    - en cas de changement de comptable, il faut supprimer l'acces existant avant d'en creer un nouveau
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "l'accès expert-comptable est réservé à une personne externe"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Un des rares articles du lot ou un role externe est nomme, distingue des collaborateurs
+    et dote de droits propres. Le schema le capte correctement en roles_bruts et
+    coordination, mais l'information la plus utile — la frontiere entre interne et externe
+    est materialisee par le produit — n'a pas de champ. Le moment "cloture comptable" est
+    une invention de ma part, l'article ne nomme aucun moment du cycle.

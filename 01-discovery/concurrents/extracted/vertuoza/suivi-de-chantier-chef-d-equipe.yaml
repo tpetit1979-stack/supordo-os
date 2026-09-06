@@ -1,0 +1,80 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/gestion-de-chantier/suivi-de-chantier-chef-d-equipe.md
+  rubrique_originale: Gestion de chantier
+  titre: Suivi de chantier chef d’équipe
+
+metier:
+  moments:
+    - chantier
+    - suivi de chantier
+  roles_bruts:
+    - chef d'equipe
+    - ouvrier
+    - gestionnaire
+  roles_canoniques:
+    - terrain
+    - bureau
+  actions:
+    - saisir
+    - soumettre
+    - consulter
+    - editer
+    - cloturer
+  objets:
+    - suivi de chantier
+    - remarque
+    - photo
+    - pdf
+    - compte chantier
+    - planning
+  job_to_be_done: faire remonter au bureau ce qui a ete fait sur le chantier, avec remarques et photos
+
+coordination:
+  niveau: 4
+  justification: >-
+    Le terrain soumet un suivi, le bureau le visualise, l'edite puis le cloture ; la cloture
+    est elle-meme l'acte qui rend le suivi visible aux gestionnaires. L'objectif annonce est
+    explicitement la communication entre terrain et bureau.
+  niveau_infere: false
+  de: chef d'equipe / ouvrier
+  vers: gestionnaire
+  objet: suivi de chantier (remarques et photos)
+
+resultat:
+  objet_produit: suivi de chantier
+  prochaine_etape: cloturer le suivi pour le rendre visible aux gestionnaires
+
+complexite:
+  preconditions:
+    - posseder un compte chantier
+    - l'ouvrier / chef d'equipe doit etre programme sur ce chantier au Planning Vertuoza
+    - realiser le suivi depuis le compte chantier sur mobile
+  nb_etapes: 4
+  etats:
+    - soumis
+    - cloture
+  exceptions: []
+  systemes_externes: []
+
+contexte:
+  dispositif: mobile
+  temporalite: pendant
+  recovery: false
+  sortie_du_logiciel:
+    - pdf
+
+preuve:
+  statut: documented
+  citation: "Pour le rendre visible aux gestionnaires, clôturez le suivi."
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Article tres court mais dense en coordination. Ambiguite reelle sur QUI cloture :
+    la section est intitulee "compte gestion" mais la cloture est presentee comme ce qui
+    rend le suivi visible aux gestionnaires — le cloturant et le destinataire semblent donc
+    distincts sans que l'article le dise. Vertuoza distingue "compte chantier" et
+    "compte gestion" : c'est un vocabulaire de permissions propre a l'editeur, conserve tel quel.
+    Le schema n'a pas de champ pour ce couple de types de comptes.

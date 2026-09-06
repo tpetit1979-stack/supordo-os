@@ -1,0 +1,68 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/faq-foires-aux-questions/comment-corriger-une-erreur-dans-un-avenant-et-ses-etats-d-avancement-associes.md
+  rubrique_originale: FAQ (Foires Aux Questions)
+  titre: Comment corriger une erreur dans un avenant et ses états d’avancement associés ?
+
+metier:
+  moments:
+    - avenant
+    - correction d'erreur
+    - facturation
+  roles_bruts: []
+  roles_canoniques:
+    - inconnu
+  actions:
+    - corriger
+    - creer
+    - annuler
+    - supprimer
+    - recreer
+  objets:
+    - avenant
+    - etat d'avancement
+    - facture
+    - historique
+  job_to_be_done: rattraper une erreur de saisie sur un avenant sans casser la tracabilite comptable
+
+coordination:
+  niveau: 0
+  justification: Aucun role, aucune transmission, aucun destinataire n'apparait dans l'article.
+  niveau_infere: false
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: avenant de correction
+  prochaine_etape: recreer les etats d'avancement et les factures associes
+
+complexite:
+  preconditions:
+    - un avenant errone existe, avec ou sans etats d'avancement / factures associes
+  nb_etapes: 2
+  etats:
+    - Brouillon
+  exceptions:
+    - la suppression n'est possible que si les etats d'avancement ou factures lies sont encore en Brouillon
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "Créez un avenant avec un montant négatif pour annuler l'erreur"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Cas typique du corpus FAQ : l'article traite d'un arbitrage reel (tracabilite contre
+    correction profonde) mais n'attribue l'action a personne. Le schema produit ici une
+    fiche riche en objets et pauvre en roles — c'est fidele au texte, pas un defaut de lecture.
+    L'article oppose deux strategies alternatives ; nb_etapes: 2 compte les deux approches,
+    pas une sequence, ce que le champ ne permet pas de distinguer.

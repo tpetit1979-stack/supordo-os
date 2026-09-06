@@ -1,0 +1,77 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/gestion-de-chantier/factures-d-acomptes.md
+  rubrique_originale: Gestion de chantier
+  titre: Factures d’acomptes
+
+metier:
+  moments:
+    - chantier
+    - facturation
+  roles_bruts: []
+  roles_canoniques:
+    - inconnu
+  actions:
+    - creer
+    - encoder
+    - soumettre
+    - comptabiliser
+    - valider
+    - crediter
+  objets:
+    - facture d'acompte
+    - note de credit
+    - avoir
+    - prorata
+    - remise globale
+    - retenue
+    - prime
+    - rentabilite
+    - chantier
+  job_to_be_done: encaisser une avance sur un chantier a venir sans perdre le suivi du restant a facturer
+
+coordination:
+  niveau: 0
+  justification: >-
+    Aucun second role n'apparait dans l'article : la procedure est decrite du debut a la fin
+    a la deuxieme personne, sans destinataire ni intervenant nomme.
+  niveau_infere: false
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: facture d'acompte
+  prochaine_etape: comptabiliser la facture pour lui donner un numero
+
+complexite:
+  preconditions:
+    - un chantier existe
+  nb_etapes: 10
+  etats:
+    - brouillon
+    - a comptabiliser
+  exceptions:
+    - en cas d'erreur sur la facture, la corriger par une note de credit / avoir
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: avant
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "En cas d'erreur sur la facture, cliquez sur \"Créditer la Facture\""
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+    - contexte.recovery
+  ambiguite: faible
+  note: >-
+    recovery est ici une reponse partielle : la correction d'erreur n'est qu'une etape sur
+    dix, pas le sujet de l'article. Le schema ne permet pas de distinguer "article consacre
+    au rattrapage d'erreur" de "article qui mentionne au passage un moyen de correction" —
+    c'est un booleen la ou il faudrait une gradation. Aucun role n'est nomme dans tout le texte.
+    La temporalite "avant" s'appuie sur "une avance que vous demandez pour un chantier à venir".

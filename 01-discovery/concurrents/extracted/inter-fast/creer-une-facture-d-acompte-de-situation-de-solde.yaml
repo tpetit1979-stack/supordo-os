@@ -1,0 +1,100 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-une-facture-d-acompte-de-situation-de-solde.md
+  rubrique_originale: Finances
+  titre: Créer une Facture d'acompte / de situation / de solde
+
+metier:
+  moments:
+    - facturation
+    - chantier
+    - correction d'erreur
+    - conformite reglementaire
+  roles_bruts:
+    - support
+    - equipe Care
+    - utilisateur
+  roles_canoniques:
+    - externe
+    - inconnu
+  actions:
+    - creer
+    - facturer
+    - finaliser
+    - envoyer
+    - corriger
+    - annuler
+    - lier
+    - dupliquer
+  objets:
+    - facture d'acompte
+    - facture de situation
+    - facture de solde
+    - devis
+    - avoir
+    - retenue de garantie
+    - ligne de regularisation
+    - TVA
+    - journal des ventes
+  job_to_be_done: facturer un chantier par etapes en restant conforme et sans bloquer le reste a facturer
+
+coordination:
+  niveau: 2
+  justification: >-
+    Le client est destinataire des factures et le support InterFast intervient sur certains
+    deblocages, mais aucune transmission entre deux roles n'est decrite comme un mecanisme :
+    l'article est centre sur des regles d'etat et des contraintes reglementaires.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: facture (acompte, situation ou solde)
+  prochaine_etape: finaliser la facture puis l'envoyer au client
+
+complexite:
+  preconditions:
+    - le devis doit etre au statut "Accepte"
+    - un devis ne peut etre lie qu'a une seule facture en brouillon
+    - la date d'echeance doit etre egale ou posterieure a la date du jour
+    - une facture de situation exige une facture d'acompte creee au prealable
+  nb_etapes: 6
+  etats:
+    - Brouillon
+    - Finalisee
+    - Envoyee
+    - Payee
+    - Accepte
+    - Facture
+    - Annule
+  exceptions:
+    - une facture finalisee et numerotee est verrouillee par la loi anti-fraude, correction par avoir total
+    - un devis passe en "Facture" par erreur bloque la creation de nouvelles factures ; le repasser en "Annule" puis "Accepte"
+    - ecart d'un centime possible par arrondi de TVA, a corriger par une ligne de regularisation a 0 %
+    - prix unitaires negatifs interdits depuis la conformite facturation electronique
+    - le nom de la retenue de garantie n'est pas personnalisable
+    - une fois le mode de situation choisi (globale ou detaillee), retour arriere impossible
+  systemes_externes: []
+
+contexte:
+  dispositif: bureau
+  temporalite: pendant
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "Lorsque votre devis a été passé au statut \"facturé\" par erreur, vous pouvez rattraper"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Article tres long qui melange procedure, FAQ et notes reglementaires. Le champ etats
+    deborde (sept valeurs melant etats de devis et de facture : le schema ne dit pas a quel
+    objet les etats se rapportent, ce qui est un vrai defaut). nb_etapes est arbitraire :
+    l'article decrit trois procedures paralleles, pas une sequence. Le moment
+    "conformite reglementaire" a du etre invente ; il reapparaitra probablement souvent
+    dans les 1 494 articles (facturation electronique, Factur-X, loi anti-fraude).

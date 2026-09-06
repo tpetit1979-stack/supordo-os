@@ -1,0 +1,70 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/paiements/supprimer-un-reglement-lie-a-un-document.md
+  rubrique_originale: Paiements
+  titre: Supprimer un règlement lié à un document
+
+metier:
+  moments:
+    - encaissement
+    - correction d'erreur
+    - rapprochement bancaire
+  roles_bruts: []
+  roles_canoniques:
+    - inconnu
+  actions:
+    - supprimer
+    - delier
+    - consulter
+    - decomptabiliser
+  objets:
+    - reglement
+    - paiement
+    - remise en banque
+    - facture
+    - document
+    - TVA sur les encaissements
+  job_to_be_done: defaire un reglement mal saisi ou mal affecte
+
+coordination:
+  niveau: 0
+  justification: Aucun role, aucun destinataire, aucune transmission n'apparait dans l'article.
+  niveau_infere: false
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: null
+  prochaine_etape: relier le reglement a un autre document s'il a ete delie et non supprime
+
+complexite:
+  preconditions:
+    - si le reglement est remis en banque, supprimer d'abord la remise en banque
+  nb_etapes: 2
+  etats: []
+  exceptions:
+    - si l'option "supprimer" n'est pas proposee, c'est que le reglement a ete remis en banque
+    - une facture creee avec la TVA sur les encaissements doit etre decomptabilisee au prealable
+    - delier conserve le reglement, supprimer l'efface definitivement
+  systemes_externes:
+    - banque
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "le règlement sera supprimé définitivement et donc de ce fait délié du document"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Article de correction d'erreur pur, en niveau 0 de coordination : c'est un travail
+    solitaire de rattrapage. Utile pour le pilote car il montre que recovery: true et
+    coordination: 0 coexistent tres bien, alors que l'hypothese de depart associait plutot
+    l'erreur a un probleme de relais entre personnes.

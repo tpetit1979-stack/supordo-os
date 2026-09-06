@@ -1,0 +1,104 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/application-mobile/ouvrier-module-pointage-sur-l-app-mobile.md
+  rubrique_originale: Application mobile
+  titre: Ouvrier - Module Pointage sur l'app mobile
+
+metier:
+  moments:
+    - pointage
+    - suivi des heures
+    - paie
+  roles_bruts:
+    - chef d'equipe
+    - ouvrier
+    - gestionnaire
+    - secretaire
+    - admin
+    - administrateur
+  roles_canoniques:
+    - terrain
+    - bureau
+    - patron
+  actions:
+    - valider
+    - modifier
+    - ajouter
+    - supprimer
+    - commenter
+    - cloturer
+    - exporter
+    - parametrer
+  objets:
+    - pointage
+    - heure
+    - heure supplementaire
+    - pause
+    - prestation
+    - absence
+    - motif d'absence
+    - mobilite
+    - kilometre
+    - rentabilite
+    - fiche ouvrier
+  job_to_be_done: faire valider les heures reellement prestees par l'equipe le jour meme, depuis le chantier
+
+coordination:
+  niveau: 5
+  justification: >-
+    Chaine complete et explicite : le systeme genere automatiquement un pointage par ouvrier
+    a partir du planning, le chef d'equipe le corrige et le valide sur mobile, puis
+    "Le pointage validé sera ensuite clôturé par le gestionnaire ou la secrétaire sur
+    ordinateur", ce qui alimente la rentabilite des chantiers et l'export vers le
+    secretariat social. Des commentaires sont explicitement destines au role suivant.
+  niveau_infere: false
+  de: chef d'equipe
+  vers: gestionnaire ou secretaire
+  objet: pointage valide
+
+resultat:
+  objet_produit: pointage valide
+  prochaine_etape: cloture du pointage par le gestionnaire ou la secretaire sur ordinateur, puis export
+
+complexite:
+  preconditions:
+    - module active par un admin dans Parametres > Proprietes > Pointage > Preferences
+    - planning de chantier et d'intervention renseigne
+    - motifs d'absence definis par l'administrateur
+    - horaire renseigne sur la fiche ouvrier pour calculer les heures supplementaires
+  nb_etapes: 5
+  etats:
+    - a valider
+    - valide
+    - cloture
+  exceptions:
+    - un ouvrier peut etre marque absent avec un motif et un commentaire
+    - entree de type "AUTRE" pour des taches non liees aux chantiers ou interventions
+    - un pointage valide peut etre rouvert
+    - les informations de mobilite ne concernent que la paie en Belgique
+  systemes_externes:
+    - secretariat social
+
+contexte:
+  dispositif: mobile
+  temporalite: apres
+  recovery: false
+  sortie_du_logiciel:
+    - whatsapp
+    - papier
+
+preuve:
+  statut: documented
+  citation: "Adieu les informations envoyées sur Whatsapp ou écrite sur une feuille de papier."
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Seul article du lot ou le logiciel decrit une orchestration de bout en bout entre trois
+    niveaux (systeme, terrain, bureau) et nomme explicitement les outils qu'il remplace
+    (WhatsApp, papier). J'ai code ces derniers en sortie_du_logiciel bien qu'ils soient
+    presentes comme un avant/apres, pas comme une sortie actuelle : le champ ne distingue
+    pas "sortie constatee" de "sortie que l'editeur pretend supprimer". C'est une limite
+    reelle. Le titre dit "Ouvrier" mais le contenu s'adresse au chef d'equipe qui valide
+    les heures des autres : incoherence de l'editeur, conservee telle quelle.

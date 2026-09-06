@@ -1,0 +1,92 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/envoyer-un-document-pour-signature-electronique.md
+  rubrique_originale: "Documents de vente "
+  titre: Envoyer un document pour signature électronique
+
+metier:
+  moments:
+    - signature
+    - devis
+    - suivi
+  roles_bruts:
+    - collaborateur
+    - administrateur
+    - contact lie au document
+    - signataire
+    - client
+  roles_canoniques:
+    - bureau
+    - client
+    - patron
+  actions:
+    - activer
+    - envoyer
+    - signer
+    - relancer
+    - annuler
+    - modifier
+    - suivre
+    - filtrer
+  objets:
+    - document de vente
+    - signature electronique
+    - signataire
+    - email d'invitation
+    - colonne
+    - filtre
+    - profil de privileges
+  job_to_be_done: faire signer un document a distance et suivre qui a signe ou pas
+
+coordination:
+  niveau: 4
+  justification: >-
+    Transmission explicite vers un ou plusieurs signataires, action du destinataire qui fait
+    changer l'etat automatiquement — "Lorsque le document aura été signé par l'ensemble des
+    signataires, il passera automatiquement en statut Accepté" — et possibilite de relancer
+    ceux qui n'ont pas signe. Fait notable : le signataire peut etre un collaborateur interne
+    autant que le client.
+  niveau_infere: false
+  de: utilisateur Sellsy (role non nomme)
+  vers: contact lie au document ou collaborateur interne
+  objet: document a signer
+
+resultat:
+  objet_produit: document signe
+  prochaine_etape: null
+
+complexite:
+  preconditions:
+    - privilege "Creation de signature electronique" active sur le profil collaborateur
+    - telephone et email du destinataire renseignes, tous deux obligatoires
+  nb_etapes: 4
+  etats:
+    - Envoye
+    - Accepte
+  exceptions:
+    - la signature ne peut pas etre activee sur un document expire
+    - une relance est impossible sur un document expire, il faut annuler puis reemettre
+    - un document deja signe n'est legalement plus modifiable
+    - l'email d'invitation n'apparait pas dans les messages envoyes du compte email connecte
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: avant
+  recovery: true
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "Ils peuvent être envoyés (...) mais aussi à l'un de vos collaborateurs"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Cas ou le meme mecanisme sert deux coordinations de nature differente : entreprise vers
+    client et entreprise vers collaborateur interne. Le schema force un seul couple
+    de / vers et ne peut pas representer cette bifurcation. recovery est mis a true pour la
+    procedure d'annulation de signature, mais il s'agit de revenir sur une demande, pas de
+    corriger une erreur de saisie : la definition du champ est trop large.

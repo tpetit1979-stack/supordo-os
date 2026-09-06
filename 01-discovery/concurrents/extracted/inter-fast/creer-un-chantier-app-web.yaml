@@ -1,0 +1,111 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/operations/creer-un-chantier-app-web.md
+  rubrique_originale: Opérations
+  titre: Créer un Chantier (App Web)
+
+metier:
+  moments:
+    - chantier
+    - affectation
+    - permissions
+    - suivi de rentabilite
+  roles_bruts:
+    - technicien
+    - Technicien +
+    - sous-traitant
+    - intervenant principal
+    - intervenant secondaire
+    - chef de chantier
+    - referent technique
+    - apprenti
+    - coequipier
+    - client
+  roles_canoniques:
+    - terrain
+    - bureau
+    - externe
+    - client
+  actions:
+    - creer
+    - affecter
+    - lier
+    - parametrer
+    - autoriser
+    - consulter
+    - planifier
+    - facturer
+    - archiver
+  objets:
+    - chantier
+    - intervention
+    - maintenance
+    - devis
+    - facture
+    - depense
+    - rapport d'intervention
+    - document
+    - plan
+    - liste de materiel
+    - rentabilite
+    - debourse sec
+    - cout horaire charge
+    - notification push
+  job_to_be_done: centraliser les documents et le temps passe d'un projet pour en suivre le cout reel
+
+coordination:
+  niveau: 5
+  justification: >-
+    L'article orchestre explicitement plusieurs roles autour d'un meme objet : l'intervenant
+    principal est "automatiquement affecté à toutes les nouvelles interventions", il "reçoit
+    une notification push sur son mobile pour chaque étape", le temps declare par les
+    intervenants secondaires alimente automatiquement le debourse sec, et un ecran de
+    parametrage decide role par role ce que le terrain voit sur son mobile.
+  niveau_infere: false
+  de: bureau (createur du chantier)
+  vers: technicien / intervenant principal
+  objet: chantier et interventions affectees
+
+resultat:
+  objet_produit: chantier
+  prochaine_etape: centraliser interventions, devis, factures, depenses et rapports sur le chantier
+
+complexite:
+  preconditions:
+    - un client existe dans le CRM
+    - pour la creation depuis un devis, celui-ci doit etre au statut "Accepte"
+    - pour donner acces aux documents au terrain, cocher les roles dans Parametres > Chantiers
+  nb_etapes: 10
+  etats:
+    - Accepte
+    - Facture
+    - Termine
+    - archive
+  exceptions:
+    - impossible de modifier le client d'un chantier existant, il faut archiver et recreer
+    - les heures d'un profil "Sous-traitant" ne sont pas valorisees dans le debourse interne
+    - par defaut les profils terrain n'ont acces ni aux documents ni aux marges et prix d'achat
+    - logique d'intervention journaliere plafonnee a 24 h, une serie d'interventions est creee
+    - les techniciens doivent vider le cache mobile pour que de nouvelles autorisations s'appliquent
+  systemes_externes: []
+
+contexte:
+  dispositif: bureau
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "les profils terrain (Technicien, Technicien + et Sous-traitant) n'ont pas accès"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Article le plus riche du corpus lu sur les roles : InterFast nomme dix roles distincts et
+    documente ce que chacun voit. Le schema le capte mal : roles_bruts devient une liste
+    fourre-tout ou "intervenant principal" (fonction sur un chantier) et "Technicien +"
+    (niveau de licence) sont melanges alors que ce sont deux natures differentes. Il manque
+    clairement une dimension "visibilite / permission par role", ici centrale et rangee
+    faute de mieux en exceptions.

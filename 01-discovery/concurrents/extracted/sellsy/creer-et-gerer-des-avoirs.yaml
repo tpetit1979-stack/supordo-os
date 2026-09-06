@@ -1,0 +1,87 @@
+source:
+  vendor: sellsy
+  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/creer-et-gerer-des-avoirs.md
+  rubrique_originale: "Documents de vente "
+  titre: Créer et gérer des avoirs
+
+metier:
+  moments:
+    - facturation
+    - correction d'erreur
+    - avoir
+  roles_bruts:
+    - client
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - creer
+    - annuler
+    - modifier
+    - lier
+    - delier
+    - ventiler
+    - rembourser
+  objets:
+    - avoir
+    - facture
+    - facture d'acompte
+    - avoir d'acompte
+    - numerotation
+    - ecriture comptable
+    - prelevement
+    - chiffre d'affaires
+  job_to_be_done: annuler tout ou partie d'une facture emise sans casser la numerotation comptable
+
+coordination:
+  niveau: 1
+  justification: >-
+    Le client est mentionne comme destinataire de la facture rectificative et beneficiaire
+    d'un remboursement possible, mais aucune transmission ni action d'un second role n'est
+    decrite : l'article porte sur des regles entre objets comptables.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: avoir
+  prochaine_etape: lier l'avoir a une ou plusieurs factures, ou rembourser le client
+
+complexite:
+  preconditions:
+    - pour "Annuler par un avoir" ou "Modifier par un avoir", la facture doit etre validee
+  nb_etapes: 4
+  etats:
+    - "A solder"
+    - validee
+    - finalise
+  exceptions:
+    - un avoir doit toujours etre positif, Sellsy equilibre les deux documents
+    - un avoir finalise ne peut pas etre supprime, la numerotation devant rester continue
+    - pour annuler un avoir, creer une facture du meme montant sur le meme client
+    - un avoir issu de "Annuler par un avoir" ou "Modifier par un avoir" ne peut plus etre delie
+    - un avoir d'acompte ne peut pas etre delie d'une facture d'acompte
+    - si des prelevements GoCardless etaient programmes, il faut penser a les annuler
+  systemes_externes:
+    - GoCardless
+
+contexte:
+  dispositif: null
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "Un avoir est une facture rectificative que vous adressez à un client"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Article dense en exceptions (six) et pauvre en roles : profil typique des articles
+    comptables. Le champ exceptions se revele le plus productif du schema, mais il melange
+    des natures tres differentes — regle legale, limite technique, effet de bord a ne pas
+    oublier. Une seule liste pour trois choses.

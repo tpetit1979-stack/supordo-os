@@ -1,0 +1,81 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/devis/signature-electronique-du-devis.md
+  rubrique_originale: Devis
+  titre: Signature électronique du devis
+
+metier:
+  moments:
+    - devis
+    - signature
+  roles_bruts:
+    - client
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - activer
+    - envoyer
+    - consulter
+    - signer
+    - accepter
+    - notifier
+  objets:
+    - devis
+    - email
+    - lien de signature
+    - notification
+    - modele de document
+    - modele d'email
+    - signature electronique
+  job_to_be_done: faire signer un devis a distance par le client et savoir quand il l'a ouvert ou signe
+
+coordination:
+  niveau: 4
+  justification: >-
+    Transmission explicite du devis au client via un lien, action du destinataire
+    (consultation puis signature) et retour vers l'emetteur sous forme de notification :
+    "Vous recevrez des notifications dès qu'un client ouvre ou signe le devis."
+  niveau_infere: false
+  de: utilisateur Vertuoza (role non nomme dans l'article)
+  vers: client
+  objet: devis a signer
+
+resultat:
+  objet_produit: devis signe
+  prochaine_etape: accepter le devis pour le transformer en chantier ou en intervention
+
+complexite:
+  preconditions:
+    - pack Pro+ minimum
+    - metadonnee [LINK_DEVIS] presente dans le modele d'email
+    - modele PDF contenant une zone de signature, et une seule
+  nb_etapes: 3
+  etats:
+    - ENVOYE
+    - SIGNE
+  exceptions:
+    - un modele de document ne peut plus etre choisi au moment de l'envoi, le lien etant fige
+    - un modele personnalise sans zone de signature (ou avec plusieurs) fait echouer le processus
+  systemes_externes: []
+
+contexte:
+  dispositif: null
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel:
+    - email
+    - pdf
+
+preuve:
+  statut: documented
+  citation: "Vous recevrez des notifications dès qu'un client ouvre ou signe le devis."
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Cas rare dans le corpus lu : le retour vers l'emetteur (accuse d'ouverture et de
+    signature) est explicitement documente. Le schema A n'a pas de champ pour cela ;
+    l'information n'est logeable que dans coordination.justification. Le role de
+    l'emetteur reste non nomme.

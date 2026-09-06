@@ -1,0 +1,94 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/operations/remplir-modifier-un-rapport-d-intervention-app-web.md
+  rubrique_originale: Opérations
+  titre: Remplir / Modifier un Rapport d'intervention (App Web)
+
+metier:
+  moments:
+    - intervention
+    - rapport d'intervention
+    - correction d'erreur
+  roles_bruts:
+    - technicien
+    - services administratifs
+    - Bureau
+    - collaborateur
+    - client
+  roles_canoniques:
+    - terrain
+    - bureau
+    - client
+  actions:
+    - saisir
+    - completer
+    - signer
+    - generer
+    - modifier
+    - corriger
+    - conserver
+    - remplacer
+  objets:
+    - rapport d'intervention
+    - sous-rapport
+    - intervention
+    - heure
+    - pause
+    - photo
+    - signature
+    - pdf
+    - version
+    - commentaire
+  job_to_be_done: completer ou corriger depuis le bureau un rapport que le terrain n'a pas pu finir sur place
+
+coordination:
+  niveau: 3
+  justification: >-
+    Deux roles travaillent successivement sur le meme objet et l'article traite explicitement
+    du cas ou le bureau reprend le rapport d'un autre : "InterFast propose deux choix lors de
+    la modification d'un rapport rédigé et signé par un autre utilisateur". Mais aucune
+    action n'est declenchee chez le redacteur initial : il n'est pas prevenu.
+  niveau_infere: false
+  de: technicien (redacteur initial)
+  vers: services administratifs / Bureau
+  objet: rapport d'intervention a completer ou corriger
+
+resultat:
+  objet_produit: rapport d'intervention PDF
+  prochaine_etape: null
+
+complexite:
+  preconditions:
+    - une intervention deja planifiee existe
+    - date du rapport et signature du technicien renseignees pour generer le rapport
+  nb_etapes: 6
+  etats:
+    - planifiee
+    - en cours
+    - en retard
+  exceptions:
+    - le client peut etre absent, une case "Client absent" remplace sa signature
+    - modifier le rapport d'un autre impose de choisir entre conserver ou remplacer sa signature
+    - chaque modification cree une nouvelle version numerotee et datee
+  systemes_externes: []
+
+contexte:
+  dispositif: bureau
+  temporalite: apres
+  recovery: true
+  sortie_du_logiciel:
+    - pdf
+
+preuve:
+  statut: documented
+  citation: "lorsque la saisie sur le terrain n'était pas possible ou suffisante"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Cas de coordination interessant et frequent en BTP : le bureau rattrape le terrain. Le
+    schema le note en niveau 3 alors que ce qui compte analytiquement est l'ABSENCE de retour
+    vers le technicien — le schema A ne sait pas exprimer une transmission a sens unique
+    assumee. Le champ etats capte ici des etats d'intervention, pas du rapport : ambiguite
+    de rattachement deja relevee ailleurs.

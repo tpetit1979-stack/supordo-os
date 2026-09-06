@@ -1,0 +1,85 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-un-avenant-au-devis.md
+  rubrique_originale: Finances
+  titre: Créer un Avenant au devis
+
+metier:
+  moments:
+    - avenant
+    - chantier
+    - facturation
+  roles_bruts:
+    - client
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - creer
+    - saisir
+    - transmettre
+    - signer
+    - valider
+    - facturer
+  objets:
+    - avenant
+    - devis
+    - plus-value
+    - moins-value
+    - article
+    - ouvrage
+    - facture de solde
+    - acompte
+    - avoir
+  job_to_be_done: integrer des travaux supplementaires ou annules sans toucher au devis contractuel
+
+coordination:
+  niveau: 4
+  justification: >-
+    Cycle de vie a trois etats explicitement decrit comme un circuit de validation client :
+    "Envoyé : Vous transmettez l'avenant au client (par email ou pour signature électronique).
+    Accepté : Le client valide les modifications." L'acceptation du client conditionne le
+    calcul de la facturation finale.
+  niveau_infere: false
+  de: utilisateur InterFast (role non nomme)
+  vers: client
+  objet: avenant
+
+resultat:
+  objet_produit: avenant
+  prochaine_etape: facturer le solde, InterFast fusionnant automatiquement devis initial et avenants acceptes
+
+complexite:
+  preconditions:
+    - le devis d'origine doit etre au statut "Accepte"
+    - devis initial ET avenant au statut "Accepte" pour facturer le solde
+  nb_etapes: 4
+  etats:
+    - Brouillon
+    - Envoye
+    - Accepte
+  exceptions:
+    - les prix unitaires negatifs ne sont pas autorises, il faut passer par une quantite negative
+    - plusieurs avenants sont cumulables, seuls ceux au statut "Accepte" sont pris en compte
+    - si les acomptes depassent le montant final, la facture de solde est negative ou nulle
+    - le comportement differe selon l'editeur de devis V1 ou V2
+  systemes_externes: []
+
+contexte:
+  dispositif: bureau
+  temporalite: pendant
+  recovery: false
+  sortie_du_logiciel:
+    - email
+
+preuve:
+  statut: documented
+  citation: "Accepté : Le client valide les modifications."
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Coordination entreprise-client explicite et automatisee (la validation client declenche
+    un recalcul), mais le role interne qui redige l'avenant n'est jamais nomme : le "vous"
+    de la documentation. Constat recurrent sur tout le corpus.

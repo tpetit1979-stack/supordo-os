@@ -1,0 +1,95 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/application-mobile/ouvrier-rapport-d-intervention.md
+  rubrique_originale: Application mobile
+  titre: Ouvrier - Rapport d’intervention
+
+metier:
+  moments:
+    - intervention
+    - rapport d'intervention
+    - preparation de la facturation
+  roles_bruts:
+    - ouvrier
+    - accompagnant
+    - gestionnaire
+    - client
+  roles_canoniques:
+    - terrain
+    - bureau
+    - client
+  actions:
+    - creer
+    - saisir
+    - modifier
+    - marquer
+    - reprogrammer
+    - joindre
+    - soumettre
+    - faire signer
+    - accepter
+  objets:
+    - rapport d'intervention
+    - intervention
+    - accompagnant
+    - heure
+    - cout
+    - frais
+    - fourniture
+    - photo
+    - certificat d'entretien
+    - planning
+    - facture
+  job_to_be_done: consigner sur place ce qui a ete fait et ce qui sera facture, et le faire valider par le client
+
+coordination:
+  niveau: 4
+  justification: >-
+    Trois transmissions explicites sont documentees : de l'ouvrier vers le client (signature),
+    de l'ouvrier vers le gestionnaire (l'intervention devient verte sur le planning du
+    gestionnaire, le rapport passe en "Cloture"), et une action declenchee chez le
+    gestionnaire — "Cela indiquera au gestionnaire que tout s'est déroulé comme prévu et
+    qu'il peut clôturer cette intervention." Une reprogrammation cree une intervention
+    "A programmer" cote gestion.
+  niveau_infere: false
+  de: ouvrier
+  vers: gestionnaire
+  objet: rapport d'intervention (et intervention marquee terminee)
+
+resultat:
+  objet_produit: rapport d'intervention
+  prochaine_etape: le gestionnaire cloture l'intervention ; les elements "facturables" apparaitront sur la facture
+
+complexite:
+  preconditions:
+    - une intervention existe au planning de l'ouvrier
+  nb_etapes: 6
+  etats:
+    - terminee
+    - A programmer
+    - Cloture
+  exceptions:
+    - une intervention peut etre marquee non facturable (ex. SAV gratuit) avec un motif
+    - une fois le rapport accepte, l'ouvrier ne peut plus le modifier
+    - le mode de valorisation change selon regie / forfaitaire / sur base d'un devis
+  systemes_externes: []
+
+contexte:
+  dispositif: mobile
+  temporalite: pendant
+  recovery: false
+  sortie_du_logiciel: []
+
+preuve:
+  statut: documented
+  citation: "Cela indiquera au gestionnaire que tout s'est déroulé comme prévu"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    Article le plus riche du lot vertuoza en coordination : l'ouvrier decide de ce qui est
+    facturable, ce qui engage directement le travail du bureau. Le schema ne permet pas de
+    representer qu'un role terrain prend ici une decision a portee financiere — c'est
+    pourtant l'element le plus interessant de l'article. Le terme "accompagnant" est propre
+    a Vertuoza et n'entre proprement dans aucune categorie canonique ; conserve en roles_bruts.

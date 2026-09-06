@@ -1,0 +1,103 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-un-devis-app-web.md
+  rubrique_originale: Finances
+  titre: Créer un Devis (App Web)
+
+metier:
+  moments:
+    - devis
+    - signature
+  roles_bruts:
+    - client
+    - collaborateur
+    - redacteur de devis
+  roles_canoniques:
+    - client
+    - bureau
+  actions:
+    - creer
+    - saisir
+    - lier
+    - structurer
+    - signer
+    - finaliser
+    - envoyer
+    - accepter
+  objets:
+    - devis
+    - ouvrage
+    - sous-ouvrage
+    - sommaire
+    - article
+    - main d'oeuvre
+    - fourniture
+    - chantier
+    - intervention
+    - maintenance
+    - SAV
+    - bon de commande
+    - signature
+    - RIB
+    - acompte
+    - pied de page
+    - dechets
+  job_to_be_done: produire un devis structure et lisible, le faire accepter et garder la trace de qui l'a etabli
+
+coordination:
+  niveau: 4
+  justification: >-
+    Transmission explicite au client (email simple ou envoi pour signature) et action du
+    destinataire documentee : "Votre client a signé votre devis via signature électronique.
+    (...) Votre devis passe automatiquement comme étant "Accepté"". L'acceptation peut aussi
+    venir du bon de commande emis par le client.
+  niveau_infere: false
+  de: redacteur du devis / collaborateur
+  vers: client
+  objet: devis
+
+resultat:
+  objet_produit: devis
+  prochaine_etape: envoyer le devis au client, par email ou pour signature electronique
+
+complexite:
+  preconditions:
+    - un client existe dans le CRM (ou est cree a la volee)
+    - prenom et nom renseignes sur la fiche contact pour un envoi en signature
+    - signature de l'utilisateur configuree dans son profil
+  nb_etapes: 11
+  etats:
+    - Brouillon
+    - Finalise
+    - Envoye
+    - Accepte
+  exceptions:
+    - sans prenom et nom sur le contact, l'envoi pour signature est impossible
+    - l'acceptation via bon de commande exige un devis au statut "Envoye"
+    - une signature deja generee ne peut pas etre modifiee, seulement supprimee puis refaite
+    - la fusion de plusieurs devis en une seule facture n'a pas ete trouvee dans cet article
+  systemes_externes: []
+
+contexte:
+  dispositif: bureau
+  temporalite: avant
+  recovery: false
+  sortie_du_logiciel:
+    - email
+    - pdf
+
+preuve:
+  statut: documented
+  citation: "Si vous changez de rédacteur de devis, c'est alors sa signature qui sera reprise"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    dispositif "bureau" est ici justifie par le titre meme de l'article ("App Web"), non par
+    une deduction. Le texte enonce une limite produit ("InterFast ne permet pas encore de
+    fusionner automatiquement plusieurs devis") : je l'ai consignee en exception avec une
+    formulation prudente, mais le schema n'a aucun champ pour les limites explicitement
+    reconnues par l'editeur — c'est pourtant une donnee concurrentielle de premier ordre.
+    "redacteur de devis" et "Etabli par" sont un vocabulaire de responsabilite propre a
+    InterFast, sans equivalent chez les autres.

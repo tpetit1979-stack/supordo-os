@@ -1,0 +1,80 @@
+source:
+  vendor: vertuoza
+  fichier: 01-discovery/concurrents/sources/vertuoza/gestion-de-chantier/avenant.md
+  rubrique_originale: Gestion de chantier
+  titre: Avenant
+
+metier:
+  moments:
+    - chantier
+    - avenant
+  roles_bruts:
+    - client
+    - responsable
+  roles_canoniques:
+    - client
+    - inconnu
+  actions:
+    - creer
+    - encoder
+    - importer
+    - modifier
+    - enregistrer
+  objets:
+    - avenant
+    - devis
+    - ligne de devis
+    - etat d'avancement
+    - rentabilite
+    - remarque
+    - fichier joint
+    - jours ouvrables
+  job_to_be_done: tracer une modification du marche initial sans toucher au devis signe
+
+coordination:
+  niveau: 2
+  justification: >-
+    Le client apparait comme partie prenante (il "prend conscience" de l'allongement du delai,
+    des remarques lui sont visibles) et un "responsable" est un champ de l'avenant, mais aucune
+    transmission entre deux roles n'est decrite comme un mecanisme du logiciel.
+  niveau_infere: true
+  de: null
+  vers: null
+  objet: null
+
+resultat:
+  objet_produit: avenant
+  prochaine_etape: null
+
+complexite:
+  preconditions:
+    - un devis de base existe et est signe par le client
+  nb_etapes: 8
+  etats:
+    - accepte
+  exceptions:
+    - un meme avenant peut contenir des lignes positives et negatives
+  systemes_externes:
+    - excel
+
+contexte:
+  dispositif: null
+  temporalite: pendant
+  recovery: false
+  sortie_du_logiciel:
+    - excel
+
+preuve:
+  statut: documented
+  citation: "une modification du contrat initial qui peut inclure des travaux supplémentaires"
+  champs_inferes:
+    - metier.roles_canoniques
+    - coordination.niveau
+    - contexte.temporalite
+  ambiguite: moyenne
+  note: >-
+    Le mot "responsable" apparait uniquement comme un champ a completer dans le formulaire
+    d'avenant : impossible de savoir s'il designe un role interne, un salarie precis ou un
+    simple libelle. Je l'ai conserve en roles_bruts mais ne l'ai pas canonise. Le niveau de
+    coordination 2 est une reconstruction : le client est present dans le texte comme
+    destinataire d'information, sans mecanisme de transmission decrit.

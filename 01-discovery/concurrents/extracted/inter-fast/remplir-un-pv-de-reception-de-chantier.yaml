@@ -1,0 +1,90 @@
+source:
+  vendor: inter-fast
+  fichier: 01-discovery/concurrents/sources/inter-fast/operations/remplir-un-pv-de-reception-de-chantier.md
+  rubrique_originale: Opérations
+  titre: Remplir un PV de réception de chantier
+
+metier:
+  moments:
+    - chantier
+    - reception de chantier
+    - cloture
+  roles_bruts:
+    - technicien
+    - client
+    - bureau
+    - entreprise
+  roles_canoniques:
+    - terrain
+    - client
+    - bureau
+  actions:
+    - creer
+    - remplir
+    - faire signer
+    - valider
+    - consulter
+    - transmettre
+  objets:
+    - PV de reception
+    - intervention
+    - rapport
+    - chantier
+    - signature
+    - garantie decennale
+    - pdf
+    - modele de rapport
+  job_to_be_done: faire acter par le client que les travaux sont acceptes, pour declencher la garantie et le transfert de propriete
+
+coordination:
+  niveau: 4
+  justification: >-
+    Transmission explicite terrain vers client avec action du destinataire : "Le technicien
+    renseigne les informations sur son application mobile et demande au client de signer
+    directement sur l'écran avant validation." Une variante bureau vers client par email est
+    aussi decrite.
+  niveau_infere: false
+  de: technicien
+  vers: client
+  objet: PV de reception a signer
+
+resultat:
+  objet_produit: PV de reception signe
+  prochaine_etape: le PV valide est automatiquement rattache au dossier du chantier concerne
+
+complexite:
+  preconditions:
+    - creer une intervention de type "PV de reception de chantier"
+    - terminer l'installation complete avant de faire signer
+  nb_etapes: 7
+  etats:
+    - valide
+    - finalise
+  exceptions:
+    - le format du PV n'est pas personnalisable, sauf a recreer un modele via le Constructeur de rapports
+    - le client doit pouvoir accepter les travaux sans reserve
+    - pour un envoi a distance, il faut finaliser cote bureau et transmettre le PDF par email
+  systemes_externes:
+    - outil de signature electronique externe (Yousign, cite comme solution de contournement)
+
+contexte:
+  dispositif: mobile
+  temporalite: apres
+  recovery: false
+  sortie_du_logiciel:
+    - email
+    - pdf
+
+preuve:
+  statut: documented
+  citation: "demande au client de signer directement sur l'écran avant validation"
+  champs_inferes:
+    - metier.roles_canoniques
+    - contexte.temporalite
+  ambiguite: faible
+  note: >-
+    L'article renvoie vers un outil tiers gratuit pour le cas "signature a distance" : le
+    logiciel reconnait donc une sortie de son propre perimetre. systemes_externes accueille
+    cette information mais lui donne le meme poids qu'une integration native comme Pennylane,
+    alors que la nature est opposee (integration voulue contre contournement d'un manque).
+    Le schema ne distingue pas les deux.
