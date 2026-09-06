@@ -1,111 +1,222 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/operations/creer-un-chantier-app-web.md
-  rubrique_originale: Opérations
-  titre: Créer un Chantier (App Web)
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - chantier
-    - affectation
-    - permissions
-    - suivi de rentabilite
-  roles_bruts:
-    - technicien
-    - Technicien +
-    - sous-traitant
-    - intervenant principal
-    - intervenant secondaire
-    - chef de chantier
-    - referent technique
-    - apprenti
-    - coequipier
-    - client
-  roles_canoniques:
-    - terrain
-    - bureau
-    - externe
-    - client
-  actions:
-    - creer
-    - affecter
-    - lier
-    - parametrer
-    - autoriser
-    - consulter
-    - planifier
-    - facturer
-    - archiver
-  objets:
-    - chantier
-    - intervention
-    - maintenance
-    - devis
-    - facture
-    - depense
-    - rapport d'intervention
-    - document
-    - plan
-    - liste de materiel
-    - rentabilite
-    - debourse sec
-    - cout horaire charge
-    - notification push
-  job_to_be_done: centraliser les documents et le temps passe d'un projet pour en suivre le cout reel
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: technicien / intervenant principal
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Attribuez le chantier à un technicien"}
+    perimetre: interne
+    relation: inconnu
+    canal: push
+    dans_logiciel: oui
+    mecanismes:
+      - forme: affectation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "sera automatiquement affecté à toutes les nouvelles interventions"}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il reçoit une notification push sur son mobile pour chaque étape"}
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "les profils terrain (Technicien, Technicien + et Sous-traitant) n'ont pas accès"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vos techniciens peuvent charger le camion sans erreur en consultant l'onglet Documents"}
 
-coordination:
-  niveau: 5
-  justification: >-
-    L'article orchestre explicitement plusieurs roles autour d'un meme objet : l'intervenant
-    principal est "automatiquement affecté à toutes les nouvelles interventions", il "reçoit
-    une notification push sur son mobile pour chaque étape", le temps declare par les
-    intervenants secondaires alimente automatiquement le debourse sec, et un ecran de
-    parametrage decide role par role ce que le terrain voit sur son mobile.
-  niveau_infere: false
-  de: bureau (createur du chantier)
-  vers: technicien / intervenant principal
-  objet: chantier et interventions affectees
+  - acteur:
+      role_brut: intervenants secondaires
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le temps de travail déclaré par les intervenants secondaires"}
+    destinataire:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    perimetre: interne
+    relation: inconnu
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "sur leur application mobile est automatiquement comptabilisé"}
 
-resultat:
-  objet_produit: chantier
-  prochaine_etape: centraliser interventions, devis, factures, depenses et rapports sur le chantier
+transitions_objet:
+  - objet_source: devis
+    etat_entree: Accepté
+    action: créer le chantier depuis le devis
+    objet_resultat: chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "une continuité logique entre le commercial, l'opérationnel et le suivi financier"}
 
-complexite:
-  preconditions:
-    - un client existe dans le CRM
-    - pour la creation depuis un devis, celui-ci doit etre au statut "Accepte"
-    - pour donner acces aux documents au terrain, cocher les roles dans Parametres > Chantiers
-  nb_etapes: 10
-  etats:
-    - Accepte
-    - Facture
-    - Termine
-    - archive
-  exceptions:
-    - impossible de modifier le client d'un chantier existant, il faut archiver et recreer
-    - les heures d'un profil "Sous-traitant" ne sont pas valorisees dans le debourse interne
-    - par defaut les profils terrain n'ont acces ni aux documents ni aux marges et prix d'achat
-    - logique d'intervention journaliere plafonnee a 24 h, une serie d'interventions est creee
-    - les techniciens doivent vider le cache mobile pour que de nouvelles autorisations s'appliquent
-  systemes_externes: []
+  - objet_source: intervention
+    etat_entree: null
+    action: lier à un chantier existant
+    objet_resultat: chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "il est possible de lier celle-ci à un chantier existant"}
 
-contexte:
-  dispositif: bureau
-  temporalite: avant
-  recovery: false
-  sortie_du_logiciel: []
+  - objet_source: chantier
+    etat_entree: null
+    action: planifier en sélectionnant chaque date au calendrier
+    objet_resultat: série d'interventions journalières
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "créera automatiquement une série d'interventions (une par jour) liées à ce chantier"}
 
-preuve:
-  statut: documented
-  citation: "les profils terrain (Technicien, Technicien + et Sous-traitant) n'ont pas accès"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Article le plus riche du corpus lu sur les roles : InterFast nomme dix roles distincts et
-    documente ce que chacun voit. Le schema le capte mal : roles_bruts devient une liste
-    fourre-tout ou "intervenant principal" (fonction sur un chantier) et "Technicien +"
-    (niveau de licence) sont melanges alors que ce sont deux natures differentes. Il manque
-    clairement une dimension "visibilite / permission par role", ici centrale et rangee
-    faute de mieux en exceptions.
+  - objet_source: facture de prestation du sous-traitant
+    etat_entree: null
+    action: enregistrer dans l'onglet Dépenses
+    objet_resultat: dépense du chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: ressaisie
+          preuve: {niveau: explicite, source: texte,
+                   citation: "vous devez enregistrer sa facture de prestation dans l'onglet Dépenses"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Pour intégrer le coût de votre sous-traitant à votre marge réelle"}
+
+  - objet_source: chantier associé au mauvais client
+    etat_entree: null
+    action: archiver puis créer un nouveau chantier
+    objet_resultat: nouveau chantier
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "archiver le chantier erroné et en créer un nouveau"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il est impossible de modifier le client associé à un chantier existant"}
+
+regles_operationnelles:
+  - description_brute: le client associé à un chantier ne peut pas être modifié après
+                       création
+    objet_concerne: chantier
+    condition: chantier existant
+    consequence: le client ne peut pas être changé, pour garantir la cohérence de l'historique
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il est impossible de modifier le client associé à un chantier existant"}
+    resolution_documentee:
+      action: archiver le chantier erroné et en créer un nouveau avec le bon client
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous devez archiver le chantier erroné (bouton \"Actions\" > \"Archiver\")"}
+
+  - description_brute: la section Opérations d'un devis n'est accessible que si le devis
+                       est au statut Accepté
+    objet_concerne: devis
+    condition: devis au statut Accepté
+    consequence: accès à Opérations pour créer ou lier chantiers, maintenances, interventions
+    preuve: {niveau: explicite, source: texte,
+             citation: "Sans cela, vous n'aurez pas accès à \"Opérations\""}
+    resolution_documentee: null
+
+  - description_brute: par défaut les profils terrain n'ont accès ni aux documents du
+                       chantier ni aux marges et tarifs d'achat
+    objet_concerne: documents du chantier
+    condition: aucune autorisation cochée dans Paramètres > Chantiers
+    consequence: les profils Technicien, Technicien + et Sous-traitant ne voient ni
+                 documents, ni marges, ni tarifs d'achat
+    preuve: {niveau: explicite, source: texte,
+             citation: "pour protéger vos données financières sensibles, les profils terrain"}
+    resolution_documentee:
+      action: cocher les rôles concernés dans la section Accès aux documents
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "cochez les rôles concernés que vous souhaitez autoriser"}
+
+  - description_brute: une modification des autorisations n'est prise en compte sur le
+                       mobile qu'après actualisation ou vidage du cache
+    objet_concerne: application mobile
+    condition: autorisations modifiées côté web
+    consequence: le terrain ne voit le changement qu'après rafraîchissement
+    preuve: {niveau: explicite, source: texte,
+             citation: "Demandez à vos techniciens d'actualiser leur application en glissant l'écran"}
+    resolution_documentee:
+      action: actualiser l'application ou vider le cache de l'application mobile
+      acteur: technicien
+      preuve: {niveau: explicite, source: texte,
+               citation: "ou en vidant le cache de l'application mobile"}
+
+  - description_brute: les heures déclarées par un profil Sous-traitant ne sont pas
+                       valorisées dans le déboursé de main-d'œuvre interne
+    objet_concerne: déboursé sec
+    condition: profil externe ayant le rôle Sous-traitant
+    consequence: ses heures ne sont pas valorisées financièrement
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne sont pas valorisées financièrement dans le déboursé de main-d'œuvre interne"}
+    resolution_documentee:
+      action: enregistrer la facture de prestation du sous-traitant dans l'onglet Dépenses
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous devez enregistrer sa facture de prestation dans l'onglet Dépenses"}
+
+  - description_brute: une intervention ne peut couvrir plus d'une journée
+    objet_concerne: intervention
+    condition: logique d'intervention journalière
+    consequence: une série d'interventions est créée, une par jour de chantier
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast fonctionne sur une logique d'intervention journalière (max 24h)"}
+    resolution_documentee: null
+
+  - description_brute: un Technicien + ne peut voir et facturer le devis d'origine sur
+                       son mobile que s'il est renseigné dans le champ « Établi par »
+    objet_concerne: devis
+    condition: technicien attribué dans le champ « Établi par » sur la fiche de synthèse
+    consequence: il peut voir et facturer le devis depuis son mobile
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez l'attribuer dans le champ « Établi par »"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la liste de matériel est liée au chantier sans les prix d'achat,
+                       de sorte que le terrain consulte le même document que le bureau
+                       mais amputé de son contenu financier
+    pourquoi_notable: un même document existe en deux versions selon le rôle qui le
+                      consulte ; le schéma sait dire qu'un accès est permis ou refusé,
+                      pas qu'un objet change de contenu selon son lecteur
+    termes_source: ["liste de matériel (sans les prix d'achat)", "charger le camion sans erreur"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "En liant votre liste de matériel (sans les prix d'achat) au chantier"}
+
+  - description_brute: les profils « Technicien + » peuvent encaisser le solde du
+                       chantier directement chez le client
+    pourquoi_notable: un acte d'encaissement, habituellement tenu par le bureau, est
+                      délégué à un rôle terrain et conditionné par un champ administratif
+                      renseigné depuis l'ordinateur ; aucun champ ne représente le
+                      déplacement d'une prérogative d'un rôle vers un autre
+    termes_source: ["Technicien +", "encaisser le solde du chantier chez le client"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Les profils \"Technicien +\" peuvent encaisser le solde du chantier chez le client"}

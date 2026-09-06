@@ -1,88 +1,123 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/devis/devis.md
-  rubrique_originale: Devis
-  titre: Devis
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - devis
-  roles_bruts:
-    - client
-  roles_canoniques:
-    - client
-    - inconnu
-  actions:
-    - creer
-    - encoder
-    - importer
-    - enregistrer
-    - envoyer
-    - accepter
-    - refuser
-    - dupliquer
-    - exporter
-  objets:
-    - devis
-    - ligne de devis
-    - poste libre
-    - ouvrage
-    - composant
-    - bibliotheque de prix
-    - marge
-    - remise
-    - chantier
-  job_to_be_done: chiffrer une offre et la faire accepter par le client pour ouvrir un chantier
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "pas encore été envoyé au client depuis Vertuoza"}
+    perimetre: client
+    relation: autre
+    canal: inconnu
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "le devis a été envoyé mais pas encore accepté par le client"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    L'article documente l'envoi du devis au client puis l'action du client (acceptation
-    ou refus) qui fait changer l'objet d'etat et le transforme en chantier.
-  niveau_infere: false
-  de: utilisateur Vertuoza (role non nomme dans l'article)
-  vers: client
-  objet: devis
+transitions_objet:
+  - objet_source: fichier Excel
+    etat_entree: null
+    action: importer
+    objet_resultat: devis
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "les informations générales et mentions légales doivent être saisies dans Vertuoza"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'import Excel concerne uniquement les lignes des postes du devis"}
 
-resultat:
-  objet_produit: devis
-  prochaine_etape: envoyer le devis au client, puis le transformer en chantier s'il est accepte
+  - objet_source: poste libre
+    etat_entree: null
+    action: enregistrer dans la bibliothèque
+    objet_resultat: ouvrage simple
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "pour pouvoir le réutiliser sur des prochains devis"}
 
-complexite:
-  preconditions:
-    - option "Import Excel" activee dans Parametres > Proprietes pour importer un devis
-    - champs disponibles dependants de Parametres > General > Preferences d'affichage
-  nb_etapes: 5
-  etats:
-    - Draft
-    - A envoyer
-    - Envoye
-    - Chantier en cours
-    - Refuse
-  exceptions:
-    - l'import Excel ne reprend que les lignes de postes, pas les informations generales
-    - types de lignes et tableau de marges restreints selon le pack (PRO / PRO+ / Expert)
-  systemes_externes:
-    - excel
+  - objet_source: devis
+    etat_entree: Envoyé
+    action: accepter
+    objet_resultat: chantier
+    etat_sortie: Chantier en cours
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le devis a été accepté par le client et transformé en chantier"}
 
-contexte:
-  dispositif: null
-  temporalite: avant
-  recovery: false
-  sortie_du_logiciel:
-    - excel
-    - email
+regles_operationnelles:
+  - description_brute: l'import d'un devis depuis Excel n'est proposé que si l'option
+                       a été activée dans les paramètres
+    objet_concerne: devis
+    condition: option Import Excel activée dans Paramètres > Propriétés > Devis et avenant
+    consequence: le bouton d'import depuis Excel est disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si l'option est activée dans les Paramètres"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "le devis a été accepté par le client et transformé en chantier"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-    - coordination.de
-  ambiguite: faible
-  note: >-
-    L'article ne nomme jamais le role de la personne qui cree le devis : seul le client
-    est nomme. Le dispositif (bureau / mobile) n'est jamais precise, d'ou null. La notion de
-    "pack" (PRO / PRO+ / Expert) conditionne l'acces a certaines fonctions ; faute de champ
-    dedie dans le schema, elle est rangee en exceptions. Le mot "Draft" est laisse tel quel (anglais dans une doc francaise).
+  - description_brute: le devis reste entièrement modifiable tant qu'il n'a pas été
+                       accepté ou refusé
+    objet_concerne: devis
+    condition: statut Draft, A envoyer ou Envoyé
+    consequence: le devis est encore complètement éditable
+    preuve: {niveau: explicite, source: texte,
+             citation: "Durant ces trois statuts, le devis est encore complètement éditable."}
+    resolution_documentee: null
+
+  - description_brute: un devis refusé disparaît de la liste par défaut mais reste
+                       présent dans l'application
+    objet_concerne: devis
+    condition: statut Refusé
+    consequence: le devis disparaît de la liste filtrée par défaut
+    preuve: {niveau: explicite, source: texte,
+             citation: "il disparait de la liste qui est filtré par défaut"}
+    resolution_documentee: null
+
+  - description_brute: le nombre de types de lignes disponibles dépend du pack souscrit
+    objet_concerne: ligne de devis
+    condition: pack PRO / PRO+ ou pack Expert
+    consequence: 5 types de lignes, ou 9 à partir du pack Expert
+    preuve: {niveau: explicite, source: texte,
+             citation: "de 5 types (pour les PRO et PRO+), ou de 9 types"}
+    resolution_documentee: null
+
+  - description_brute: le calcul de marge n'est cohérent que si un prix d'achat est
+                       renseigné dans tous les composants
+    objet_concerne: tableau de résumé des marges
+    condition: prix d'achat renseigné dans tous les composants
+    consequence: le résultat de marge est cohérent
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez indiquer un prix d'achat dans tous vos composants"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la quantité d'un poste peut être calculée à partir du détail
+                       des mesures relevées, et ce détail peut être affiché ou masqué
+                       sur le document remis au client
+    pourquoi_notable: le relevé métré est conservé à l'intérieur de la ligne de devis
+                      au lieu d'être réduit à un total, et son exposition au client
+                      est un choix ; ni les interactions, ni les transitions, ni les
+                      règles ne représentent cette conservation d'un raisonnement de
+                      chiffrage
+    termes_source: ["Quantité avancée", "template de devis"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "calculer plus précisément la quantité du poste en fonction des mesures"}

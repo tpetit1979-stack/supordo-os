@@ -1,77 +1,101 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/gestion-de-chantier/factures-d-acomptes.md
-  rubrique_originale: Gestion de chantier
-  titre: Factures d’acomptes
+parcours:
+  origine: inconnu
+  nature: installation
 
-metier:
-  moments:
-    - chantier
-    - facturation
-  roles_bruts: []
-  roles_canoniques:
-    - inconnu
-  actions:
-    - creer
-    - encoder
-    - soumettre
-    - comptabiliser
-    - valider
-    - crediter
-  objets:
-    - facture d'acompte
-    - note de credit
-    - avoir
-    - prorata
-    - remise globale
-    - retenue
-    - prime
-    - rentabilite
-    - chantier
-  job_to_be_done: encaisser une avance sur un chantier a venir sans perdre le suivi du restant a facturer
+interactions: []
 
-coordination:
-  niveau: 0
-  justification: >-
-    Aucun second role n'apparait dans l'article : la procedure est decrite du debut a la fin
-    a la deuxieme personne, sans destinataire ni intervenant nomme.
-  niveau_infere: false
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: chantier
+    etat_entree: null
+    action: créer une facture d'acompte
+    objet_resultat: facture d'acompte
+    etat_sortie: brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cliquez sur \"Confirmer\", un brouillon de facture est donc créée."}
 
-resultat:
-  objet_produit: facture d'acompte
-  prochaine_etape: comptabiliser la facture pour lui donner un numero
+  - objet_source: facture d'acompte
+    etat_entree: brouillon
+    action: soumettre
+    objet_resultat: facture d'acompte
+    etat_sortie: à comptabiliser
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "reprise dans le tableau des “Factures clients” sous le statut “à comptabiliser”"}
 
-complexite:
-  preconditions:
-    - un chantier existe
-  nb_etapes: 10
-  etats:
-    - brouillon
-    - a comptabiliser
-  exceptions:
-    - en cas d'erreur sur la facture, la corriger par une note de credit / avoir
-  systemes_externes: []
+  - objet_source: facture d'acompte
+    etat_entree: à comptabiliser
+    action: comptabiliser
+    objet_resultat: facture d'acompte numérotée
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "cliquez sur Comptabiliser\" pour donner un numéro"}
 
-contexte:
-  dispositif: null
-  temporalite: avant
-  recovery: true
-  sortie_du_logiciel: []
+  - objet_source: facture d'acompte
+    etat_entree: null
+    action: créditer la facture
+    objet_resultat: note de crédit / avoir
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "cliquez sur \"Créditer la Facture\" pour créer une note de crédit/avoir"}
 
-preuve:
-  statut: documented
-  citation: "En cas d'erreur sur la facture, cliquez sur \"Créditer la Facture\""
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-    - contexte.recovery
-  ambiguite: faible
-  note: >-
-    recovery est ici une reponse partielle : la correction d'erreur n'est qu'une etape sur
-    dix, pas le sujet de l'article. Le schema ne permet pas de distinguer "article consacre
-    au rattrapage d'erreur" de "article qui mentionne au passage un moyen de correction" —
-    c'est un booleen la ou il faudrait une gradation. Aucun role n'est nomme dans tout le texte.
-    La temporalite "avant" s'appuie sur "une avance que vous demandez pour un chantier à venir".
+regles_operationnelles:
+  - description_brute: une erreur sur une facture se corrige en créditant la facture,
+                       ce qui crée une note de crédit ou un avoir
+    objet_concerne: facture d'acompte
+    condition: erreur constatée sur la facture
+    consequence: la correction passe par une note de crédit / avoir
+    preuve: {niveau: explicite, source: texte,
+             citation: "En cas d'erreur sur la facture, cliquez sur “…” et ensuite sur \"Créditer la Facture\""}
+    resolution_documentee:
+      action: créer une note de crédit / avoir depuis la facture
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "pour créer une note de crédit/avoir"}
+
+  - description_brute: une facture ne reçoit un numéro qu'au moment où elle est
+                       comptabilisée
+    objet_concerne: facture d'acompte
+    condition: action Comptabiliser déclenchée
+    consequence: un numéro est attribué à la facture
+    preuve: {niveau: explicite, source: texte,
+             citation: "sur Comptabiliser\" pour donner un numéro"}
+    resolution_documentee: null
+
+  - description_brute: le paiement se valide manuellement sur la facture lorsqu'il a
+                       été effectué
+    objet_concerne: facture d'acompte
+    condition: le paiement a été fait
+    consequence: le paiement peut être validé sur la facture
+    preuve: {niveau: explicite, source: texte,
+             citation: "sur \"Valider le Paiement\" si le paiement a été fait"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: l'objectif affiché est de faire peser l'acompte sur la rentabilité
+                       du chantier tout en tenant à jour un « restant à facturer »
+    pourquoi_notable: un indicateur dérivé est maintenu en permanence à travers plusieurs
+                      objets (chantier, factures successives) sans qu'aucun de ces objets
+                      ne le porte ; ni les transitions ni les règles ne représentent un
+                      état agrégé qui vit en dehors des documents
+    termes_source: ["rentabilité du chantier", "restant à facturer"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "impacter la rentabilité du chantier tout en restant à jour sur le restant à facturer"}

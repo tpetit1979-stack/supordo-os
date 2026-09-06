@@ -1,70 +1,81 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/paiements/supprimer-un-reglement-lie-a-un-document.md
-  rubrique_originale: Paiements
-  titre: Supprimer un règlement lié à un document
+parcours:
+  origine: inconnu
+  nature: administratif
 
-metier:
-  moments:
-    - encaissement
-    - correction d'erreur
-    - rapprochement bancaire
-  roles_bruts: []
-  roles_canoniques:
-    - inconnu
-  actions:
-    - supprimer
-    - delier
-    - consulter
-    - decomptabiliser
-  objets:
-    - reglement
-    - paiement
-    - remise en banque
-    - facture
-    - document
-    - TVA sur les encaissements
-  job_to_be_done: defaire un reglement mal saisi ou mal affecte
+interactions: []
 
-coordination:
-  niveau: 0
-  justification: Aucun role, aucun destinataire, aucune transmission n'apparait dans l'article.
-  niveau_infere: false
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: remise en banque
+    etat_entree: null
+    action: supprimer la remise en banque
+    objet_resultat: règlement déliable ou supprimable
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cliquez sur les trois points à droite de votre ligne puis sur \"supprimer\""}
 
-resultat:
-  objet_produit: null
-  prochaine_etape: relier le reglement a un autre document s'il a ete delie et non supprime
+  - objet_source: règlement lié à un document
+    etat_entree: lié
+    action: délier le règlement
+    objet_resultat: règlement non lié
+    etat_sortie: conservé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Votre règlement sera donc conservé pour être relié à nouveau si besoin."}
 
-complexite:
-  preconditions:
-    - si le reglement est remis en banque, supprimer d'abord la remise en banque
-  nb_etapes: 2
-  etats: []
-  exceptions:
-    - si l'option "supprimer" n'est pas proposee, c'est que le reglement a ete remis en banque
-    - une facture creee avec la TVA sur les encaissements doit etre decomptabilisee au prealable
-    - delier conserve le reglement, supprimer l'efface definitivement
-  systemes_externes:
-    - banque
+  - objet_source: règlement lié à un document
+    etat_entree: lié
+    action: supprimer le règlement
+    objet_resultat: null
+    etat_sortie: supprimé définitivement
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le règlement sera supprimé définitivement et donc de ce fait délié"}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel: []
+regles_operationnelles:
+  - description_brute: un règlement remis en banque ne peut pas être supprimé directement
+    objet_concerne: règlement
+    condition: règlement remis en banque
+    consequence: l'option « supprimer » n'est pas proposée
+    preuve: {niveau: explicite, source: texte,
+             citation: "cela signifie que le règlement a été remis en banque"}
+    resolution_documentee:
+      action: supprimer d'abord la remise en banque depuis Banque > Liste des règlements
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "veuillez suivre l'étape 1 de cet article en amont"}
 
-preuve:
-  statut: documented
-  citation: "le règlement sera supprimé définitivement et donc de ce fait délié du document"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Article de correction d'erreur pur, en niveau 0 de coordination : c'est un travail
-    solitaire de rattrapage. Utile pour le pilote car il montre que recovery: true et
-    coordination: 0 coexistent tres bien, alors que l'hypothese de depart associait plutot
-    l'erreur a un probleme de relais entre personnes.
+  - description_brute: une facture créée avec la TVA sur les encaissements empêche de
+                       délier ou supprimer le règlement
+    objet_concerne: facture
+    condition: facture créée avec la TVA sur les encaissements
+    consequence: le règlement ne peut être ni délié ni supprimé
+    preuve: {niveau: explicite, source: texte,
+             citation: "La facture a probablement été créée avec une TVA sur les encaissements."}
+    resolution_documentee:
+      action: décomptabiliser la facture
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "il sera nécessaire de la décomptabiliser afin de pouvoir délier"}
+
+  - description_brute: délier conserve le règlement, supprimer l'efface définitivement
+    objet_concerne: règlement
+    condition: choix entre les deux options proposées
+    consequence: le règlement est soit conservé et relié plus tard, soit détruit
+    preuve: {niveau: explicite, source: texte,
+             citation: "cela supprimera la liaison \"règlements\" / \"document\""}
+    resolution_documentee: null
+
+signaux_emergents: []

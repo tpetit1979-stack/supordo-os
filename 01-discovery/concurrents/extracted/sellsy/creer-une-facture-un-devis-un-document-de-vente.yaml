@@ -1,91 +1,126 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/creer-une-facture-un-devis-un-document-de-vente.md
-  rubrique_originale: "Documents de vente "
-  titre: Créer une facture, un devis, un document de vente
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - devis
-    - facturation
-    - parametrage
-  roles_bruts:
-    - commercial
-    - contact interne
-    - referent
-    - client
-  roles_canoniques:
-    - bureau
-    - client
-  actions:
-    - parametrer
-    - creer
-    - saisir
-    - dupliquer
-    - convertir
-    - enregistrer
-    - envoyer
-  objets:
-    - devis
-    - facture
-    - document de vente
-    - ligne
-    - catalogue
-    - produit
-    - modele de document
-    - apparence de document
-    - categorie tarifaire
-    - societe
-    - cycle de vente
-  job_to_be_done: editer rapidement un document de vente conforme a partir de donnees deja parametrees
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Votre adresse ainsi que celle de votre client ont été définies."}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous pouvez l'enregistrer (en brouillon) ou l'envoyer directement par email"}
 
-coordination:
-  niveau: 2
-  justification: >-
-    Un referent interne en charge du devis peut etre designe et le document est destine au
-    client, mais aucune transmission entre roles n'est decrite comme un mecanisme : l'article
-    s'arrete a "l'enregistrer (en brouillon) ou l'envoyer directement par email".
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: société et catalogue
+    etat_entree: null
+    action: créer un devis
+    objet_resultat: devis
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Votre adresse ainsi que celle de votre client ont été définies."}
 
-resultat:
-  objet_produit: document de vente (devis pris en exemple)
-  prochaine_etape: enregistrer en brouillon ou envoyer directement par email
+  - objet_source: devis
+    etat_entree: null
+    action: convertir en facture
+    objet_resultat: facture
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "afin que deux documents de vente soient liés entre eux"}
 
-complexite:
-  preconditions:
-    - informations de la societe a jour dans les reglages du compte
-    - catalogue de produits et services deja parametre
-  nb_etapes: 3
-  etats:
-    - brouillon
-  exceptions:
-    - un document duplique n'est pas rattache au cycle de vente du document d'origine
-    - lier deux documents apres leur creation est impossible, il faut utiliser "Convertir"
-    - certaines colonnes sont masquables mais leur ordre est fige
-  systemes_externes: []
+  - objet_source: document de vente existant
+    etat_entree: null
+    action: copier ce document
+    objet_resultat: copie du document
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "la copie ne sera pas rattachée au cycle de vente du document d'origine"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "la possibilité de dupliquer un document déjà existant"}
 
-contexte:
-  dispositif: null
-  temporalite: avant
-  recovery: false
-  sortie_du_logiciel:
-    - email
+regles_operationnelles:
+  - description_brute: le paramétrage du compte en amont conditionne la conformité des
+                       documents édités
+    objet_concerne: informations de la société
+    condition: informations de l'entreprise à jour avant l'édition
+    consequence: les documents édités sont conformes
+    preuve: {niveau: explicite, source: texte,
+             citation: "le paramétrage de votre compte en amont (...) est indispensable"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "définir le contact interne à votre société ou le référent en charge du devis"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    "commercial" n'apparait qu'entre parentheses dans un exemple ("par exemple : vous, en
-    tant que commercial") : c'est une illustration, pas une attribution de role. Je l'ai
-    conserve en roles_bruts mais c'est un cas limite qui montre que roles_bruts capte aussi
-    bien un role documente qu'une simple tournure d'exemple. Aucun article consacre au
-    chantier n'existe dans le corpus Sellsy analyse ici : le vocabulaire est celui d'un ERP
-    generaliste (societe, cycle de vente, catalogue).
+  - description_brute: deux documents de vente ne peuvent pas être liés après leur
+                       création
+    objet_concerne: document de vente
+    condition: documents créés séparément
+    consequence: aucun lien ne peut être établi a posteriori
+    preuve: {niveau: explicite, source: texte,
+             citation: "il n'est pas possible de lier deux documents de vente après leur création"}
+    resolution_documentee:
+      action: utiliser l'option « Convertir » depuis la page du document parent
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "veuillez utiliser l'option \"Convertir\" depuis la page du document parent"}
+
+  - description_brute: une copie de document n'est pas rattachée au cycle de vente du
+                       document d'origine
+    objet_concerne: copie de document
+    condition: duplication d'un document existant
+    consequence: la copie perd le rattachement au cycle de vente d'origine
+    preuve: {niveau: explicite, source: texte,
+             citation: "en cas de duplication, la copie ne sera pas rattachée au cycle de vente"}
+    resolution_documentee: null
+
+  - description_brute: les colonnes d'un document peuvent être masquées mais leur ordre
+                       est figé
+    objet_concerne: document de vente
+    condition: personnalisation de l'affichage des colonnes
+    consequence: le masquage est possible, la réorganisation ne l'est pas
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'ordre des colonnes dans un document est figé"}
+    resolution_documentee: null
+
+  - description_brute: les paramètres d'un document héritent des préférences générales
+                       ou de celles du client
+    objet_concerne: préférences du document
+    condition: aucune modification au niveau du document
+    consequence: les paramètres généraux ou ceux du client s'appliquent
+    preuve: {niveau: explicite, source: texte,
+             citation: "ces paramètres sont réglés d'après vos préférences générales"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: le document porte un « contact interne » ou « référent en charge »,
+                       rôle désigné sur le document lui-même
+    pourquoi_notable: comme le champ « responsable » d'un avenant Vertuoza, un rôle est
+                      attaché à l'objet sans être acteur ni destinataire d'une interaction
+                      documentée ; le schéma n'a pas d'emplacement pour un rôle porté par
+                      le document
+    termes_source: ["contact interne", "référent en charge du devis"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "définir le contact interne à votre société ou le référent en charge"}

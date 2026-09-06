@@ -1,100 +1,226 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/application-mobile/remplir-ses-feuilles-de-temps-app-mobile.md
-  rubrique_originale: Application Mobile
-  titre: Remplir ses Feuilles de temps (App Mobile)
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - suivi des heures
-    - pointage
-    - validation
-    - paie
-  roles_bruts:
-    - Employeur
-    - administrateur
-    - technicien
-    - stagiaire
-    - alternant
-    - sous-traitant
-    - Support
-  roles_canoniques:
-    - terrain
-    - patron
-    - bureau
-    - externe
-  actions:
-    - saisir
-    - declarer
-    - enregistrer
-    - valider
-    - soumettre
-    - refuser
-    - corriger
-    - consulter
-  objets:
-    - feuille de temps
-    - plage horaire
-    - heure supplementaire
-    - astreinte
-    - intervention
-    - zone
-    - prime panier repas
-    - propriete personnalisee
-    - historique
-  job_to_be_done: declarer ses heures pour justifier sa remuneration et alimenter la rentabilite de l'entreprise
+interactions:
+  - acteur:
+      role_brut: salarié (technicien, stagiaire, alternant)
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "réservée aux salariés de l'entreprise (ex: Techniciens, Stagiaires, Alternants)"}
+    destinataire:
+      role_brut: Employeur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "transmise à votre Employeur pour validation depuis son application web"}
+    perimetre: interne
+    relation: hierarchique
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "La feuille de temps est alors transmise à votre Employeur pour validation"}
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Il doit refuser votre feuille de temps (...) depuis son interface Web"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "la liste de vos journées avec leur statut de validation (vert, jaune ou rouge)"}
 
-coordination:
-  niveau: 5
-  justification: >-
-    Circuit de validation complet et bidirectionnel, explicitement nomme : le salarie valide
-    et "La feuille de temps est alors transmise à votre Employeur pour validation depuis son
-    application web", avec trois statuts de retour (En attente, Validee, Refusee) et une
-    boucle de correction — un refus "repasse parmi les déclarations à saisir / modifiables".
-  niveau_infere: false
-  de: technicien (salarie)
-  vers: Employeur
-  objet: feuille de temps validee
+  - acteur:
+      role_brut: Employeur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "votre Employeur devra solliciter l'aide du Support"}
+    destinataire:
+      role_brut: Support
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "solliciter l'aide du Support dans le tchat en ligne"}
+    perimetre: editeur
+    relation: autre
+    canal: interface
+    dans_logiciel: partiel
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "votre Employeur devra solliciter l'aide du Support dans le tchat"}
 
-resultat:
-  objet_produit: feuille de temps validee
-  prochaine_etape: approbation par l'Employeur depuis son application web
+  - acteur:
+      role_brut: administrateur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "votre administrateur doit d'abord configurer des Propriétés personnalisées"}
+    destinataire:
+      role_brut: salarié
+      role_canonique: terrain
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Ces informations se trouvent en bas de votre feuille de temps"}
+    perimetre: interne
+    relation: hierarchique
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Si ces champs n'apparaissent pas, votre administrateur doit d'abord configurer"}
 
-complexite:
-  preconditions:
-    - plages horaires pre-parametrees par l'Employeur depuis l'application web
-    - proprietes personnalisees configurees par l'administrateur pour la zone et le panier repas
-  nb_etapes: 6
-  etats:
-    - brouillon
-    - En attente
-    - Validee
-    - Refusee
-  exceptions:
-    - une feuille validee n'est plus modifiable, seul l'Employeur peut la refuser pour la rouvrir
-    - une intervention realisee apres l'enregistrement en brouillon n'apparait pas, il faut "Reinitialiser"
-    - deux feuilles de temps pour la meme date sont impossibles
-    - si la feuille est deja validee, l'Employeur doit solliciter le Support pour la rouvrir
-    - la fonctionnalite est reservee aux salaries, un sous-traitant n'y a pas acces
-  systemes_externes: []
+transitions_objet:
+  - objet_source: interventions terminées
+    etat_entree: terminée
+    action: report automatique sur la feuille de temps du jour
+    objet_resultat: feuille de temps
+    etat_sortie: à saisir
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: salarié
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Le remplissage de votre feuille de temps quotidienne"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "apparaissent sous les plages horaires correspondantes"}
 
-contexte:
-  dispositif: mobile
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel: []
+  - objet_source: intervention réalisée après enregistrement de la feuille en brouillon
+    etat_entree: brouillon
+    action: rafraîchir la feuille via « Réinitialiser »
+    objet_resultat: feuille de temps à jour
+    etat_sortie: null
+    owner_avant:
+      role: salarié
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Si vous enregistrez votre feuille de temps en brouillon"}
+    owner_apres:
+      role: salarié
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Dans votre feuille de temps, cliquez sur les trois petits points"}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "puis réalisez une nouvelle intervention, celle-ci n'apparaîtra pas"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "cliquez sur \"Réinitialiser\" pour rafraîchir la feuille avec les dernières données"}
 
-preuve:
-  statut: documented
-  citation: "La feuille de temps est alors transmise à votre Employeur pour validation"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Le seul article du lot A qui documente un retour explicite vers l'emetteur ET une rupture
-    du circuit (astreinte du soir sur une journee deja validee : il faut passer par
-    l'Employeur, voire par le Support de l'editeur). Le schema A n'a aucun champ pour ce
-    dernier point, qui est pourtant le plus revelateur : le workflow deborde du logiciel et
-    remonte jusqu'a l'editeur. Consigne ici et en exceptions faute de mieux.
-    "Employeur" avec majuscule est un vocabulaire propre a InterFast, conserve tel quel.
+  - objet_source: feuille de temps
+    etat_entree: brouillon
+    action: valider la feuille de temps
+    objet_resultat: feuille de temps
+    etat_sortie: En attente
+    owner_avant:
+      role: salarié
+      preuve: {niveau: explicite, source: texte,
+               citation: "appuyez sur \"Valider la feuille de temps\""}
+    owner_apres:
+      role: Employeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "en attente de validation par votre Employeur"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "votre feuille de temps est \"soumise\" et en attente de validation"}
+
+  - objet_source: feuille de temps
+    etat_entree: En attente
+    action: refus par l'Employeur
+    objet_resultat: feuille de temps
+    etat_sortie: Refusée
+    owner_avant:
+      role: Employeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "l'Employeur a refusé la feuille de temps"}
+    owner_apres:
+      role: salarié
+      preuve: {niveau: explicite, source: texte,
+               citation: "Elle repasse parmi les déclarations à saisir / modifiables"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devrez la corriger pour la valider à nouveau"}
+
+regles_operationnelles:
+  - description_brute: une feuille de temps validée n'est plus modifiable sur
+                       l'application mobile
+    objet_concerne: feuille de temps
+    condition: la feuille est validée par le salarié
+    consequence: elle est verrouillée et transmise pour approbation
+    preuve: {niveau: explicite, source: texte,
+             citation: "une feuille de temps validée n'est plus modifiable"}
+    resolution_documentee:
+      action: demander à l'employeur de refuser la feuille pour récupérer la main
+      acteur: Employeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il doit refuser votre feuille de temps (...) depuis son interface Web"}
+
+  - description_brute: si la feuille de temps est déjà validée, la réouverture passe par
+                       le Support de l'éditeur
+    objet_concerne: feuille de temps
+    condition: feuille de temps déjà validée
+    consequence: l'Employeur ne peut pas la rouvrir seul
+    preuve: {niveau: explicite, source: texte,
+             citation: "votre Employeur devra solliciter l'aide du Support dans le tchat"}
+    resolution_documentee:
+      action: solliciter le Support InterFast dans le tchat en ligne
+      acteur: Employeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "solliciter l'aide du Support dans le tchat en ligne"}
+
+  - description_brute: il ne peut exister deux feuilles de temps pour une même date
+    objet_concerne: feuille de temps
+    condition: une feuille existe déjà pour la date concernée
+    consequence: aucune seconde feuille ne peut être créée
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il n'est pas possible d'avoir deux feuilles de temps pour la même date."}
+    resolution_documentee: null
+
+  - description_brute: une astreinte effectuée le soir d'un jour déjà déclaré ne doit pas
+                       passer par le bouton « Déclarer une astreinte »
+    objet_concerne: astreinte
+    condition: astreinte sur un jour déjà déclaré
+    consequence: le bouton « Déclarer une astreinte » ne doit pas être utilisé
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous ne devez pas utiliser le bouton \"Déclarer une astreinte\""}
+    resolution_documentee:
+      action: faire refuser la feuille initiale puis ajouter une plage horaire
+      acteur: Employeur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous devrez demander à votre Employeur de refuser votre feuille de temps initiale"}
+
+  - description_brute: la fonctionnalité Feuilles de temps est réservée aux salariés de
+                       l'entreprise
+    objet_concerne: feuille de temps
+    condition: profil sous-traitant
+    consequence: l'accès à la fonctionnalité n'est pas ouvert
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous ne pouvez donc pas accéder à cette fonctionnalité."}
+    resolution_documentee:
+      action: déclarer l'heure de début et de fin dans le rapport d'intervention
+      acteur: sous-traitant
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous pouvez déclarer l'heure de début et de fin de votre intervention"}
+
+  - description_brute: les champs Zone et Prime Panier Repas n'apparaissent que si des
+                       propriétés personnalisées ont été configurées
+    objet_concerne: feuille de temps
+    condition: propriétés personnalisées configurées sur l'application Web
+    consequence: les champs complémentaires deviennent saisissables
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si votre administrateur les a activés, vous pouvez renseigner"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: pour enregistrer une astreinte survenue le soir d'une journée déjà
+                       validée, la correction doit remonter du salarié à l'Employeur, puis
+                       de l'Employeur au Support de l'éditeur
+    pourquoi_notable: un événement de travail ordinaire déclenche une escalade à trois
+                      niveaux dont le dernier sort de l'entreprise ; le schéma enregistre
+                      chaque maillon séparément mais ne représente pas qu'ils forment une
+                      seule chaîne de résolution pour un même fait
+    termes_source: ["Déclarer une astreinte", "solliciter l'aide du Support"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si la feuille de temps est déjà validée, votre Employeur devra solliciter"}

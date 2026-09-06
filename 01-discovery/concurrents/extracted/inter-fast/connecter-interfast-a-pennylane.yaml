@@ -1,116 +1,237 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/mon-entreprise/connecter-interfast-a-pennylane.md
-  rubrique_originale: Mon Entreprise
-  titre: Connecter InterFast à Pennylane
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - parametrage
-    - integration comptable
-    - conformite reglementaire
-    - facturation
-  roles_bruts:
-    - Dirigeant
-    - Administrateur
-    - Gestionnaire
-    - Collaborateur
-    - comptable
-    - expert-comptable
-    - support
-    - representant legal
-    - equipe Care
-  roles_canoniques:
-    - patron
-    - comptabilite
-    - externe
-    - bureau
-  actions:
-    - connecter
-    - autoriser
-    - designer
-    - exporter
-    - importer
-    - filtrer
-    - fusionner
-    - relancer
-    - verifier
-  objets:
-    - facture de vente
-    - facture d'achat
-    - avoir fournisseur
-    - depense
-    - Factur-X
-    - Plateforme Agreee
-    - identifiant Pennylane
-    - SIREN
-    - SIRET
-    - journal des ventes
-    - filtre
-  job_to_be_done: automatiser le transfert des factures vers la comptabilite et se mettre en conformite avec la facturation electronique
+interactions:
+  - acteur:
+      role_brut: Dirigeant / Administrateur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous devez posséder un profil Dirigeant sur Pennylane pour autoriser l'accès"}
+    destinataire:
+      role_brut: Pennylane
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "connecter votre compte Pennylane via l'accès sécurisé OAuth"}
+    perimetre: partenaire
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "seul un responsable peut autoriser le partage des données comptables"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "il est envoyé automatiquement vers Pennylane, sans action de votre part"}
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous pouvez (re)lancer l'envoi à tout moment via le bouton « Exporter vers Pennylane »"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Transmission explicite et automatique vers un systeme et un role externes, avec action du
-    destinataire documentee : "la facture part quand même dans Pennylane et votre comptable
-    pourra la rattacher manuellement". Le flux est bidirectionnel pour les achats.
-  niveau_infere: false
-  de: InterFast (entreprise)
-  vers: Pennylane / comptable
-  objet: facture de vente au format Factur-X
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: comptable / expert-comptable
+      role_canonique: comptabilite
+      preuve: {niveau: explicite, source: texte,
+               citation: "votre comptable pourra la rattacher manuellement"}
+    perimetre: partenaire
+    relation: autre
+    canal: interface
+    dans_logiciel: non
+    mecanismes:
+      - forme: edition_partagee
+        preuve: {niveau: explicite, source: texte,
+                 citation: "la facture part quand même dans Pennylane et votre comptable pourra la rattacher"}
 
-resultat:
-  objet_produit: facture exportee vers Pennylane
-  prochaine_etape: rattachement au bon client Pennylane, manuellement par le comptable si necessaire
+transitions_objet:
+  - objet_source: facture de vente ou avoir
+    etat_entree: envoyé
+    action: export automatique au format Factur-X
+    objet_resultat: document dans Pennylane
+    etat_sortie: Exporté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: comptable
+      preuve: {niveau: contextuel, source: texte,
+               citation: "votre comptable pourra la rattacher manuellement"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Dès qu'une facture ou un avoir passe au statut \"envoyé\" dans InterFast"}
 
-complexite:
-  preconditions:
-    - entreprise basee en France
-    - profil Dirigeant ou Administrateur sur Pennylane
-    - options Factur-X et Pennylane activees par le support InterFast
-    - connexion via OAuth depuis Parametres > Integrations
-  nb_etapes: 7
-  etats:
-    - envoye
-    - Non exporte
-    - Exporte
-    - PA en cours d'activation
-  exceptions:
-    - la recherche du client par nom est sensible a la casse, elle peut creer des doublons
-    - la synchronisation des achats ne peut pas etre desactivee separement des ventes
-    - l'information de paiement ne redescend pas encore, la synchronisation bidirectionnelle est en developpement
-    - les devis et avenants ne sont pas transmis a Pennylane
-    - une adresse email saisie a tort n'est plus corrigeable, InterFast ne peut pas intervenir
-    - un profil "Gestionnaire" ne suffit pas a autoriser la liaison
-  systemes_externes:
-    - Pennylane
-    - Factur-X
-    - Portail Public de l'Etat
-    - annuaire officiel des entreprises
+  - objet_source: facture d'achat ou avoir fournisseur dans Pennylane
+    etat_entree: null
+    action: import automatique dans InterFast
+    objet_resultat: dépense
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le fichier PDF, le montant total, la date de facture, l'échéance et le fournisseur"}
 
-contexte:
-  dispositif: bureau
-  temporalite: indifferent
-  recovery: true
-  sortie_du_logiciel:
-    - email
-    - pdf
-    - excel
+  - objet_source: facture marquée « Payée » dans InterFast
+    etat_entree: Payée
+    action: aucune synchronisation documentée vers Pennylane
+    objet_resultat: facture correspondante dans Pennylane
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "cette information ne redescend pas encore automatiquement dans Pennylane"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "La synchronisation bidirectionnelle des encaissements est en cours de développement"}
 
-preuve:
-  statut: documented
-  citation: "votre comptable pourra la rattacher manuellement"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.dispositif
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Article ou le role "comptable / expert-comptable" est enfin explicitement nomme comme
-    destinataire agissant — c'est rare dans le corpus lu. Difficulte : les roles cites sont
-    pour moitie des roles Pennylane (Dirigeant, Gestionnaire, Collaborateur) et non des roles
-    de l'entreprise BTP. roles_bruts les melange sans pouvoir dire a quel systeme ils
-    appartiennent. Le champ recovery est mis a true pour les procedures de doublons et de
-    reexport, mais il s'agit de rattraper une erreur du systeme autant qu'une erreur humaine :
-    la definition du champ ne tranche pas.
+  - objet_source: fiche client dupliquée dans Pennylane
+    etat_entree: null
+    action: fusionner les fiches puis vérifier l'Identifiant Pennylane dans InterFast
+    objet_resultat: client unique correctement rattaché
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "un doublon peut donc être créé dans Pennylane"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "dans Pennylane, utilisez « Fusionner » sur les fiches concernées"}
+
+regles_operationnelles:
+  - description_brute: la connexion suppose une entreprise basée en France
+    objet_concerne: intégration Pennylane
+    condition: entreprise basée en France
+    consequence: la connexion est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Votre entreprise doit être basée en France."}
+    resolution_documentee: null
+
+  - description_brute: seul un profil Dirigeant ou Administrateur sur Pennylane peut
+                       autoriser l'intégration
+    objet_concerne: connexion OAuth
+    condition: profil Dirigeant ou Administrateur sur Pennylane
+    consequence: l'autorisation d'accès peut être accordée
+    preuve: {niveau: explicite, source: texte,
+             citation: "les profils \"Gestionnaire\" ou \"Collaborateur\" ne suffisent pas"}
+    resolution_documentee:
+      action: demander à un administrateur de réaliser la première connexion
+      acteur: administrateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "demandez à un administrateur de réaliser la première connexion"}
+
+  - description_brute: les options Factur-X et Pennylane doivent être activées sur le
+                       compte par l'éditeur
+    objet_concerne: compte InterFast
+    condition: options activées par le support
+    consequence: l'intégration devient disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'activation nécessite un message au support via le tchat en ligne"}
+    resolution_documentee:
+      action: demander l'activation au support InterFast via le tchat
+      acteur: support
+      preuve: {niveau: explicite, source: texte,
+               citation: "demandez l'activation au support"}
+
+  - description_brute: le rattachement du client se fait par SIREN/SIRET ou à défaut par
+                       nom, la recherche par nom étant sensible à la casse
+    objet_concerne: fiche client
+    condition: rattachement par nom
+    consequence: « ACME » et « Acme » sont vus comme deux clients différents
+    preuve: {niveau: explicite, source: texte,
+             citation: "La recherche par nom est sensible à la casse et à l'orthographe"}
+    resolution_documentee:
+      action: fusionner les fiches dans Pennylane puis corriger la propriété
+              « Identifiant Pennylane » dans InterFast
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vérifiez la propriété « Identifiant Pennylane » pour qu'elle pointe"}
+
+  - description_brute: l'émission d'une facture n'est jamais bloquée par un échec d'export
+    objet_concerne: facture de vente
+    condition: client non rattachable automatiquement ou échec technique
+    consequence: la facture est émise et part quand même dans Pennylane
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'émission d'une facture n'est jamais bloquée par l'export"}
+    resolution_documentee:
+      action: laisser le comptable rattacher manuellement, ou relancer l'export depuis
+              la fiche du document
+      acteur: comptable
+      preuve: {niveau: explicite, source: texte,
+               citation: "votre comptable pourra la rattacher manuellement"}
+
+  - description_brute: la synchronisation des achats ne peut pas être désactivée
+                       séparément de celle des ventes
+    objet_concerne: synchronisation Pennylane
+    condition: intégration active
+    consequence: toute facture d'achat chargée dans Pennylane redescend dans InterFast
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne peut pas être désactivée séparément de vos factures de vente"}
+    resolution_documentee:
+      action: n'importer dans Pennylane que les documents non déjà saisis dans InterFast,
+              et repérer les doublons avec le filtre « Importée depuis Pennylane »
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "n'importez dans Pennylane que les factures d'achat et avoirs fournisseurs"}
+
+  - description_brute: les devis et les avenants ne sont pas transmis à Pennylane
+    objet_concerne: devis et avenant
+    condition: intégration active
+    consequence: seuls factures et avoirs sont exportés
+    preuve: {niveau: explicite, source: texte,
+             citation: "(Les devis et avenants ne sont pas transmis à Pennylane.)"}
+    resolution_documentee: null
+
+  - description_brute: InterFast reprend exactement les informations reconnues par
+                       Pennylane, erreurs comprises
+    objet_concerne: dépense importée
+    condition: donnée absente ou erronée dans Pennylane
+    consequence: la donnée est absente ou erronée à l'identique dans InterFast
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si une donnée est absente ou erronée dans Pennylane, elle le sera également"}
+    resolution_documentee: null
+
+  - description_brute: aucune synchronisation bidirectionnelle n'existe après l'import
+                       initial d'une dépense
+    objet_concerne: dépense importée
+    condition: modification faite dans Pennylane après l'import
+    consequence: la modification devra être reportée manuellement dans InterFast
+    preuve: {niveau: explicite, source: texte,
+             citation: "devra être reportée manuellement dans InterFast"}
+    resolution_documentee: null
+
+  - description_brute: l'adresse e-mail saisie lors de la création du compte Pennylane
+                       n'est plus modifiable une fois la connexion lancée
+    objet_concerne: compte Pennylane
+    condition: connexion lancée avec une adresse e-mail erronée
+    consequence: InterFast ne peut ni renvoyer ni corriger l'e-mail
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast n'a aucun moyen d'intervenir (ni renvoyer l'e-mail, ni le corriger)"}
+    resolution_documentee:
+      action: contacter directement le support Pennylane
+      acteur: support Pennylane
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous devrez contacter directement le support Pennylane"}
+
+signaux_emergents:
+  - description_brute: la documentation enseigne des routines de contrôle à tenir par
+                       l'utilisateur — filtrer les factures « Non exportée » après une
+                       journée d'émission, avant une clôture comptable, ou quand le
+                       comptable signale une facture manquante
+    pourquoi_notable: l'intégrité du flux entre les deux systèmes repose sur une vigilance
+                      humaine périodique plutôt que sur une garantie du produit ; le
+                      schéma sait dire qu'une transmission est automatique, pas qu'elle
+                      doit être surveillée
+    termes_source: ["Non exportée", "Avant une clôture comptable", "signalée absente par votre comptable"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Contrôler un lot après une journée d'émission : filtrez sur Non exportée."}

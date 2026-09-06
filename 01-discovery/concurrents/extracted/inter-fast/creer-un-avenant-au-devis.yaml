@@ -1,85 +1,114 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-un-avenant-au-devis.md
-  rubrique_originale: Finances
-  titre: Créer un Avenant au devis
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - avenant
-    - chantier
-    - facturation
-  roles_bruts:
-    - client
-  roles_canoniques:
-    - client
-    - inconnu
-  actions:
-    - creer
-    - saisir
-    - transmettre
-    - signer
-    - valider
-    - facturer
-  objets:
-    - avenant
-    - devis
-    - plus-value
-    - moins-value
-    - article
-    - ouvrage
-    - facture de solde
-    - acompte
-    - avoir
-  job_to_be_done: integrer des travaux supplementaires ou annules sans toucher au devis contractuel
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous transmettez l'avenant au client"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous transmettez l'avenant au client (par email ou pour signature électronique)"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Cycle de vie a trois etats explicitement decrit comme un circuit de validation client :
-    "Envoyé : Vous transmettez l'avenant au client (par email ou pour signature électronique).
-    Accepté : Le client valide les modifications." L'acceptation du client conditionne le
-    calcul de la facturation finale.
-  niveau_infere: false
-  de: utilisateur InterFast (role non nomme)
-  vers: client
-  objet: avenant
+transitions_objet:
+  - objet_source: devis d'origine
+    etat_entree: Accepté
+    action: créer un avenant
+    objet_resultat: avenant
+    etat_sortie: Brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "un nouveau document, lié financièrement et commercialement au devis premier"}
 
-resultat:
-  objet_produit: avenant
-  prochaine_etape: facturer le solde, InterFast fusionnant automatiquement devis initial et avenants acceptes
+  - objet_source: devis initial et avenant
+    etat_entree: Accepté
+    action: facturer le solde
+    objet_resultat: facture de solde
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "reprendra automatiquement le montant du devis initial + ou - le montant de l'avenant"}
 
-complexite:
-  preconditions:
-    - le devis d'origine doit etre au statut "Accepte"
-    - devis initial ET avenant au statut "Accepte" pour facturer le solde
-  nb_etapes: 4
-  etats:
-    - Brouillon
-    - Envoye
-    - Accepte
-  exceptions:
-    - les prix unitaires negatifs ne sont pas autorises, il faut passer par une quantite negative
-    - plusieurs avenants sont cumulables, seuls ceux au statut "Accepte" sont pris en compte
-    - si les acomptes depassent le montant final, la facture de solde est negative ou nulle
-    - le comportement differe selon l'editeur de devis V1 ou V2
-  systemes_externes: []
+regles_operationnelles:
+  - description_brute: un devis passé au statut Accepté est figé et ne doit plus être
+                       modifié
+    objet_concerne: devis
+    condition: le devis est au statut Accepté
+    consequence: il est figé pour garantir la traçabilité juridique et commerciale
+    preuve: {niveau: explicite, source: texte,
+             citation: "il est figé pour garantir la traçabilité juridique et commerciale"}
+    resolution_documentee:
+      action: créer un avenant, document annexe lié au devis initial
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "La solution ? Créer un Avenant."}
 
-contexte:
-  dispositif: bureau
-  temporalite: pendant
-  recovery: false
-  sortie_du_logiciel:
-    - email
+  - description_brute: la création d'un avenant suppose que le devis d'origine soit au
+                       statut Accepté
+    objet_concerne: avenant
+    condition: devis d'origine au statut Accepté
+    consequence: l'action « Créer un avenant » est disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Rendez-vous sur le devis d'origine (qui doit être au statut Accepté)"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "Accepté : Le client valide les modifications."
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Coordination entreprise-client explicite et automatisee (la validation client declenche
-    un recalcul), mais le role interne qui redige l'avenant n'est jamais nomme : le "vous"
-    de la documentation. Constat recurrent sur tout le corpus.
+  - description_brute: les prix unitaires négatifs ne sont pas autorisés dans le nouvel
+                       éditeur, conforme à la facturation électronique
+    objet_concerne: ligne d'avenant
+    condition: saisie d'une moins-value
+    consequence: un prix unitaire négatif est refusé
+    preuve: {niveau: explicite, source: texte,
+             citation: "les prix unitaires négatifs ne sont pas autorisés"}
+    resolution_documentee:
+      action: saisir l'article avec un prix positif et une quantité négative
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "saisissez votre article avec un prix positif, mais indiquez une quantité négative"}
+
+  - description_brute: un avenant n'est pris en compte dans la facturation finale que
+                       s'il est au statut Accepté
+    objet_concerne: avenant
+    condition: avenant au statut Accepté
+    consequence: il entre dans le calcul de la facturation finale
+    preuve: {niveau: explicite, source: texte,
+             citation: "doit impérativement être passé au statut \"Accepté\" pour être pris en compte"}
+    resolution_documentee: null
+
+  - description_brute: plusieurs avenants peuvent coexister et sont cumulés lors de la
+                       facturation du solde
+    objet_concerne: avenant
+    condition: avenants au statut Accepté
+    consequence: InterFast cumule l'ensemble des avenants acceptés
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast cumulera l'ensemble des avenants ayant le statut \"Accepté\""}
+    resolution_documentee: null
+
+  - description_brute: si les acomptes versés dépassent le montant final des travaux,
+                       la facture de solde est négative ou nulle
+    objet_concerne: facture de solde
+    condition: acomptes supérieurs au montant final après avenant en moins-value
+    consequence: la facture de solde générée est négative ou à zéro
+    preuve: {niveau: explicite, source: texte,
+             citation: "la facture de solde générée sera négative (ce qui correspond techniquement à un avoir)"}
+    resolution_documentee: null
+
+signaux_emergents: []

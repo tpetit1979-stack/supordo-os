@@ -1,90 +1,140 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/operations/remplir-un-pv-de-reception-de-chantier.md
-  rubrique_originale: Opérations
-  titre: Remplir un PV de réception de chantier
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - chantier
-    - reception de chantier
-    - cloture
-  roles_bruts:
-    - technicien
-    - client
-    - bureau
-    - entreprise
-  roles_canoniques:
-    - terrain
-    - client
-    - bureau
-  actions:
-    - creer
-    - remplir
-    - faire signer
-    - valider
-    - consulter
-    - transmettre
-  objets:
-    - PV de reception
-    - intervention
-    - rapport
-    - chantier
-    - signature
-    - garantie decennale
-    - pdf
-    - modele de rapport
-  job_to_be_done: faire acter par le client que les travaux sont acceptes, pour declencher la garantie et le transfert de propriete
+interactions:
+  - acteur:
+      role_brut: technicien
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le technicien renseigne les informations sur son application mobile"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "demande au client de signer directement sur l'écran avant validation"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes: []
 
-coordination:
-  niveau: 4
-  justification: >-
-    Transmission explicite terrain vers client avec action du destinataire : "Le technicien
-    renseigne les informations sur son application mobile et demande au client de signer
-    directement sur l'écran avant validation." Une variante bureau vers client par email est
-    aussi decrite.
-  niveau_infere: false
-  de: technicien
-  vers: client
-  objet: PV de reception a signer
+  - acteur:
+      role_brut: bureau
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous devrez finaliser le document côté bureau"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "lui transmettre le PDF par e-mail"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: non
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous devrez finaliser le document côté bureau et lui transmettre le PDF"}
 
-resultat:
-  objet_produit: PV de reception signe
-  prochaine_etape: le PV valide est automatiquement rattache au dossier du chantier concerne
+transitions_objet:
+  - objet_source: intervention "PV de réception de chantier"
+    etat_entree: null
+    action: ajouter un PV lors du remplissage du rapport
+    objet_resultat: PV de réception
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: technicien
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le technicien renseigne les informations sur son application mobile"}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ajouter un PV de réception de chantier - lors du remplissage du rapport"}
 
-complexite:
-  preconditions:
-    - creer une intervention de type "PV de reception de chantier"
-    - terminer l'installation complete avant de faire signer
-  nb_etapes: 7
-  etats:
-    - valide
-    - finalise
-  exceptions:
-    - le format du PV n'est pas personnalisable, sauf a recreer un modele via le Constructeur de rapports
-    - le client doit pouvoir accepter les travaux sans reserve
-    - pour un envoi a distance, il faut finaliser cote bureau et transmettre le PDF par email
-  systemes_externes:
-    - outil de signature electronique externe (Yousign, cite comme solution de contournement)
+  - objet_source: PV de réception
+    etat_entree: validé
+    action: rattachement au dossier du chantier
+    objet_resultat: document du dossier chantier
+    etat_sortie: finalisé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le PV de réception est automatiquement rattaché au dossier du chantier"}
 
-contexte:
-  dispositif: mobile
-  temporalite: apres
-  recovery: false
-  sortie_du_logiciel:
-    - email
-    - pdf
+  - objet_source: PV de réception
+    etat_entree: finalisé côté bureau
+    action: envoi à distance pour signature
+    objet_resultat: PV signé à distance
+    etat_sortie: null
+    owner_avant: {role: bureau, preuve: {niveau: explicite, source: texte,
+                  citation: "finaliser le document côté bureau"}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: sortie_logiciel
+          preuve: {niveau: explicite, source: texte,
+                   citation: "vous pouvez utiliser un outil gratuit de signature électronique"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Pour un envoi à distance, vous devrez finaliser le document côté bureau"}
 
-preuve:
-  statut: documented
-  citation: "demande au client de signer directement sur l'écran avant validation"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    L'article renvoie vers un outil tiers gratuit pour le cas "signature a distance" : le
-    logiciel reconnait donc une sortie de son propre perimetre. systemes_externes accueille
-    cette information mais lui donne le meme poids qu'une integration native comme Pennylane,
-    alors que la nature est opposee (integration voulue contre contournement d'un manque).
-    Le schema ne distingue pas les deux.
+regles_operationnelles:
+  - description_brute: sans PV signé, les équipements restent juridiquement la propriété
+                       de l'entreprise et la garantie décennale ne démarre pas
+    objet_concerne: PV de réception
+    condition: absence de PV signé
+    consequence: les équipements restent propriété de l'entreprise, la garantie décennale
+                 ne démarre pas
+    preuve: {niveau: explicite, source: texte,
+             citation: "Sans PV signé, vos équipements restent juridiquement votre propriété"}
+    resolution_documentee: null
+
+  - description_brute: le format du PV de réception n'est pas personnalisable directement
+    objet_concerne: PV de réception
+    condition: document juridique standard proposé par InterFast
+    consequence: aucune personnalisation directe du format
+    preuve: {niveau: explicite, source: texte,
+             citation: "document juridique \"standard\" dont le format n'est pas personnalisable"}
+    resolution_documentee:
+      action: créer un nouveau modèle incluant les champs obligatoires via le Constructeur
+              de rapports
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous devez utiliser le \"Constructeur de rapports\" pour créer un nouveau modèle"}
+
+  - description_brute: il est recommandé de terminer l'installation complète avant de
+                       faire signer le PV
+    objet_concerne: chantier
+    condition: chantier non totalement finalisé ou nécessitant des ajustements
+    consequence: il est recommandé de différer la rédaction et la signature du PV
+    preuve: {niveau: explicite, source: texte,
+             citation: "il est recommandé de terminer l'installation complète avant de rédiger"}
+    resolution_documentee: null
+
+  - description_brute: le flux standard prévoit que le PV soit rempli lors de la dernière
+                       intervention du chantier
+    objet_concerne: PV de réception
+    condition: dernière intervention du chantier
+    consequence: le PV y est rempli et signé sur l'écran du mobile
+    preuve: {niveau: explicite, source: texte,
+             citation: "prévoit que le PV soit rempli lors de la dernière intervention du chantier"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: pour le cas de la signature à distance, la documentation renvoie
+                       elle-même vers un outil de signature électronique tiers, en
+                       précisant sa limite d'usage gratuite
+    pourquoi_notable: l'éditeur prescrit explicitement de sortir de son produit pour un
+                      cas d'usage qu'il ne couvre pas ; la rupture sortie_logiciel
+                      enregistre le fait, mais aucun champ ne distingue une sortie subie
+                      d'une sortie recommandée par l'éditeur lui-même
+    termes_source: ["outil gratuit de signature électronique", "limité à 2 envois / mois"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Si besoin, vous pouvez utiliser un outil gratuit de signature électronique"}

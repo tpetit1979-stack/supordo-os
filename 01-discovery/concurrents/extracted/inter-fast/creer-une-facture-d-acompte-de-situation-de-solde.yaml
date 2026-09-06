@@ -1,100 +1,283 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-une-facture-d-acompte-de-situation-de-solde.md
-  rubrique_originale: Finances
-  titre: Créer une Facture d'acompte / de situation / de solde
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - facturation
-    - chantier
-    - correction d'erreur
-    - conformite reglementaire
-  roles_bruts:
-    - support
-    - equipe Care
-    - utilisateur
-  roles_canoniques:
-    - externe
-    - inconnu
-  actions:
-    - creer
-    - facturer
-    - finaliser
-    - envoyer
-    - corriger
-    - annuler
-    - lier
-    - dupliquer
-  objets:
-    - facture d'acompte
-    - facture de situation
-    - facture de solde
-    - devis
-    - avoir
-    - retenue de garantie
-    - ligne de regularisation
-    - TVA
-    - journal des ventes
-  job_to_be_done: facturer un chantier par etapes en restant conforme et sans bloquer le reste a facturer
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "elle pourra être envoyée à votre client"}
+    perimetre: client
+    relation: autre
+    canal: inconnu
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Une fois la facture finalisée, elle pourra être envoyée à votre client."}
 
-coordination:
-  niveau: 2
-  justification: >-
-    Le client est destinataire des factures et le support InterFast intervient sur certains
-    deblocages, mais aucune transmission entre deux roles n'est decrite comme un mecanisme :
-    l'article est centre sur des regles d'etat et des contraintes reglementaires.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: équipe Care
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "activation par l'équipe Care depuis le tchat"}
+    perimetre: editeur
+    relation: autre
+    canal: interface
+    dans_logiciel: partiel
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "réinitialisable — activation par l'équipe Care depuis le tchat"}
 
-resultat:
-  objet_produit: facture (acompte, situation ou solde)
-  prochaine_etape: finaliser la facture puis l'envoyer au client
+transitions_objet:
+  - objet_source: devis
+    etat_entree: Accepté
+    action: facturer un acompte
+    objet_resultat: facture d'acompte
+    etat_sortie: Brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "une nouvelle facture d'acompte est automatiquement créée dans l'onglet Factures"}
 
-complexite:
-  preconditions:
-    - le devis doit etre au statut "Accepte"
-    - un devis ne peut etre lie qu'a une seule facture en brouillon
-    - la date d'echeance doit etre egale ou posterieure a la date du jour
-    - une facture de situation exige une facture d'acompte creee au prealable
-  nb_etapes: 6
-  etats:
-    - Brouillon
-    - Finalisee
-    - Envoyee
-    - Payee
-    - Accepte
-    - Facture
-    - Annule
-  exceptions:
-    - une facture finalisee et numerotee est verrouillee par la loi anti-fraude, correction par avoir total
-    - un devis passe en "Facture" par erreur bloque la creation de nouvelles factures ; le repasser en "Annule" puis "Accepte"
-    - ecart d'un centime possible par arrondi de TVA, a corriger par une ligne de regularisation a 0 %
-    - prix unitaires negatifs interdits depuis la conformite facturation electronique
-    - le nom de la retenue de garantie n'est pas personnalisable
-    - une fois le mode de situation choisi (globale ou detaillee), retour arriere impossible
-  systemes_externes: []
+  - objet_source: devis et facture d'acompte
+    etat_entree: Accepté
+    action: facturer le solde
+    objet_resultat: facture de solde
+    etat_sortie: Brouillon
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le logiciel déduira proprement le montant déjà perçu"}
 
-contexte:
-  dispositif: bureau
-  temporalite: pendant
-  recovery: true
-  sortie_du_logiciel: []
+  - objet_source: facture
+    etat_entree: Brouillon
+    action: finaliser
+    objet_resultat: facture numérotée
+    etat_sortie: Finalisée
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une fois votre facture finalisée et numérotée, elle est verrouillée"}
 
-preuve:
-  statut: documented
-  citation: "Lorsque votre devis a été passé au statut \"facturé\" par erreur, vous pouvez rattraper"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Article tres long qui melange procedure, FAQ et notes reglementaires. Le champ etats
-    deborde (sept valeurs melant etats de devis et de facture : le schema ne dit pas a quel
-    objet les etats se rapportent, ce qui est un vrai defaut). nb_etapes est arbitraire :
-    l'article decrit trois procedures paralleles, pas une sequence. Le moment
-    "conformite reglementaire" a du etre invente ; il reapparaitra probablement souvent
-    dans les 1 494 articles (facturation electronique, Factur-X, loi anti-fraude).
+  - objet_source: facture finalisée erronée
+    etat_entree: Finalisée
+    action: créer un avoir total puis recréer la facture
+    objet_resultat: facture corrigée
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "puis recréer la facture correcte"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous devez l'annuler en créant un Avoir (total), puis recréer la facture"}
+
+  - objet_source: facture d'acompte non liée au devis
+    etat_entree: null
+    action: rétablir manuellement le lien via « Lier à un devis »
+    objet_resultat: facture d'acompte liée au devis
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "si vous avez importé vos données d'un ancien logiciel ou si le lien a été brisé"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "cliquez sur \"Lier à un devis\" et sélectionnez le devis correspondant"}
+
+  - objet_source: devis marqué « Facturé » par erreur
+    etat_entree: Facturé
+    action: repasser le statut en Annulé puis Accepté
+    objet_resultat: devis facturable
+    etat_sortie: Accepté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le bouton \"Facturer\" réapparaîtra alors en haut à droite."}
+
+regles_operationnelles:
+  - description_brute: un devis ne peut être lié qu'à une seule facture en brouillon
+    objet_concerne: devis
+    condition: une facture en brouillon est déjà liée au devis
+    consequence: aucune nouvelle facture ne peut être créée
+    preuve: {niveau: explicite, source: texte,
+             citation: "un devis ne peut être lié qu'à une seule facture en brouillon"}
+    resolution_documentee:
+      action: finaliser ou supprimer la facture en brouillon
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il faut donc absolument la finaliser ou la supprimer"}
+
+  - description_brute: la date d'échéance d'une facture doit être égale ou postérieure à
+                       la date du jour pour que le document puisse être finalisé
+    objet_concerne: facture
+    condition: date d'échéance égale ou postérieure à la date du jour
+    consequence: la facture peut être finalisée
+    preuve: {niveau: explicite, source: texte,
+             citation: "la date d'échéance de la facture doit être égale ou postérieure à la date du jour"}
+    resolution_documentee: null
+
+  - description_brute: une facture finalisée et numérotée ne peut être ni modifiée ni
+                       supprimée, la législation anti-fraude à la TVA l'interdisant
+    objet_concerne: facture
+    condition: facture finalisée et numérotée
+    consequence: modification et suppression impossibles
+    preuve: {niveau: explicite, source: texte,
+             citation: "la législation anti-fraude à la TVA interdit de la modifier ou de la supprimer"}
+    resolution_documentee:
+      action: créer un avoir total pour annuler la facture, puis recréer la facture
+              correcte en dupliquant l'annulée
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous pouvez utiliser la fonction \"Dupliquer\" sur la facture annulée"}
+
+  - description_brute: une facture créée pour essayer reste définitivement dans
+                       l'historique
+    objet_concerne: facture
+    condition: facture de test finalisée en usage réel
+    consequence: elle demeure dans l'historique de l'entreprise
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une facture créée « pour essayer » restera donc définitivement dans votre historique."}
+    resolution_documentee:
+      action: utiliser le Mode test avec de faux clients, réinitialisable, activé par
+              l'équipe Care depuis le tchat
+      acteur: équipe Care
+      preuve: {niveau: explicite, source: texte,
+               citation: "Pour tester InterFast → utilisez le Mode test (avec de faux clients"}
+
+  - description_brute: un devis au statut « Facturé » bloque la création de nouvelles
+                       factures
+    objet_concerne: devis
+    condition: devis marqué comme Facturé
+    consequence: le logiciel considère que tout a été payé et bloque la facturation
+    preuve: {niveau: explicite, source: texte,
+             citation: "le logiciel considère que tout a été payé et bloque la création"}
+    resolution_documentee:
+      action: repasser le statut du devis de Facturé à Annulé puis Accepté
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "changez-le en \"Annulé\" puis \"Accepté\""}
+
+  - description_brute: un devis conservant un reste à facturer demeure au statut Accepté
+                       et apparaît dans le tableau de bord des relances
+    objet_concerne: devis
+    condition: montant final facturé inférieur au devis initial
+    consequence: le devis reste au statut Accepté et alimente le tableau de bord des relances
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le devis restait bloqué au statut \"Accepté\", polluant le tableau de bord"}
+    resolution_documentee:
+      action: passer manuellement le devis au statut Facturé pour forcer la clôture du dossier
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez forcer la clôture du dossier."}
+
+  - description_brute: une facture de situation suppose qu'une facture d'acompte ait été
+                       créée au préalable
+    objet_concerne: facture de situation
+    condition: une facture d'acompte existe sur le devis
+    consequence: la facture de situation peut être créée
+    preuve: {niveau: explicite, source: texte,
+             citation: "il faut avoir créé, au préalable, une facture sur acompte d'un devis"}
+    resolution_documentee: null
+
+  - description_brute: le mode de facturation d'une situation, globale ou détaillée, est
+                       définitif une fois choisi
+    objet_concerne: facture de situation
+    condition: méthode globale ou détaillée sélectionnée
+    consequence: il n'est plus possible de revenir en arrière pour changer de type
+    preuve: {niveau: explicite, source: texte,
+             citation: "il ne sera plus possible de revenir en arrière pour modifier le type"}
+    resolution_documentee: null
+
+  - description_brute: la retenue de garantie se configure dans les options du devis et
+                       son intitulé n'est pas personnalisable
+    objet_concerne: retenue de garantie
+    condition: plusieurs retenues aux appellations différentes nécessaires
+    consequence: le nom de la retenue ne peut pas être personnalisé
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast ne permet pas de personnaliser le nom de la retenue de garantie."}
+    resolution_documentee:
+      action: ajouter une ligne de texte explicative détaillant la répartition
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "il est donc recommandé d'ajouter une ligne de texte explicative"}
+
+  - description_brute: les prix unitaires négatifs ne sont plus autorisés depuis la mise
+                       à jour de conformité pour la facturation électronique
+    objet_concerne: ligne de facture
+    condition: saisie d'un montant à déduire
+    consequence: un prix unitaire négatif est refusé
+    preuve: {niveau: explicite, source: texte,
+             citation: "il n'est plus possible de saisir un prix unitaire négatif"}
+    resolution_documentee:
+      action: saisir une quantité négative, ou créer un avenant sur le devis initial
+              avant de générer la facture de solde
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "La méthode recommandée (L'Avenant)"}
+
+  - description_brute: un écart d'un ou deux centimes entre l'acompte prévu et la facture
+                       d'acompte provient des règles d'arrondi de la TVA
+    objet_concerne: facture d'acompte
+    condition: calcul de l'acompte sur le TTC puis reconstitution du HT
+    consequence: un écart de quelques centimes peut apparaître
+    preuve: {niveau: explicite, source: texte,
+             citation: "c'est un comportement tout à fait normal lié aux règles d'arrondi"}
+    resolution_documentee:
+      action: ajouter une ligne de régularisation à 0,01 € avec un taux de TVA à 0 %,
+              en quantité négative si le centime doit être déduit
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Appliquez impérativement un taux de TVA à 0 % sur cette ligne."}
+
+  - description_brute: le passage manuel d'un devis au statut Facturé n'a aucune
+                       incidence comptable
+    objet_concerne: devis
+    condition: statut Facturé positionné manuellement
+    consequence: aucune écriture comptable, aucun effet sur le chiffre d'affaires ni sur
+                 le journal des ventes
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le passage manuel au statut \"Facturé\" ne génère aucune écriture comptable"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: InterFast a introduit un statut de devis que l'utilisateur
+                       positionne à la main, sans effet comptable, dans le seul but de
+                       nettoyer le tableau de bord des affaires en cours
+    pourquoi_notable: un même champ porte deux significations disjointes — un fait
+                      comptable et un état de charge de travail — et l'éditeur assume de
+                      le laisser mentir sur le premier pour servir le second ; le schéma
+                      enregistre les états mais ne peut pas représenter qu'un état soit
+                      délibérément découplé de la réalité qu'il nomme
+    termes_source: ["marqué manuellement comme facturé", "polluant le tableau de bord des relances"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Elle sert uniquement à nettoyer votre tableau de bord des devis \"En cours\""}

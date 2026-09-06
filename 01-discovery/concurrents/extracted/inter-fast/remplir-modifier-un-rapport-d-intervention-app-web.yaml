@@ -1,94 +1,134 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/operations/remplir-modifier-un-rapport-d-intervention-app-web.md
-  rubrique_originale: Opérations
-  titre: Remplir / Modifier un Rapport d'intervention (App Web)
+parcours:
+  origine: inconnu
+  nature: intervention
 
-metier:
-  moments:
-    - intervention
-    - rapport d'intervention
-    - correction d'erreur
-  roles_bruts:
-    - technicien
-    - services administratifs
-    - Bureau
-    - collaborateur
-    - client
-  roles_canoniques:
-    - terrain
-    - bureau
-    - client
-  actions:
-    - saisir
-    - completer
-    - signer
-    - generer
-    - modifier
-    - corriger
-    - conserver
-    - remplacer
-  objets:
-    - rapport d'intervention
-    - sous-rapport
-    - intervention
-    - heure
-    - pause
-    - photo
-    - signature
-    - pdf
-    - version
-    - commentaire
-  job_to_be_done: completer ou corriger depuis le bureau un rapport que le terrain n'a pas pu finir sur place
+interactions:
+  - acteur:
+      role_brut: services administratifs / équipes au Bureau
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vos équipes au Bureau peuvent ainsi créer des rapports complémentaires"}
+    destinataire:
+      role_brut: collaborateur ayant rédigé et signé le rapport
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "un rapport rédigé et signé par un autre utilisateur"}
+    perimetre: interne
+    relation: inconnu
+    canal: aucun
+    dans_logiciel: oui
+    mecanismes:
+      - forme: edition_partagee
+        preuve: {niveau: explicite, source: texte,
+                 citation: "lors de la modification d'un rapport rédigé et signé par un autre utilisateur"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous pouvez consulter l'auteur du rapport initial depuis la fiche de synthèse"}
 
-coordination:
-  niveau: 3
-  justification: >-
-    Deux roles travaillent successivement sur le meme objet et l'article traite explicitement
-    du cas ou le bureau reprend le rapport d'un autre : "InterFast propose deux choix lors de
-    la modification d'un rapport rédigé et signé par un autre utilisateur". Mais aucune
-    action n'est declenchee chez le redacteur initial : il n'est pas prevenu.
-  niveau_infere: false
-  de: technicien (redacteur initial)
-  vers: services administratifs / Bureau
-  objet: rapport d'intervention a completer ou corriger
+  - acteur:
+      role_brut: technicien
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "le technicien doit signer (via souris ou trackpad) pour valider sa saisie"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "le client signe la réception du rapport"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes: []
 
-resultat:
-  objet_produit: rapport d'intervention PDF
-  prochaine_etape: null
+transitions_objet:
+  - objet_source: intervention planifiée
+    etat_entree: planifiée, en cours ou en retard
+    action: remplir le rapport
+    objet_resultat: rapport d'intervention
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Sur la fiche synthétique, cliquez sur le bouton « Remplir le rapport »"}
 
-complexite:
-  preconditions:
-    - une intervention deja planifiee existe
-    - date du rapport et signature du technicien renseignees pour generer le rapport
-  nb_etapes: 6
-  etats:
-    - planifiee
-    - en cours
-    - en retard
-  exceptions:
-    - le client peut etre absent, une case "Client absent" remplace sa signature
-    - modifier le rapport d'un autre impose de choisir entre conserver ou remplacer sa signature
-    - chaque modification cree une nouvelle version numerotee et datee
-  systemes_externes: []
+  - objet_source: rapport d'intervention renseigné
+    etat_entree: null
+    action: générer le rapport
+    objet_resultat: rapport PDF
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le document PDF final qui est consultable immédiatement depuis la fiche"}
 
-contexte:
-  dispositif: bureau
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel:
-    - pdf
+  - objet_source: rapport d'intervention
+    etat_entree: version précédente générée
+    action: éditer puis générer à nouveau
+    objet_resultat: nouvelle version du rapport
+    etat_sortie: null
+    owner_avant:
+      role: auteur du rapport initial
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez consulter l'auteur du rapport initial"}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous présenter le contenu de la dernière version du rapport"}
 
-preuve:
-  statut: documented
-  citation: "lorsque la saisie sur le terrain n'était pas possible ou suffisante"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Cas de coordination interessant et frequent en BTP : le bureau rattrape le terrain. Le
-    schema le note en niveau 3 alors que ce qui compte analytiquement est l'ABSENCE de retour
-    vers le technicien — le schema A ne sait pas exprimer une transmission a sens unique
-    assumee. Le champ etats capte ici des etats d'intervention, pas du rapport : ambiguite
-    de rattachement deja relevee ailleurs.
+regles_operationnelles:
+  - description_brute: la génération du rapport exige que la date du rapport et la
+                       signature du technicien soient renseignées
+    objet_concerne: rapport d'intervention
+    condition: champs obligatoires remplis, notamment date et signature du technicien
+    consequence: le bouton « Générer le rapport » produit le PDF final
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une fois que les champs obligatoires sont remplis (notamment la Date"}
+    resolution_documentee: null
+
+  - description_brute: modifier un rapport rédigé et signé par un autre utilisateur
+                       impose de choisir entre remplacer sa signature ou la conserver
+    objet_concerne: rapport d'intervention
+    condition: rapport rédigé et signé par un autre utilisateur
+    consequence: deux choix sont proposés, remplacer la signature initiale ou la conserver
+    preuve: {niveau: explicite, source: texte,
+             citation: "InterFast propose deux choix lors de la modification d'un rapport"}
+    resolution_documentee:
+      action: choisir de remplacer la signature du collaborateur ou de la conserver,
+              en associant éventuellement un commentaire à la nouvelle version
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez y associer un commentaire pour faciliter la compréhension"}
+
+  - description_brute: en l'absence du client, une case « Client absent » remplace sa
+                       signature
+    objet_concerne: rapport d'intervention
+    condition: client absent au moment de la signature
+    consequence: la signature client est remplacée par une case cochée
+    preuve: {niveau: explicite, source: texte,
+             citation: "ou vous cochez \"Client absent\" si nécessaire"}
+    resolution_documentee:
+      action: cocher « Client absent »
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous cochez \"Client absent\" si nécessaire"}
+
+  - description_brute: chaque régénération du rapport produit une version numérotée et
+                       datée, mentionnée sous le nom du rapport
+    objet_concerne: rapport d'intervention
+    condition: modification puis régénération du rapport
+    consequence: le numéro et la date de la dernière version apparaissent sous le nom
+                 du rapport
+    preuve: {niveau: explicite, source: texte,
+             citation: "La mention du numéro et de la date de la dernière version apparaît"}
+    resolution_documentee: null
+
+signaux_emergents: []

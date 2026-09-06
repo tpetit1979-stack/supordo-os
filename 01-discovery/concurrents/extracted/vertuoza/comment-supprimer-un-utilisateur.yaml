@@ -1,69 +1,32 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/parametres/comment-supprimer-un-utilisateur.md
-  rubrique_originale: Paramètres
-  titre: Comment supprimer un utilisateur?
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - administration de l'entreprise
-    - gestion des utilisateurs
-  roles_bruts:
-    - utilisateur
-  roles_canoniques:
-    - inconnu
-  actions:
-    - supprimer
-    - consulter
-  objets:
-    - utilisateur
-    - compte gestion
-    - compte chantier
-    - historique
-    - personnel
-  job_to_be_done: retirer l'acces d'une personne sans perdre l'historique de son travail
+interactions: []
 
-coordination:
-  niveau: 1
-  justification: >-
-    Deux roles existent implicitement — celui qui supprime et l'utilisateur supprime — mais
-    ils ne sont pas nommes et aucune transmission n'est decrite entre eux.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: utilisateur
+    etat_entree: null
+    action: supprimer
+    objet_resultat: informations du personnel
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "l'ensemble des données du compte seront conservées au niveau des informations"}
 
-resultat:
-  objet_produit: null
-  prochaine_etape: null
+regles_operationnelles:
+  - description_brute: la suppression d'un utilisateur n'a aucun impact sur l'historique
+                       de l'application, les données du compte étant conservées
+    objet_concerne: utilisateur
+    condition: suppression d'un utilisateur
+    consequence: l'historique est préservé, les données sont conservées dans les
+                 informations du personnel
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cette action n'aura aucun impact sur l'historique de votre application"}
+    resolution_documentee: null
 
-complexite:
-  preconditions:
-    - acceder a la liste des utilisateurs (gestion ou chantier)
-  nb_etapes: 2
-  etats: []
-  exceptions:
-    - la suppression n'a aucun impact sur l'historique, les donnees du compte sont conservees
-  systemes_externes: []
-
-contexte:
-  dispositif: null
-  temporalite: indifferent
-  recovery: null
-  sortie_du_logiciel: []
-
-preuve:
-  statut: documented
-  citation: "Cette action n'aura aucun impact sur l'historique de votre application"
-  champs_inferes:
-    - coordination.niveau
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Article d'administration pure : il ne correspond a aucun moment du cycle client. J'ai
-    du inventer le moment "administration de l'entreprise", que le schema n'anticipait pas.
-    C'est exactement le cas de figure ou le vocabulaire des moments risque de diverger.
-    "utilisateur" n'est pas un role metier mais un objet de configuration : je l'ai place
-    dans roles_bruts ET dans objets, ce qui revele que le schema ne separe pas la personne
-    de sa fiche. recovery est null : la question ne s'applique pas ici.
+signaux_emergents: []

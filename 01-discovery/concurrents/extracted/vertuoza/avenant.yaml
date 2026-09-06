@@ -1,80 +1,103 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/gestion-de-chantier/avenant.md
-  rubrique_originale: Gestion de chantier
-  titre: Avenant
+parcours:
+  origine: inconnu
+  nature: installation
 
-metier:
-  moments:
-    - chantier
-    - avenant
-  roles_bruts:
-    - client
-    - responsable
-  roles_canoniques:
-    - client
-    - inconnu
-  actions:
-    - creer
-    - encoder
-    - importer
-    - modifier
-    - enregistrer
-  objets:
-    - avenant
-    - devis
-    - ligne de devis
-    - etat d'avancement
-    - rentabilite
-    - remarque
-    - fichier joint
-    - jours ouvrables
-  job_to_be_done: tracer une modification du marche initial sans toucher au devis signe
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Ajoutez des remarques visibles pour le client"}
+    perimetre: client
+    relation: autre
+    canal: inconnu
+    dans_logiciel: oui
+    mecanismes:
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "des remarques visibles pour le client, des remarques internes"}
 
-coordination:
-  niveau: 2
-  justification: >-
-    Le client apparait comme partie prenante (il "prend conscience" de l'allongement du delai,
-    des remarques lui sont visibles) et un "responsable" est un champ de l'avenant, mais aucune
-    transmission entre deux roles n'est decrite comme un mecanisme du logiciel.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: devis de base
+    etat_entree: signé par le client
+    action: cocher des lignes du devis de base pour les ajouter à l'avenant
+    objet_resultat: avenant
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cochez les lignes du devis de base pour les ajouter à l'Avenant."}
 
-resultat:
-  objet_produit: avenant
-  prochaine_etape: null
+  - objet_source: fichier Excel
+    etat_entree: null
+    action: importer
+    objet_resultat: avenant
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Encodez votre Avenant (ou importez-le au format Excel)"}
 
-complexite:
-  preconditions:
-    - un devis de base existe et est signe par le client
-  nb_etapes: 8
-  etats:
-    - accepte
-  exceptions:
-    - un meme avenant peut contenir des lignes positives et negatives
-  systemes_externes:
-    - excel
+  - objet_source: avenant
+    etat_entree: accepté
+    action: intégrer
+    objet_resultat: état d'avancement et tableau de rentabilité
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "ajoutant ou soustrayant son montant au devis de base"}
 
-contexte:
-  dispositif: null
-  temporalite: pendant
-  recovery: false
-  sortie_du_logiciel:
-    - excel
+regles_operationnelles:
+  - description_brute: un même avenant peut contenir des lignes positives et des lignes
+                       négatives
+    objet_concerne: avenant
+    condition: null
+    consequence: les quantités du devis initial peuvent être ajustées à la hausse
+                 comme à la baisse dans un seul document
+    preuve: {niveau: explicite, source: texte,
+             citation: "peut contenir des lignes positives et/ou négatives"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "une modification du contrat initial qui peut inclure des travaux supplémentaires"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Le mot "responsable" apparait uniquement comme un champ a completer dans le formulaire
-    d'avenant : impossible de savoir s'il designe un role interne, un salarie precis ou un
-    simple libelle. Je l'ai conserve en roles_bruts mais ne l'ai pas canonise. Le niveau de
-    coordination 2 est une reconstruction : le client est present dans le texte comme
-    destinataire d'information, sans mecanisme de transmission decrit.
+  - description_brute: un avenant n'est repris dans les états d'avancement et la
+                       rentabilité qu'une fois accepté
+    objet_concerne: avenant
+    condition: l'avenant est accepté
+    consequence: il est intégré aux futurs états d'avancement et au tableau de rentabilité
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une fois accepté, l'Avenant est intégré dans une zone spécifique"}
+    resolution_documentee: null
+
+  - description_brute: l'avenant précise le nombre de jours ouvrables supplémentaires
+                       nécessaires
+    objet_concerne: avenant
+    condition: null
+    consequence: le client peut prendre conscience de l'allongement du délai des travaux
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'Avenant spécifie le nombre de jours ouvrables supplémentaires nécessaires"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: le formulaire de création d'un avenant comporte un champ
+                       « responsable », sans que l'article indique quel rôle il désigne
+                       ni ce que cette désignation entraîne
+    pourquoi_notable: un rôle est attaché nominativement à un document contractuel, mais
+                      il n'est ni acteur ni destinataire d'une interaction documentée ;
+                      le schéma n'a aucun emplacement pour un rôle porté par l'objet
+                      lui-même
+    termes_source: ["responsable"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "(référence, responsable, jours ouvrables supplémentaires, taux de TVA"}

@@ -1,103 +1,189 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/finances/creer-un-devis-app-web.md
-  rubrique_originale: Finances
-  titre: Créer un Devis (App Web)
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - devis
-    - signature
-  roles_bruts:
-    - client
-    - collaborateur
-    - redacteur de devis
-  roles_canoniques:
-    - client
-    - bureau
-  actions:
-    - creer
-    - saisir
-    - lier
-    - structurer
-    - signer
-    - finaliser
-    - envoyer
-    - accepter
-  objets:
-    - devis
-    - ouvrage
-    - sous-ouvrage
-    - sommaire
-    - article
-    - main d'oeuvre
-    - fourniture
-    - chantier
-    - intervention
-    - maintenance
-    - SAV
-    - bon de commande
-    - signature
-    - RIB
-    - acompte
-    - pied de page
-    - dechets
-  job_to_be_done: produire un devis structure et lisible, le faire accepter et garder la trace de qui l'a etabli
+interactions:
+  - acteur:
+      role_brut: rédacteur de devis
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Si vous changez de rédacteur de devis, c'est alors sa signature"}
+    destinataire:
+      role_brut: contacts destinataires / client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "en choisissant le ou les contacts destinataires"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "deux options s'offrent à vous pour l'envoyer à votre client par email"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Transmission explicite au client (email simple ou envoi pour signature) et action du
-    destinataire documentee : "Votre client a signé votre devis via signature électronique.
-    (...) Votre devis passe automatiquement comme étant "Accepté"". L'acceptation peut aussi
-    venir du bon de commande emis par le client.
-  niveau_infere: false
-  de: redacteur du devis / collaborateur
-  vers: client
-  objet: devis
+  - acteur:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Votre client a signé votre devis via signature électronique."}
+    destinataire:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    perimetre: client
+    relation: autre
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Votre client a signé votre devis via signature électronique."}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Votre devis passe automatiquement comme étant \"Accepté\""}
 
-resultat:
-  objet_produit: devis
-  prochaine_etape: envoyer le devis au client, par email ou pour signature electronique
+transitions_objet:
+  - objet_source: devis
+    etat_entree: Brouillon
+    action: finaliser
+    objet_resultat: devis
+    etat_sortie: Finalisé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une fois finalisé, un numéro unique lui sera attribué."}
 
-complexite:
-  preconditions:
-    - un client existe dans le CRM (ou est cree a la volee)
-    - prenom et nom renseignes sur la fiche contact pour un envoi en signature
-    - signature de l'utilisateur configuree dans son profil
-  nb_etapes: 11
-  etats:
-    - Brouillon
-    - Finalise
-    - Envoye
-    - Accepte
-  exceptions:
-    - sans prenom et nom sur le contact, l'envoi pour signature est impossible
-    - l'acceptation via bon de commande exige un devis au statut "Envoye"
-    - une signature deja generee ne peut pas etre modifiee, seulement supprimee puis refaite
-    - la fusion de plusieurs devis en une seule facture n'a pas ete trouvee dans cet article
-  systemes_externes: []
+  - objet_source: devis
+    etat_entree: Envoyé
+    action: signature électronique du client
+    objet_resultat: devis signé
+    etat_sortie: Accepté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "retrouver le devis signé dans les pièces jointes de sa fiche récapitulative"}
 
-contexte:
-  dispositif: bureau
-  temporalite: avant
-  recovery: false
-  sortie_du_logiciel:
-    - email
-    - pdf
+  - objet_source: bon de commande du client
+    etat_entree: null
+    action: renseigner le numéro du bon de commande pour accepter le devis
+    objet_resultat: devis
+    etat_sortie: Accepté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le numéro du bon de commande concerné devra alors être renseigné"}
 
-preuve:
-  statut: documented
-  citation: "Si vous changez de rédacteur de devis, c'est alors sa signature qui sera reprise"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    dispositif "bureau" est ici justifie par le titre meme de l'article ("App Web"), non par
-    une deduction. Le texte enonce une limite produit ("InterFast ne permet pas encore de
-    fusionner automatiquement plusieurs devis") : je l'ai consignee en exception avec une
-    formulation prudente, mais le schema n'a aucun champ pour les limites explicitement
-    reconnues par l'editeur — c'est pourtant une donnee concurrentielle de premier ordre.
-    "redacteur de devis" et "Etabli par" sont un vocabulaire de responsabilite propre a
-    InterFast, sans equivalent chez les autres.
+  - objet_source: devis
+    etat_entree: null
+    action: lier à une intervention, un chantier ou une maintenance
+    objet_resultat: devis lié à une opération
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous pouvez lier votre devis aux opérations de votre client"}
+
+regles_operationnelles:
+  - description_brute: un devis au statut Brouillon n'a pas de numéro
+    objet_concerne: devis
+    condition: statut Brouillon
+    consequence: aucun numéro n'est attribué au devis
+    preuve: {niveau: explicite, source: texte,
+             citation: "Tant que le statut du devis reste au statut Brouillon, le devis n'a pas de numéro."}
+    resolution_documentee: null
+
+  - description_brute: l'envoi pour signature exige un prénom et un nom renseignés sur
+                       la fiche contact du client
+    objet_concerne: contact CRM
+    condition: prénom et nom renseignés dans le contact dédié
+    consequence: l'envoi pour signature est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Sans cela, l'envoi pour signature ne sera pas possible."}
+    resolution_documentee:
+      action: renseigner un prénom et un nom dans le contact de la fiche CRM
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Attention à bien avoir renseigné un prénom et un nom dans le contact dédié"}
+
+  - description_brute: l'acceptation via bon de commande suppose un devis au statut Envoyé
+    objet_concerne: devis
+    condition: devis au statut Envoyé
+    consequence: l'acceptation via le bon de commande client est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Votre devis doit être au statut « Envoyé » pour procéder via cette option."}
+    resolution_documentee: null
+
+  - description_brute: la distinction entre main d'œuvre et fourniture repose uniquement
+                       sur l'unité choisie pour la ligne
+    objet_concerne: ligne de devis
+    condition: unité h, min ou mo
+    consequence: la ligne est comptabilisée comme de la main d'œuvre, les autres unités
+                 comme des fournitures
+    preuve: {niveau: explicite, source: texte,
+             citation: "la distinction main d'œuvre / fourniture est basée sur les unités"}
+    resolution_documentee: null
+
+  - description_brute: une signature déjà générée ne peut pas être modifiée directement
+    objet_concerne: signature utilisateur
+    condition: signature générée depuis les paramètres
+    consequence: aucun bouton de modification directe n'existe
+    preuve: {niveau: explicite, source: texte,
+             citation: "il est nécessaire de d'abord la supprimer pour la recommencer"}
+    resolution_documentee:
+      action: supprimer la signature puis la recommencer
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez la recommencer en cliquant sur \"Effacer la signature\"."}
+
+  - description_brute: le sommaire n'affiche que les ouvrages et sous-ouvrages, sans le
+                       détail des lignes
+    objet_concerne: sommaire du devis
+    condition: sommaire activé
+    consequence: seuls ouvrages et sous-ouvrages apparaissent, avec leur montant total
+    preuve: {niveau: explicite, source: texte,
+             citation: "le sommaire affiche uniquement les ouvrages et sous-ouvrages"}
+    resolution_documentee: null
+
+  - description_brute: plusieurs devis ne peuvent pas être fusionnés ni rattachés à une
+                       même maintenance ou un même chantier pour produire une seule facture
+    objet_concerne: devis
+    condition: plusieurs devis portant sur une même opération
+    consequence: une facture unique ne peut pas être produite à partir de ces devis
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne permet pas encore de fusionner automatiquement plusieurs devis"}
+    resolution_documentee: null
+
+  - description_brute: l'adresse de chantier peut être saisie à la main dans la
+                       description du devis au lieu d'être rattachée à un chantier
+    objet_concerne: devis
+    condition: option « Inclure une description/page de garde » activée
+    consequence: l'adresse du chantier figure dans la description au lieu d'un lien
+                 vers un chantier
+    preuve: {niveau: explicite, source: texte,
+             citation: "possible d'ajouter les informations d'un chantier à la main"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la signature du rédacteur est apposée automatiquement sur le devis
+                       et suit le changement de rédacteur, de sorte que le document porte
+                       toujours l'identité du collaborateur qui l'a établi
+    pourquoi_notable: l'identité d'un collaborateur est attachée au document et se
+                      substitue automatiquement quand le rôle change de titulaire ; le
+                      schéma représente qui agit et qui reçoit, jamais qui un document
+                      engage
+    termes_source: ["rédacteur de devis", "la validation du bon collaborateur"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vos documents portent donc systématiquement la validation du bon collaborateur"}

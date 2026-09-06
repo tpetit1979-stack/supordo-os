@@ -1,87 +1,160 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/creer-et-gerer-des-avoirs.md
-  rubrique_originale: "Documents de vente "
-  titre: Créer et gérer des avoirs
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - facturation
-    - correction d'erreur
-    - avoir
-  roles_bruts:
-    - client
-  roles_canoniques:
-    - client
-    - inconnu
-  actions:
-    - creer
-    - annuler
-    - modifier
-    - lier
-    - delier
-    - ventiler
-    - rembourser
-  objets:
-    - avoir
-    - facture
-    - facture d'acompte
-    - avoir d'acompte
-    - numerotation
-    - ecriture comptable
-    - prelevement
-    - chiffre d'affaires
-  job_to_be_done: annuler tout ou partie d'une facture emise sans casser la numerotation comptable
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "une facture rectificative que vous adressez à un client"}
+    perimetre: client
+    relation: autre
+    canal: inconnu
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Un avoir est une facture rectificative que vous adressez à un client"}
 
-coordination:
-  niveau: 1
-  justification: >-
-    Le client est mentionne comme destinataire de la facture rectificative et beneficiaire
-    d'un remboursement possible, mais aucune transmission ni action d'un second role n'est
-    decrite : l'article porte sur des regles entre objets comptables.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: facture
+    etat_entree: null
+    action: créer un avoir depuis la facture
+    objet_resultat: avoir rattaché à la facture
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "un avoir correspondant à la facture avec toutes ses lignes"}
 
-resultat:
-  objet_produit: avoir
-  prochaine_etape: lier l'avoir a une ou plusieurs factures, ou rembourser le client
+  - objet_source: facture validée
+    etat_entree: validée
+    action: modifier par un avoir
+    objet_resultat: avoir et copie de la facture
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous serez alors redirigé vers une copie de la facture que vous souhaitez modifier."}
 
-complexite:
-  preconditions:
-    - pour "Annuler par un avoir" ou "Modifier par un avoir", la facture doit etre validee
-  nb_etapes: 4
-  etats:
-    - "A solder"
-    - validee
-    - finalise
-  exceptions:
-    - un avoir doit toujours etre positif, Sellsy equilibre les deux documents
-    - un avoir finalise ne peut pas etre supprime, la numerotation devant rester continue
-    - pour annuler un avoir, creer une facture du meme montant sur le meme client
-    - un avoir issu de "Annuler par un avoir" ou "Modifier par un avoir" ne peut plus etre delie
-    - un avoir d'acompte ne peut pas etre delie d'une facture d'acompte
-    - si des prelevements GoCardless etaient programmes, il faut penser a les annuler
-  systemes_externes:
-    - GoCardless
+  - objet_source: avoir simple
+    etat_entree: À solder
+    action: lier une ou plusieurs factures et ventiler le montant
+    objet_resultat: avoir rattaché
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "choisir comment vous souhaitez ventiler le montant de l'avoir"}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel: []
+  - objet_source: avoir finalisé à annuler
+    etat_entree: finalisé
+    action: créer une facture du même montant sur le même client puis relier
+    objet_resultat: opération nulle dans le chiffre d'affaires
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cela aura pour effet de faire une opération nulle dans votre chiffre d'affaires"}
 
-preuve:
-  statut: documented
-  citation: "Un avoir est une facture rectificative que vous adressez à un client"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Article dense en exceptions (six) et pauvre en roles : profil typique des articles
-    comptables. Le champ exceptions se revele le plus productif du schema, mais il melange
-    des natures tres differentes — regle legale, limite technique, effet de bord a ne pas
-    oublier. Une seule liste pour trois choses.
+regles_operationnelles:
+  - description_brute: un avoir doit toujours avoir un montant positif, les écritures
+                       apparaissant au crédit
+    objet_concerne: avoir
+    condition: création d'un avoir
+    consequence: le montant doit être positif, Sellsy équilibre les deux documents
+    preuve: {niveau: explicite, source: texte,
+             citation: "Un avoir doit toujours être positif."}
+    resolution_documentee: null
+
+  - description_brute: les options « Annuler par un avoir » et « Modifier par un avoir »
+                       ne sont disponibles que sur des factures validées
+    objet_concerne: facture
+    condition: facture validée
+    consequence: les deux options d'annulation par avoir deviennent disponibles
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ces deux options sont disponibles uniquement sur des factures validées."}
+    resolution_documentee: null
+
+  - description_brute: un avoir finalisé ne peut pas être supprimé, la numérotation devant
+                       rester continue et chronologique
+    objet_concerne: avoir
+    condition: avoir finalisé
+    consequence: la suppression est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "il ne sera pas possible de supprimer un avoir finalisé"}
+    resolution_documentee:
+      action: créer une facture du même montant sur le même client, puis relier l'avoir
+              à cette facture
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Créez une facture du même montant que l'avoir"}
+
+  - description_brute: un avoir créé par « Annuler par un avoir » ou « Modifier par un
+                       avoir » ne peut plus être délié de la facture
+    objet_concerne: avoir
+    condition: avoir issu de l'une de ces deux options
+    consequence: le déliement est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "il ne sera pas possible de délier l'avoir de la facture"}
+    resolution_documentee: null
+
+  - description_brute: les factures d'acompte ne peuvent être annulées que par des avoirs
+                       créés depuis elles, sans rattachement a posteriori
+    objet_concerne: facture d'acompte
+    condition: annulation d'une facture d'acompte
+    consequence: l'avoir doit être créé depuis la facture d'acompte, aucun rattachement
+                 ultérieur n'est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "mais pas de lier des avoirs à postériori"}
+    resolution_documentee: null
+
+  - description_brute: un avoir d'acompte ne peut pas être délié d'une facture d'acompte
+    objet_concerne: avoir d'acompte
+    condition: avoir d'acompte lié à une facture d'acompte
+    consequence: le déliement est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Un avoir d'acompte ne peut pas être délié d'une facture d'acompte."}
+    resolution_documentee: null
+
+  - description_brute: l'annulation d'une facture par un avoir n'annule pas les
+                       prélèvements GoCardless déjà programmés
+    objet_concerne: prélèvement GoCardless
+    condition: facture annulée par un avoir avec prélèvements programmés
+    consequence: les prélèvements restent programmés
+    preuve: {niveau: explicite, source: texte,
+             citation: "il faudra penser à annuler ces prélèvements"}
+    resolution_documentee:
+      action: annuler les prélèvements depuis l'onglet « Prélèvement GoCardless » de la facture
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "depuis l'onglet \"Prélèvement GoCardless\" de la facture"}
+
+signaux_emergents:
+  - description_brute: l'annulation d'une facture ne propage rien vers les prélèvements
+                       programmés dans le système de paiement connecté ; la documentation
+                       s'en remet à la mémoire de l'utilisateur
+    pourquoi_notable: une conséquence financière réelle dans un système tiers dépend d'un
+                      geste que rien ne rappelle ni ne déclenche ; la règle enregistre la
+                      consigne, mais le schéma ne distingue pas une conséquence prise en
+                      charge par le produit d'une conséquence confiée à la vigilance humaine
+    termes_source: ["il faudra penser à annuler ces prélèvements", "GoCardless"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "il faudra penser à annuler ces prélèvements depuis l'onglet"}

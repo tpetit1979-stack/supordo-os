@@ -1,92 +1,191 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/envoyer-un-document-pour-signature-electronique.md
-  rubrique_originale: "Documents de vente "
-  titre: Envoyer un document pour signature électronique
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - signature
-    - devis
-    - suivi
-  roles_bruts:
-    - collaborateur
-    - administrateur
-    - contact lie au document
-    - signataire
-    - client
-  roles_canoniques:
-    - bureau
-    - client
-    - patron
-  actions:
-    - activer
-    - envoyer
-    - signer
-    - relancer
-    - annuler
-    - modifier
-    - suivre
-    - filtrer
-  objets:
-    - document de vente
-    - signature electronique
-    - signataire
-    - email d'invitation
-    - colonne
-    - filtre
-    - profil de privileges
-  job_to_be_done: faire signer un document a distance et suivre qui a signe ou pas
+interactions:
+  - acteur:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: permission,
+               citation: "les profils de type collaborateur doivent avoir le privilège"}
+    destinataire:
+      role_brut: contact lié au document
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Ils peuvent être envoyés à la fois au contact lié au document"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "l'email d'invitation à la signature électronique"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Transmission explicite vers un ou plusieurs signataires, action du destinataire qui fait
-    changer l'etat automatiquement — "Lorsque le document aura été signé par l'ensemble des
-    signataires, il passera automatiquement en statut Accepté" — et possibilite de relancer
-    ceux qui n'ont pas signe. Fait notable : le signataire peut etre un collaborateur interne
-    autant que le client.
-  niveau_infere: false
-  de: utilisateur Sellsy (role non nomme)
-  vers: contact lie au document ou collaborateur interne
-  objet: document a signer
+  - acteur:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: permission,
+               citation: "les profils de type collaborateur doivent avoir le privilège"}
+    destinataire:
+      role_brut: collaborateur en charge du dossier
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "mais aussi à l’un de vos collaborateurs en charge du dossier"}
+    perimetre: interne
+    relation: pair
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "aussi un collaborateur de votre compte Sellsy"}
 
-resultat:
-  objet_produit: document signe
-  prochaine_etape: null
+  - acteur:
+      role_brut: signataires
+      role_canonique: inconnu
+      preuve: {niveau: explicite, source: texte,
+               citation: "signé par l'ensemble des signataires"}
+    destinataire:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    perimetre: inconnu
+    relation: autre
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Lorsque le document aura été signé par l'ensemble des signataires"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "il passera automatiquement en statut \"Accepté\""}
 
-complexite:
-  preconditions:
-    - privilege "Creation de signature electronique" active sur le profil collaborateur
-    - telephone et email du destinataire renseignes, tous deux obligatoires
-  nb_etapes: 4
-  etats:
-    - Envoye
-    - Accepte
-  exceptions:
-    - la signature ne peut pas etre activee sur un document expire
-    - une relance est impossible sur un document expire, il faut annuler puis reemettre
-    - un document deja signe n'est legalement plus modifiable
-    - l'email d'invitation n'apparait pas dans les messages envoyes du compte email connecte
-  systemes_externes: []
+  - acteur:
+      role_brut: administrateurs
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Les privilèges sont modifiables par les administrateurs"}
+    destinataire:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: permission,
+               citation: "les profils de type collaborateur doivent avoir le privilège"}
+    perimetre: interne
+    relation: hierarchique
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "le privilège \"Création de signature électronique\" activé"}
 
-contexte:
-  dispositif: null
-  temporalite: avant
-  recovery: true
-  sortie_du_logiciel:
-    - email
+transitions_objet:
+  - objet_source: document de vente
+    etat_entree: null
+    action: envoyer en signature électronique
+    objet_resultat: document de vente
+    etat_sortie: Envoyé
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "En cliquant sur \"Envoyer\" le document passe automatiquement en statut \"Envoyé\""}
 
-preuve:
-  statut: documented
-  citation: "Ils peuvent être envoyés (...) mais aussi à l'un de vos collaborateurs"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Cas ou le meme mecanisme sert deux coordinations de nature differente : entreprise vers
-    client et entreprise vers collaborateur interne. Le schema force un seul couple
-    de / vers et ne peut pas representer cette bifurcation. recovery est mis a true pour la
-    procedure d'annulation de signature, mais il s'agit de revenir sur une demande, pas de
-    corriger une erreur de saisie : la definition du champ est trop large.
+  - objet_source: document de vente
+    etat_entree: Envoyé
+    action: signature par l'ensemble des signataires
+    objet_resultat: document signé
+    etat_sortie: Accepté
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "il passera automatiquement en statut \"Accepté\""}
+
+  - objet_source: document envoyé en signature et non signé
+    etat_entree: Envoyé
+    action: annuler la signature puis modifier et renouveler la demande
+    objet_resultat: nouvelle demande de signature
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous pourrez alors modifier le document puis renouveler la demande de signature."}
+
+regles_operationnelles:
+  - description_brute: l'envoi en signature électronique suppose le privilège « Création
+                       de signature électronique »
+    objet_concerne: profil de privilèges
+    condition: privilège activé sur le profil collaborateur
+    consequence: l'envoi en signature électronique est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "les profils de type collaborateur doivent avoir le privilège"}
+    resolution_documentee:
+      action: faire activer le privilège par un administrateur depuis Réglages >
+              Profils de privilèges
+      acteur: administrateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Les privilèges sont modifiables par les administrateurs"}
+
+  - description_brute: le numéro de téléphone et l'email du destinataire sont obligatoires
+    objet_concerne: demande de signature
+    condition: destinataire renseigné avec téléphone et email
+    consequence: les signataires peuvent être qualifiés en cas de litige
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le numéro de téléphone (fixe ou mobile) et l'email du destinataire sont obligatoires"}
+    resolution_documentee: null
+
+  - description_brute: la signature électronique ne peut pas être activée sur un document
+                       expiré
+    objet_concerne: document de vente
+    condition: document expiré
+    consequence: l'activation de la signature électronique est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "La signature électronique ne peut pas être activée sur un document expiré."}
+    resolution_documentee:
+      action: modifier le document pour ajuster la date du champ « à signer avant le »
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "ajuster la date dans le champ \"à signer avant le\""}
+
+  - description_brute: une relance de signature ne peut pas être effectuée sur un document
+                       expiré
+    objet_concerne: demande de signature
+    condition: document expiré
+    consequence: la relance est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une relance de signature électronique ne peut pas être effectuée"}
+    resolution_documentee:
+      action: annuler la demande de signature, ajuster la date puis renouveler la demande
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "il est nécessaire d'annuler la demande de signature, modifier le document"}
+
+  - description_brute: un document déjà signé n'est légalement plus modifiable
+    objet_concerne: document de vente
+    condition: document signé
+    consequence: aucune modification n'est possible
+    preuve: {niveau: explicite, source: texte,
+             citation: "ce dernier ne sera légalement plus modifiable"}
+    resolution_documentee: null
+
+  - description_brute: l'email d'invitation à la signature n'apparaît pas dans les
+                       messages envoyés du compte email connecté
+    objet_concerne: email d'invitation
+    condition: envoi d'une demande de signature
+    consequence: l'email est consultable dans l'onglet Emails du document, non dans la
+                 messagerie connectée
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne sera pas visible dans le dossier \"Messages envoyés\" de votre compte email"}
+    resolution_documentee: null
+
+signaux_emergents: []

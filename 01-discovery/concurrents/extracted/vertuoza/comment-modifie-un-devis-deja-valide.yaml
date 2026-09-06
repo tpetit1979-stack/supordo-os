@@ -1,67 +1,66 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/faq-foires-aux-questions/comment-modifie-un-devis-deja-valide.md
-  rubrique_originale: FAQ (Foires Aux Questions)
-  titre: Comment modifié un devis déjà validé ?
+parcours:
+  origine: vente
+  nature: installation
 
-metier:
-  moments:
-    - devis
-    - correction d'erreur
-    - avenant
-  roles_bruts: []
-  roles_canoniques:
-    - inconnu
-  actions:
-    - supprimer
-    - modifier
-    - reouvrir
-    - creer
-  objets:
-    - devis
-    - chantier
-    - facture
-    - avenant
-  job_to_be_done: modifier un devis deja transforme en chantier sans perdre les documents deja emis
+interactions: []
 
-coordination:
-  niveau: 0
-  justification: Aucun role ni transmission n'apparait ; l'article decrit une contrainte technique entre objets.
-  niveau_infere: false
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: chantier
+    etat_entree: aucun document créé
+    action: supprimer le chantier
+    objet_resultat: devis initial
+    etat_sortie: réouvert et modifiable
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le devis initial sera alors réouvert et à nouveau modifiable"}
 
-resultat:
-  objet_produit: devis reouvert ou avenant
-  prochaine_etape: null
+  - objet_source: devis validé
+    etat_entree: validé
+    action: créer un avenant
+    objet_resultat: avenant
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "qui permet d’apporter des modifications au devis de base"}
 
-complexite:
-  preconditions:
-    - un devis valide et transforme en chantier existe
-  nb_etapes: 2
-  etats:
-    - valide
-  exceptions:
-    - la suppression du chantier est impossible tant que des factures ou documents existent
-    - si l'on ne veut pas supprimer ces documents, passer par un avenant
-  systemes_externes: []
+regles_operationnelles:
+  - description_brute: la suppression du chantier n'est possible que si aucun document
+                       n'y a encore été créé
+    objet_concerne: chantier
+    condition: aucun document créé dans le chantier
+    consequence: le chantier peut être supprimé et le devis réouvert
+    preuve: {niveau: explicite, source: texte,
+             citation: "si aucun document n’a encore été créé dans le chantier, supprimer celui-ci"}
+    resolution_documentee: null
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel: []
+  - description_brute: tant que des factures ou autres documents existent dans le chantier,
+                       celui-ci ne peut pas être supprimé
+    objet_concerne: chantier
+    condition: des factures ou autres documents ont été générés dans le chantier
+    consequence: la suppression du chantier est impossible
+    preuve: {niveau: explicite, source: texte,
+             citation: "la suppression du chantier n’est plus possible tant que ces documents existent"}
+    resolution_documentee:
+      action: supprimer tous les documents associés, ou passer par un avenant pour
+              modifier le devis sans les supprimer
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Si vous supprimez tous les documents associés, le chantier pourra alors être supprimé."}
 
-preuve:
-  statut: documented
-  citation: "Le devis initial sera alors réouvert et à nouveau modifiable"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    L'interet de l'article est une regle de dependance entre objets (devis / chantier /
-    facture) qui contraint ce qui est encore reversible. Le schema n'a aucun champ pour
-    representer une contrainte de ce type : ni preconditions ni exceptions ne rendent la
-    logique "tant que X existe, Y est impossible".
+  - description_brute: un avenant peut contenir des montants positifs comme négatifs
+    objet_concerne: avenant
+    condition: null
+    consequence: le devis validé peut être ajusté de manière flexible
+    preuve: {niveau: explicite, source: texte,
+             citation: "aussi bien des montants positifs que négatifs"}
+    resolution_documentee: null
+
+signaux_emergents: []

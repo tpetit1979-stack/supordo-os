@@ -1,95 +1,165 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/application-mobile/ouvrier-rapport-d-intervention.md
-  rubrique_originale: Application mobile
-  titre: Ouvrier - Rapport d’intervention
+parcours:
+  origine: inconnu
+  nature: intervention
 
-metier:
-  moments:
-    - intervention
-    - rapport d'intervention
-    - preparation de la facturation
-  roles_bruts:
-    - ouvrier
-    - accompagnant
-    - gestionnaire
-    - client
-  roles_canoniques:
-    - terrain
-    - bureau
-    - client
-  actions:
-    - creer
-    - saisir
-    - modifier
-    - marquer
-    - reprogrammer
-    - joindre
-    - soumettre
-    - faire signer
-    - accepter
-  objets:
-    - rapport d'intervention
-    - intervention
-    - accompagnant
-    - heure
-    - cout
-    - frais
-    - fourniture
-    - photo
-    - certificat d'entretien
-    - planning
-    - facture
-  job_to_be_done: consigner sur place ce qui a ete fait et ce qui sera facture, et le faire valider par le client
+interactions:
+  - acteur:
+      role_brut: ouvrier
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "Depuis le planning, l’ouvrier peut créer un rapport d’intervention."}
+    destinataire:
+      role_brut: gestionnaire
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Cela indiquera au gestionnaire que tout s'est déroulé comme prévu"}
+    perimetre: interne
+    relation: inconnu
+    canal: statut
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Cela indiquera au gestionnaire (...) qu'il peut clôturer cette intervention"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "L’intervention deviendra verte sur le planning du gestionnaire"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Une nouvelle intervention \"A programmer\" sera alors créée sur le planning"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Trois transmissions explicites sont documentees : de l'ouvrier vers le client (signature),
-    de l'ouvrier vers le gestionnaire (l'intervention devient verte sur le planning du
-    gestionnaire, le rapport passe en "Cloture"), et une action declenchee chez le
-    gestionnaire — "Cela indiquera au gestionnaire que tout s'est déroulé comme prévu et
-    qu'il peut clôturer cette intervention." Une reprogrammation cree une intervention
-    "A programmer" cote gestion.
-  niveau_infere: false
-  de: ouvrier
-  vers: gestionnaire
-  objet: rapport d'intervention (et intervention marquee terminee)
+  - acteur:
+      role_brut: ouvrier
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "de le faire signer par le client avant de l’accepter"}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "de le faire signer par le client"}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes: []
 
-resultat:
-  objet_produit: rapport d'intervention
-  prochaine_etape: le gestionnaire cloture l'intervention ; les elements "facturables" apparaitront sur la facture
+transitions_objet:
+  - objet_source: planning
+    etat_entree: null
+    action: créer un rapport d'intervention
+    objet_resultat: rapport d'intervention
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: ouvrier
+      preuve: {niveau: explicite, source: texte,
+               citation: "Depuis le planning, l’ouvrier peut créer un rapport d’intervention."}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Depuis le planning, l’ouvrier peut créer un rapport d’intervention."}
 
-complexite:
-  preconditions:
-    - une intervention existe au planning de l'ouvrier
-  nb_etapes: 6
-  etats:
-    - terminee
-    - A programmer
-    - Cloture
-  exceptions:
-    - une intervention peut etre marquee non facturable (ex. SAV gratuit) avec un motif
-    - une fois le rapport accepte, l'ouvrier ne peut plus le modifier
-    - le mode de valorisation change selon regie / forfaitaire / sur base d'un devis
-  systemes_externes: []
+  - objet_source: rapport d'intervention
+    etat_entree: null
+    action: soumettre puis accepter
+    objet_resultat: rapport d'intervention
+    etat_sortie: Clôturé
+    owner_avant:
+      role: ouvrier
+      preuve: {niveau: explicite, source: texte,
+               citation: "l’ouvrier peut le soumettre"}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le rapport apparaîtra sous le statut “Clôturé” dans la gestion de l’intervention"}
 
-contexte:
-  dispositif: mobile
-  temporalite: pendant
-  recovery: false
-  sortie_du_logiciel: []
+  - objet_source: intervention
+    etat_entree: null
+    action: reprogrammer
+    objet_resultat: nouvelle intervention
+    etat_sortie: A programmer
+    owner_avant:
+      role: ouvrier
+      preuve: {niveau: explicite, source: texte,
+               citation: "l'ouvrier peut également reprogrammer l'intervention"}
+    owner_apres:
+      role: gestion
+      preuve: {niveau: explicite, source: texte,
+               citation: "sera alors créée sur le planning côté gestion"}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "en entrant la nouvelle date et les actions à réaliser"}
 
-preuve:
-  statut: documented
-  citation: "Cela indiquera au gestionnaire que tout s'est déroulé comme prévu"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Article le plus riche du lot vertuoza en coordination : l'ouvrier decide de ce qui est
-    facturable, ce qui engage directement le travail du bureau. Le schema ne permet pas de
-    representer qu'un role terrain prend ici une decision a portee financiere — c'est
-    pourtant l'element le plus interessant de l'article. Le terme "accompagnant" est propre
-    a Vertuoza et n'entre proprement dans aucune categorie canonique ; conserve en roles_bruts.
+regles_operationnelles:
+  - description_brute: dans une intervention en régie, chaque accompagnant ajouté est
+                       repris dans les coûts de l'intervention
+    objet_concerne: intervention
+    condition: intervention en régie
+    consequence: chaque accompagnant est ajouté dans les coûts de l'intervention
+    preuve: {niveau: explicite, source: texte,
+             citation: "chaque accompagnant est ajouté dans les coûts de l’intervention"}
+    resolution_documentee: null
+
+  - description_brute: dans une intervention en régie, la période saisie sert au calcul
+                       du coût
+    objet_concerne: intervention
+    condition: intervention en régie
+    consequence: la période indiquée sert à calculer le coût de l'intervention
+    preuve: {niveau: explicite, source: texte,
+             citation: "la période indiquée sert à calculer le coût de l’intervention"}
+    resolution_documentee: null
+
+  - description_brute: un élément du rapport n'apparaît sur la facture que si l'option
+                       facturable est activée
+    objet_concerne: ligne d'intervention
+    condition: option "facturable" activée
+    consequence: l'élément apparaît sur la facture
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'élément apparaîtra sur la facture si l'option \"facturable\" est activée."}
+    resolution_documentee: null
+
+  - description_brute: une intervention marquée non facturable peut être assortie d'une
+                       raison saisie par l'ouvrier
+    objet_concerne: intervention
+    condition: intervention marquée comme non facturable
+    consequence: une raison peut être entrée
+    preuve: {niveau: explicite, source: texte,
+             citation: "Dans ce cas, il peut entrer une raison."}
+    resolution_documentee: null
+
+  - description_brute: une fois le rapport accepté, l'ouvrier ne peut plus le modifier
+    objet_concerne: rapport d'intervention
+    condition: le rapport est accepté
+    consequence: l'ouvrier ne peut plus modifier le rapport
+    preuve: {niveau: explicite, source: texte,
+             citation: "Une fois accepté, l’ouvrier ne peut plus modifier le rapport."}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: c'est l'ouvrier, sur le terrain, qui décide de ce qui sera facturé
+                       — caractère facturable, prix de l'intervention, prix unitaire de
+                       la main-d'œuvre, coûts ajoutés — et sa saisie alimente directement
+                       la facture
+    pourquoi_notable: une décision à portée commerciale et financière est déléguée au
+                      rôle terrain ; les règles enregistrent le mécanisme mais aucun champ
+                      ne représente le fait que la décision elle-même change de rôle
+    termes_source: ["facturable", "en régie", "forfaitaire", "prix unitaire"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "L’ouvrier peut définir si la main-d’œuvre est facturable ou non"}
+
+  - description_brute: le rapport comporte une liste d'« accompagnants », personnes
+                       présentes sur l'intervention dont la seule trace est leur poids
+                       dans les coûts
+    pourquoi_notable: ces personnes participent au travail sans être ni acteur, ni
+                      destinataire, ni utilisateur du logiciel ; le schéma n'a aucun
+                      emplacement pour une personne qui n'a pas de compte mais compte
+                      dans le calcul
+    termes_source: ["accompagnants"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Dans cette section, l’ouvrier peut gérer la liste des accompagnants."}

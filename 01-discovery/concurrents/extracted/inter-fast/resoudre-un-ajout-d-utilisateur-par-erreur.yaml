@@ -1,88 +1,133 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/equipe/resoudre-un-ajout-d-utilisateur-par-erreur.md
-  rubrique_originale: Équipe
-  titre: Résoudre un ajout d’Utilisateur par erreur
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - administration de l'entreprise
-    - gestion des utilisateurs
-    - correction d'erreur
-    - abonnement et facturation editeur
-  roles_bruts:
-    - utilisateur
-    - collaborateur
-    - collaborateur sortant
-    - support
-  roles_canoniques:
-    - patron
-    - externe
-    - inconnu
-  actions:
-    - ajouter
-    - archiver
-    - contacter
-    - inviter
-    - creer
-  objets:
-    - utilisateur
-    - licence
-    - prorata
-    - facture d'abonnement
-    - credit
-    - avoir
-    - profil
-    - CGV
-  job_to_be_done: annuler les frais declenches par l'ajout d'un utilisateur cree par erreur
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: support / équipe Care
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Contactez le support depuis le tchat ou par mail"}
+    perimetre: editeur
+    relation: autre
+    canal: email
+    dans_logiciel: partiel
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "pour valider la conversion du montant en crédit sur votre compte"}
 
-coordination:
-  niveau: 3
-  justification: >-
-    Transmission explicite du client vers l'editeur, presentee comme une etape obligatoire :
-    "Contactez le support depuis le tchat ou par mail (...) pour valider la conversion du
-    montant en crédit". L'action du support n'est pas decrite au-dela de cette validation.
-  niveau_infere: false
-  de: administrateur du compte
-  vers: support InterFast
-  objet: demande de conversion du montant en credit
+transitions_objet:
+  - objet_source: ajout d'un utilisateur payant
+    etat_entree: null
+    action: calcul et facturation automatiques au prorata
+    objet_resultat: facture d'abonnement
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "le système calcule et facture automatiquement son coût"}
 
-resultat:
-  objet_produit: credit d'abonnement
-  prochaine_etape: le credit est deduit automatiquement de la prochaine facture
+  - objet_source: utilisateur archivé
+    etat_entree: archivé
+    action: conversion de la part non utilisée
+    objet_resultat: crédit d'abonnement
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le système calcule la part non utilisée et la transforme instantanément"}
 
-complexite:
-  preconditions:
-    - un utilisateur payant a ete ajoute et la licence activee
-  nb_etapes: 2
-  etats:
-    - archive
-  exceptions:
-    - les frais ne sont pas remboursables en numeraire, uniquement convertis en credit
-    - la facture emise reste comptablement valide, elle est neutralisee par l'avoir
-    - pour un remplacement, archiver d'abord le sortant pour liberer la licence
-    - ne pas modifier un profil errone mais l'archiver puis en creer un nouveau
-    - si l'archivage a lieu juste avant la date anniversaire, le credit reste sur le compte
-  systemes_externes: []
+  - objet_source: profil utilisateur erroné
+    etat_entree: null
+    action: archiver puis créer un nouveau profil
+    objet_resultat: nouveau profil utilisateur
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: reconstruction_contexte
+          preuve: {niveau: explicite, source: texte,
+                   citation: "puis créez un nouveau profil avec les bonnes informations"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ne modifiez pas l’utilisateur existant si les informations sont incorrectes."}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: true
-  sortie_du_logiciel:
-    - email
+regles_operationnelles:
+  - description_brute: le coût d'une licence est généré dès son activation, même si
+                       l'utilisateur est archivé immédiatement après
+    objet_concerne: licence
+    condition: licence activée
+    consequence: le coût au prorata est facturé jusqu'à la prochaine échéance
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ce coût est généré dès l'activation de la licence"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "Contactez le support (...) pour valider la conversion du montant en crédit"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Article d'administration qui ne releve pas du cycle client mais de la relation
-    commerciale avec l'editeur. Le moment "abonnement et facturation editeur" a du etre
-    invente. Probleme de fond : le seul "handoff" de l'article est client vers editeur, pas
-    entre deux roles de l'entreprise. Si l'on compte mecaniquement les handoffs, ce type
-    d'article gonflera artificiellement le score de coordination sans rien dire de la
-    coordination interne. Le champ coordination ne distingue pas les deux natures.
+  - description_brute: les frais d'ajout de licence ne sont pas remboursables en numéraire
+    objet_concerne: frais de licence
+    condition: licence activée et montant réglé
+    consequence: aucun remboursement sur le compte bancaire
+    preuve: {niveau: explicite, source: texte,
+             citation: "Les frais d'ajout de licence ne sont pas remboursables en numéraire."}
+    resolution_documentee:
+      action: archiver l'utilisateur pour convertir le montant en crédit, puis contacter
+              le support pour valider la conversion
+      acteur: support
+      preuve: {niveau: explicite, source: texte,
+               citation: "nous convertissons le montant facturé en crédit sur votre compte client"}
+
+  - description_brute: un profil dont les informations sont incorrectes ne doit pas être
+                       modifié
+    objet_concerne: profil utilisateur
+    condition: informations incorrectes sur un profil existant
+    consequence: la modification est déconseillée
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ne modifiez pas l’utilisateur existant si les informations sont incorrectes."}
+    resolution_documentee:
+      action: archiver le profil erroné puis créer un nouveau profil, le crédit couvrant
+              la nouvelle facturation
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Archivez le profil erroné, ce qui génère un crédit pour la somme avancée"}
+
+  - description_brute: lors d'un remplacement de collaborateur, l'ordre des opérations
+                       détermine le coût
+    objet_concerne: licence
+    condition: archivage du collaborateur sortant effectué avant l'invitation du nouveau
+    consequence: la licence est libérée, le crédit couvre la nouvelle licence, l'opération
+                 est neutre financièrement
+    preuve: {niveau: explicite, source: texte,
+             citation: "à condition de suivre le bon ordre : archivez d’abord le collaborateur sortant"}
+    resolution_documentee: null
+
+  - description_brute: la facture émise à tort reste comptablement valide et se trouve
+                       neutralisée par l'avoir généré à l'archivage
+    objet_concerne: facture d'abonnement
+    condition: facture émise puis utilisateur archivé
+    consequence: la facture reste valide, neutralisée par le crédit
+    preuve: {niveau: explicite, source: texte,
+             citation: "la facture émise reste comptablement valide"}
+    resolution_documentee: null
+
+  - description_brute: un archivage intervenant juste avant la date anniversaire n'empêche
+                       pas la conservation du crédit
+    objet_concerne: crédit d'abonnement
+    condition: archivage peu avant la date anniversaire, facture de renouvellement déjà éditée
+    consequence: le crédit reste sur le compte et sera déduit du paiement final ou de la
+                 facture suivante
+    preuve: {niveau: explicite, source: texte,
+             citation: "le crédit généré reste sur votre compte"}
+    resolution_documentee: null
+
+signaux_emergents: []

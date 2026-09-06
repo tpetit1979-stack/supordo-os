@@ -1,90 +1,173 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/paiements/ajouter-un-reglement-a-une-ou-plusieurs-factures.md
-  rubrique_originale: Paiements
-  titre: Ajouter un règlement à une ou plusieurs factures
+parcours:
+  origine: inconnu
+  nature: administratif
 
-metier:
-  moments:
-    - encaissement
-    - facturation
-    - rapprochement bancaire
-  roles_bruts:
-    - client
-    - prospect
-    - fournisseur
-    - administrateur
-  roles_canoniques:
-    - client
-    - externe
-    - patron
-    - inconnu
-  actions:
-    - enregistrer
-    - saisir
-    - rattacher
-    - solder
-    - lier
-    - editer
-    - supprimer
-    - envoyer
-  objets:
-    - reglement
-    - paiement
-    - facture
-    - facture d'acompte
-    - remise en banque
-    - mode de reglement
-    - email de remerciement
-    - profil de privileges
-  job_to_be_done: enregistrer l'argent recu et le rattacher aux bonnes factures
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Envoyer un email de remerciement au client"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "envoyer automatiquement un email de remerciement ou un accusé de réception"}
 
-coordination:
-  niveau: 3
-  justification: >-
-    Une transmission explicite est prevue vers le client : l'option "Envoyer un email de
-    remerciement au client" declenche un accuse de reception. Aucune action du client en
-    retour n'est documentee. La coordination interne se limite a une dependance de droits.
-  niveau_infere: false
-  de: utilisateur Sellsy (role non nomme)
-  vers: client
-  objet: email de remerciement / accuse de reception du paiement
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: administrateur du compte Sellsy
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "veuillez prendre contact avec un administrateur de votre compte Sellsy"}
+    perimetre: interne
+    relation: hierarchique
+    canal: aucun
+    dans_logiciel: non
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "vous devez avoir les droits nécessaires dans votre profil de privilèges"}
 
-resultat:
-  objet_produit: reglement
-  prochaine_etape: null
+transitions_objet:
+  - objet_source: paiement reçu du client
+    etat_entree: null
+    action: enregistrer un paiement depuis l'aperçu de la facture
+    objet_resultat: règlement lié à la facture
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "enregistrer les paiements reçus de vos clients en règlement de vos factures"}
 
-complexite:
-  preconditions:
-    - disposer des droits necessaires dans son profil de privileges
-    - pour un reglement multi-factures, l'enregistrer d'abord depuis le menu Banque
-  nb_etapes: 4
-  etats: []
-  exceptions:
-    - par defaut le reglement solde la facture, decocher l'ajustement pour un reglement partiel
-    - la date et le montant d'un paiement ne sont pas modifiables, il faut supprimer puis recreer
-    - la liste n'affiche que les reglements des clients auxquels on a acces
-    - pour des acomptes lies a un devis, utiliser plutot "Emettre une facture d'acompte"
-  systemes_externes:
-    - banque
+  - objet_source: règlement non affecté
+    etat_entree: non affecté
+    action: rattacher au document
+    objet_resultat: règlement lié
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "ils vous sont proposés en haut de la fenêtre"}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: false
-  sortie_du_logiciel:
-    - email
+  - objet_source: règlement enregistré depuis le menu Banque
+    etat_entree: null
+    action: solder des factures et répartir le montant
+    objet_resultat: règlement lié à plusieurs factures
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "spécifier le montant à solder pour chacune d'entre-elles"}
 
-preuve:
-  statut: documented
-  citation: "vous pourrez envoyer automatiquement un email de remerciement ou un accusé de réception"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Le niveau 3 repose sur un email automatique vers le client, ce qui est une transmission
-    faible : discutable, et symptomatique du fait que l'echelle ne distingue pas une
-    notification sortante d'un veritable relais de travail. L'article documente aussi une
-    coordination indirecte forte — la visibilite des reglements depend du perimetre client de
-    chacun — que le schema ne sait pas representer.
+  - objet_source: paiement dont la date ou le montant est erroné
+    etat_entree: enregistré
+    action: supprimer puis recréer le paiement
+    objet_resultat: paiement corrigé
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: rupture_documentee
+      ruptures:
+        - type: ressaisie
+          preuve: {niveau: explicite, source: texte,
+                   citation: "le paiement devra être supprimé puis recréé avec les informations souhaitées"}
+    preuve: {niveau: explicite, source: texte,
+             citation: "la date et le montant d'un paiement enregistré (...) ne peuvent pas être modifiés"}
+
+regles_operationnelles:
+  - description_brute: par défaut le règlement solde la facture
+    objet_concerne: règlement
+    condition: case d'ajustement laissée cochée
+    consequence: le règlement solde la facture
+    preuve: {niveau: explicite, source: texte,
+             citation: "Par défaut, le règlement solde la facture."}
+    resolution_documentee:
+      action: décocher la case d'ajustement pour saisir le montant exact d'un règlement partiel
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "décochez la case d'ajustement pour saisir le montant exact"}
+
+  - description_brute: la date et le montant d'un paiement enregistré ne peuvent pas être
+                       modifiés
+    objet_concerne: paiement
+    condition: paiement déjà enregistré sur un document
+    consequence: aucune modification de la date ni du montant
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne peuvent pas être modifiés, le paiement devra être supprimé puis recréé"}
+    resolution_documentee:
+      action: supprimer le paiement puis le recréer avec les informations souhaitées
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "supprimé puis recréé avec les informations souhaitées"}
+
+  - description_brute: l'ajout de règlements et l'accès à la liste des règlements
+                       supposent des droits dans le profil de privilèges
+    objet_concerne: profil de privilèges
+    condition: droits nécessaires accordés
+    consequence: l'ajout de règlements et l'accès à la liste deviennent possibles
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devez avoir les droits nécessaires dans votre profil de privilèges"}
+    resolution_documentee:
+      action: prendre contact avec un administrateur du compte Sellsy
+      acteur: administrateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "veuillez prendre contact avec un administrateur de votre compte Sellsy"}
+
+  - description_brute: la liste des règlements n'affiche que ceux des clients, prospects
+                       et fournisseurs auxquels l'utilisateur a accès
+    objet_concerne: liste des règlements
+    condition: périmètre d'accès de l'utilisateur
+    consequence: seuls les règlements des tiers accessibles sont affichés
+    preuve: {niveau: explicite, source: texte,
+             citation: "n'affichera que les règlements des clients/prospects/fournisseurs auxquels vous avez accès"}
+    resolution_documentee: null
+
+  - description_brute: pour des acomptes liés à un devis, la fonction « Émettre une
+                       facture d'acompte » est plus adaptée
+    objet_concerne: facture d'acompte
+    condition: paiements échelonnés liés à un devis spécifique
+    consequence: l'émission d'une facture d'acompte depuis le devis est recommandée
+    preuve: {niveau: explicite, source: texte,
+             citation: "Cette méthode est plus adaptée pour gérer les paiements échelonnés"}
+    resolution_documentee: null
+
+  - description_brute: plusieurs règlements remis en banque simultanément relèvent d'une
+                       remise groupée
+    objet_concerne: remise en banque
+    condition: plusieurs règlements remis en banque en même temps
+    consequence: la création d'une remise groupée est recommandée
+    preuve: {niveau: explicite, source: texte,
+             citation: "créez plutôt une remise groupée"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la liste des règlements est filtrée par le périmètre de tiers de
+                       chaque utilisateur, de sorte que deux collaborateurs consultant le
+                       même écran ne voient pas les mêmes encaissements
+    pourquoi_notable: la réalité financière affichée dépend du rôle qui regarde ; le
+                      schéma sait enregistrer qu'un accès est accordé ou refusé, pas qu'un
+                      même écran restitue un contenu différent selon son lecteur
+    termes_source: ["clients/prospects/fournisseurs auxquels vous avez accès"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "la liste des règlements n'affichera que les règlements des clients"}

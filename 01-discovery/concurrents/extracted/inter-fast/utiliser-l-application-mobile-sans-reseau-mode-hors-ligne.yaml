@@ -1,80 +1,104 @@
-source:
-  vendor: inter-fast
-  fichier: 01-discovery/concurrents/sources/inter-fast/application-mobile/utiliser-l-application-mobile-sans-reseau-mode-hors-ligne.md
-  rubrique_originale: Application Mobile
-  titre: Utiliser l'application mobile sans réseau (Mode hors ligne)
+parcours:
+  origine: inconnu
+  nature: intervention
 
-metier:
-  moments:
-    - intervention
-    - rapport d'intervention
-    - travail en zone sans reseau
-  roles_bruts:
-    - client
-  roles_canoniques:
-    - terrain
-    - client
-  actions:
-    - precharger
-    - demarrer
-    - remplir
-    - cocher
-    - photographier
-    - synchroniser
-    - terminer
-  objets:
-    - intervention
-    - rapport d'intervention
-    - liste de controle
-    - photo
-    - equipement
-    - client
-  job_to_be_done: continuer a documenter une intervention dans une cave ou une zone blanche sans perdre sa saisie
+interactions:
+  - acteur:
+      role_brut: terrain
+      role_canonique: terrain
+      preuve: {niveau: explicite, source: texte,
+               citation: "une synchronisation instantanée entre le terrain et le bureau"}
+    destinataire:
+      role_brut: bureau
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "une synchronisation instantanée entre le terrain et le bureau"}
+    perimetre: interne
+    relation: inconnu
+    canal: inconnu
+    dans_logiciel: inconnu
+    mecanismes: []
 
-coordination:
-  niveau: 1
-  justification: >-
-    Le client et l'equipement apparaissent comme des donnees a precharger, et le texte evoque
-    "une synchronisation instantanée entre le terrain et le bureau", mais aucun role
-    destinataire n'agit dans l'article : il porte sur la contrainte technique, pas sur un relais.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+transitions_objet:
+  - objet_source: fiche d'intervention sur les serveurs
+    etat_entree: null
+    action: pré-charger l'intervention avec une connexion active
+    objet_resultat: intervention disponible hors ligne
+    etat_sortie: démarrée
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: terrain
+      preuve: {niveau: contextuel, source: rubrique,
+               citation: "Application Mobile"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ouvrez la fiche de votre intervention du jour pour la \"pré-charger\""}
 
-resultat:
-  objet_produit: rapport d'intervention
-  prochaine_etape: attendre le retour du reseau avant de cliquer sur "Terminer l'intervention"
+  - objet_source: saisies du rapport hors réseau
+    etat_entree: null
+    action: sauvegarde locale sur le téléphone
+    objet_resultat: rapport d'intervention en attente de synchronisation
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "sauvegardées localement et en toute sécurité sur la mémoire interne"}
 
-complexite:
-  preconditions:
-    - avoir precharge la fiche d'intervention avec une connexion active
-    - avoir clique sur "Demarrer l'intervention" avant de perdre le reseau
-  nb_etapes: 3
-  etats: []
-  exceptions:
-    - le mode hors ligne est partiel, une intervention non prechargee est inutilisable
-    - ne pas terminer l'intervention tant que le reseau n'est pas revenu
-  systemes_externes: []
+  - objet_source: rapport d'intervention en attente de synchronisation
+    etat_entree: null
+    action: terminer l'intervention au retour du réseau
+    objet_resultat: rapport généré
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Attendez de retrouver une connexion stable (Wi-Fi ou 4G/5G)"}
 
-contexte:
-  dispositif: chantier
-  temporalite: pendant
-  recovery: false
-  sortie_du_logiciel: []
+regles_operationnelles:
+  - description_brute: le mode hors ligne est partiel, l'intervention doit avoir été
+                       chargée au préalable avec une connexion active
+    objet_concerne: intervention
+    condition: intervention préchargée avec une connexion internet active
+    consequence: le téléphone connaît le client et le travail à faire hors réseau
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous devez obligatoirement avoir chargé l'intervention au préalable"}
+    resolution_documentee:
+      action: ouvrir la fiche d'intervention et cliquer sur Démarrer l'intervention avant
+              de perdre le réseau
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Avant de perdre le réseau (...) ouvrez l'application InterFast"}
 
-preuve:
-  statut: documented
-  citation: "Vous devez obligatoirement avoir chargé l'intervention au préalable"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.dispositif
-  ambiguite: moyenne
-  note: >-
-    dispositif code "chantier" plutot que "mobile" : c'est une inference discutable, l'outil
-    est le mobile mais le sujet de l'article est le lieu (caves, sous-sols, zones blanches).
-    Le schema force a choisir alors que les deux sont vrais — "mobile" et "chantier" ne sont
-    pas sur le meme axe (support materiel contre lieu). Defaut a signaler.
-    Le sujet reel — la degradation du service et ce que l'utilisateur doit anticiper — n'a
-    aucun champ dedie.
+  - description_brute: il ne faut pas terminer l'intervention tant que le réseau n'est
+                       pas revenu
+    objet_concerne: intervention
+    condition: absence de réseau au moment de terminer
+    consequence: l'action « Terminer l'intervention » doit être différée
+    preuve: {niveau: explicite, source: texte,
+             citation: "ne cliquez pas tout de suite sur \"Terminer l'intervention\""}
+    resolution_documentee:
+      action: attendre une connexion stable puis terminer l'intervention
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Attendez de retrouver une connexion stable (Wi-Fi ou 4G/5G)"}
+
+signaux_emergents:
+  - description_brute: la couverture du mode dégradé repose sur une discipline
+                       d'anticipation du technicien — précharger depuis le véhicule avant
+                       d'entrer dans la zone blanche, puis respecter un ordre d'actions
+                       au retour du réseau
+    pourquoi_notable: la continuité n'est pas assurée par le logiciel mais par un
+                      protocole humain que la documentation enseigne ; le schéma ne
+                      distingue pas une continuité tenue par le produit d'une continuité
+                      tenue par le comportement de l'utilisateur
+    termes_source: ["dans votre véhicule en arrivant devant le bâtiment", "mode hors ligne partiel"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "Avant de perdre le réseau (par exemple, dans votre véhicule"}

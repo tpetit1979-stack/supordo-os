@@ -1,86 +1,128 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/app-mobile-sellsy-crm/app-sellsy-crm-le-journal-des-appels.md
-  rubrique_originale: App mobile Sellsy CRM
-  titre: App Sellsy CRM - Le journal des appels
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - prospection
-    - suivi client
-    - vente en deplacement
-  roles_bruts:
-    - collaborateur
-    - administrateur
-    - contact
-  roles_canoniques:
-    - bureau
-    - patron
-    - client
-  actions:
-    - activer
-    - appeler
-    - saisir
-    - dicter
-    - enregistrer
-    - creer
-    - consulter
-  objets:
-    - appel sortant
-    - fil d'activites
-    - note
-    - tache
-    - evenement
-    - opportunite
-    - document de vente
-    - profil de privileges
-  job_to_be_done: garder une trace de ce qui s'est dit au telephone et ne pas oublier la suite a donner
+interactions:
+  - acteur:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: permission,
+               citation: "les profils de type collaborateur doivent avoir le droit “Accès au module”"}
+    destinataire:
+      role_brut: contact
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "recherchez votre contact et cliquez sur \"Appeler\""}
+    perimetre: client
+    relation: autre
+    canal: inconnu
+    dans_logiciel: partiel
+    mecanismes: []
 
-coordination:
-  niveau: 1
-  justification: >-
-    Le contact appele et l'administrateur qui accorde les droits apparaissent, mais tout le
-    travail decrit reste celui d'une seule personne : le fil d'activites est un journal
-    personnel, aucun destinataire interne n'est nomme.
-  niveau_infere: true
-  de: null
-  vers: null
-  objet: null
+  - acteur:
+      role_brut: administrateurs
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Les privilèges sont modifiables par les administrateurs"}
+    destinataire:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: permission,
+               citation: "les profils de type collaborateur doivent avoir le droit “Accès au module”"}
+    perimetre: interne
+    relation: hierarchique
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "le droit “Accès au module” dans la section \"Suivi des appels\""}
 
-resultat:
-  objet_produit: entree d'appel dans le fil d'activites
-  prochaine_etape: creer une tache, un evenement, une opportunite ou un document de vente pour donner suite a l'appel
+transitions_objet:
+  - objet_source: appel sortant passé depuis l'application
+    etat_entree: null
+    action: capture automatique à la fin de l'appel
+    objet_resultat: entrée dans le fil d'activités
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "remplit automatiquement les détails de votre appel (appel sortant, date, heure"}
 
-complexite:
-  preconditions:
-    - droit "Acces au module" dans la section "Suivi des appels" du profil de privileges
-    - fonctionnalite "Ajout des appels sortants" activee
-  nb_etapes: 5
-  etats: []
-  exceptions:
-    - la creation d'une activite liee apres un appel n'est pas obligatoire
-  systemes_externes:
-    - telephone mobile
+  - objet_source: note dictée au microphone
+    etat_entree: null
+    action: conversion de la parole en texte
+    objet_resultat: note de l'appel
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "utiliser le microphone intégré à votre téléphone pour dicter la note"}
 
-contexte:
-  dispositif: mobile
-  temporalite: indifferent
-  recovery: false
-  sortie_du_logiciel:
-    - telephone
+  - objet_source: appel enregistré
+    etat_entree: enregistré
+    action: donner suite à l'appel
+    objet_resultat: tâche, événement, opportunité ou document de vente
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous serez automatiquement invité à donner suite à cet appel"}
 
-preuve:
-  statut: documented
-  citation: "capturer automatiquement les détails de l'appel dans le fil d'activités"
-  champs_inferes:
-    - metier.roles_canoniques
-    - coordination.niveau
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Le "fil d'activites" est un canal potentiel de coordination — chez InterFast un objet du
-    meme nom sert explicitement au relais — mais ici rien ne dit qu'un autre collaborateur le
-    consulte. J'ai donc refuse de monter le niveau, alors que la tentation etait forte : cas
-    concret ou ma connaissance d'un autre concurrent aurait pu contaminer la lecture.
-    sortie_du_logiciel: telephone est un cas limite, l'appel etant a la fois hors du logiciel
-    et capture par lui.
+regles_operationnelles:
+  - description_brute: l'enregistrement des appels sortants suppose le droit « Accès au
+                       module » dans la section Suivi des appels
+    objet_concerne: profil de privilèges
+    condition: droit « Accès au module » accordé sur Suivi des appels
+    consequence: la fonctionnalité devient utilisable
+    preuve: {niveau: explicite, source: texte,
+             citation: "les profils de type collaborateur doivent avoir le droit “Accès au module”"}
+    resolution_documentee:
+      action: faire modifier les privilèges par un administrateur depuis Réglages >
+              Profils de privilèges
+      acteur: administrateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Les privilèges sont modifiables par les administrateurs"}
+
+  - description_brute: la fonctionnalité s'active au premier appel, ou plus tard depuis
+                       les réglages
+    objet_concerne: enregistrement des appels sortants
+    condition: proposition d'activation ignorée au premier appel
+    consequence: l'activation reste possible ultérieurement
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous pouvez l'activer plus tard depuis les réglages"}
+    resolution_documentee:
+      action: cocher l'option « Ajout des appels sortants » dans les réglages
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "Il suffira alors de cocher l'option \"Ajout des appels sortants\"."}
+
+  - description_brute: la création d'une activité de suivi après un appel n'est pas
+                       obligatoire
+    objet_concerne: activité de suivi
+    condition: proposition affichée après l'enregistrement de l'appel
+    consequence: la liste peut être fermée sans créer d'activité
+    preuve: {niveau: explicite, source: texte,
+             citation: "Vous n’êtes pas obligé de créer une activité liée après un appel."}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: la note d'appel se saisit à la voix, dictée au microphone du
+                       téléphone puis convertie en texte, immédiatement après avoir
+                       raccroché
+    pourquoi_notable: le mode de capture est ici la parole plutôt que le clavier, dans un
+                      moment précis où l'utilisateur n'a pas les mains libres pour écrire ;
+                      la transition « note dictée → note » enregistre le résultat mais
+                      perd entièrement le fait que l'entrée soit vocale et immédiate
+    termes_source: ["synthèse vocale", "dicter la note et la convertir en texte"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "utiliser la synthèse vocale pour résumer les points clé dans les notes"}

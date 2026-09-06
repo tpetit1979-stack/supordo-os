@@ -1,81 +1,115 @@
-source:
-  vendor: vertuoza
-  fichier: 01-discovery/concurrents/sources/vertuoza/devis/signature-electronique-du-devis.md
-  rubrique_originale: Devis
-  titre: Signature électronique du devis
+parcours:
+  origine: vente
+  nature: inconnu
 
-metier:
-  moments:
-    - devis
-    - signature
-  roles_bruts:
-    - client
-  roles_canoniques:
-    - client
-    - inconnu
-  actions:
-    - activer
-    - envoyer
-    - consulter
-    - signer
-    - accepter
-    - notifier
-  objets:
-    - devis
-    - email
-    - lien de signature
-    - notification
-    - modele de document
-    - modele d'email
-    - signature electronique
-  job_to_be_done: faire signer un devis a distance par le client et savoir quand il l'a ouvert ou signe
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "permettant à votre client de consulter et de signer le devis"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Insérez la méta-donnée [LINK_DEVIS] dans le corps de l'email"}
 
-coordination:
-  niveau: 4
-  justification: >-
-    Transmission explicite du devis au client via un lien, action du destinataire
-    (consultation puis signature) et retour vers l'emetteur sous forme de notification :
-    "Vous recevrez des notifications dès qu'un client ouvre ou signe le devis."
-  niveau_infere: false
-  de: utilisateur Vertuoza (role non nomme dans l'article)
-  vers: client
-  objet: devis a signer
+  - acteur:
+      role_brut: client
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Le client ouvre le lien dans son email pour consulter le devis."}
+    destinataire:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    perimetre: client
+    relation: autre
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "En cliquant sur le bouton « Signer », la signature est enregistrée"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "il passe automatiquement du statut \"ENVOYÉ\" à \"SIGNÉ\""}
+      - forme: notification
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous recevrez des notifications dès qu'un client ouvre ou signe"}
 
-resultat:
-  objet_produit: devis signe
-  prochaine_etape: accepter le devis pour le transformer en chantier ou en intervention
+transitions_objet:
+  - objet_source: devis
+    etat_entree: ENVOYÉ
+    action: signer
+    objet_resultat: devis signé
+    etat_sortie: SIGNÉ
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Le client peut ensuite télécharger une copie du devis signé."}
 
-complexite:
-  preconditions:
-    - pack Pro+ minimum
-    - metadonnee [LINK_DEVIS] presente dans le modele d'email
-    - modele PDF contenant une zone de signature, et une seule
-  nb_etapes: 3
-  etats:
-    - ENVOYE
-    - SIGNE
-  exceptions:
-    - un modele de document ne peut plus etre choisi au moment de l'envoi, le lien etant fige
-    - un modele personnalise sans zone de signature (ou avec plusieurs) fait echouer le processus
-  systemes_externes: []
+  - objet_source: devis
+    etat_entree: SIGNÉ
+    action: accepter
+    objet_resultat: chantier ou intervention
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "accepter le devis pour le transformer en chantier ou en intervention"}
 
-contexte:
-  dispositif: null
-  temporalite: avant
-  recovery: false
-  sortie_du_logiciel:
-    - email
-    - pdf
+regles_operationnelles:
+  - description_brute: la signature électronique n'est disponible qu'à partir du pack Pro+
+    objet_concerne: signature électronique
+    condition: pack Pro+
+    consequence: la fonctionnalité est disponible
+    preuve: {niveau: explicite, source: texte,
+             citation: "disponible uniquement à partir du pack Pro+"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "Vous recevrez des notifications dès qu'un client ouvre ou signe le devis."
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Cas rare dans le corpus lu : le retour vers l'emetteur (accuse d'ouverture et de
-    signature) est explicitement documente. Le schema A n'a pas de champ pour cela ;
-    l'information n'est logeable que dans coordination.justification. Le role de
-    l'emetteur reste non nomme.
+  - description_brute: sans la métadonnée [LINK_DEVIS] dans le modèle d'email, le client
+                       ne peut pas consulter ni signer le devis en ligne
+    objet_concerne: modèle d'email
+    condition: métadonnée [LINK_DEVIS] présente dans le modèle
+    consequence: le client peut consulter et signer le devis en ligne
+    preuve: {niveau: explicite, source: texte,
+             citation: "assurez-vous d'y inclure cette métadonnée pour permettre à vos clients"}
+    resolution_documentee:
+      action: insérer la métadonnée [LINK_DEVIS] dans le modèle d'email personnalisé
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "assurez-vous d'y inclure cette métadonnée"}
+
+  - description_brute: un modèle PDF personnalisé doit contenir une zone de signature,
+                       et une seule
+    objet_concerne: modèle de document PDF
+    condition: modèle personnalisé contenant exactement une zone de signature
+    consequence: le processus de signature fonctionne correctement
+    preuve: {niveau: explicite, source: texte,
+             citation: "vérifiez qu'il contient bien une zone de signature (et une seule)"}
+    resolution_documentee: null
+
+  - description_brute: le modèle de document ne peut plus être choisi au moment de
+                       l'envoi, le lien de signature étant identique pour un devis donné
+    objet_concerne: modèle de document
+    condition: envoi d'un devis en signature électronique
+    consequence: le modèle appliqué est celui défini par défaut dans les paramètres
+    preuve: {niveau: explicite, source: texte,
+             citation: "Il n'est plus possible de définir un modèle lors de l'envoi par email"}
+    resolution_documentee: null
+
+signaux_emergents: []

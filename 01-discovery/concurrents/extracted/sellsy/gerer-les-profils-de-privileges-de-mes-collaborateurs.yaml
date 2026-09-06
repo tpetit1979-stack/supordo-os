@@ -1,80 +1,124 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/configuration-du-compte/gerer-les-profils-de-privileges-de-mes-collaborateurs.md
-  rubrique_originale: Configuration du compte
-  titre: Gérer les profils de privilèges de mes collaborateurs
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - administration de l'entreprise
-    - permissions
-    - parametrage
-  roles_bruts:
-    - collaborateur
-    - administrateur
-  roles_canoniques:
-    - bureau
-    - patron
-  actions:
-    - creer
-    - definir
-    - modifier
-    - appliquer
-    - comparer
-    - consulter
-  objets:
-    - profil de privileges
-    - licence
-    - droit d'acces
-    - module
-    - collaborateur
-    - pipeline
-    - devis
-    - bon de commande
-  job_to_be_done: donner a chaque collaborateur exactement les acces necessaires a ses missions, sans plus
+interactions:
+  - acteur:
+      role_brut: collaborateur privé d'accès à une fonctionnalité
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "Si vous n'avez pas accès à une fonctionnalité"}
+    destinataire:
+      role_brut: administrateur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "vous rapprocher de votre administrateur afin qu'il vous donne les droits"}
+    perimetre: interne
+    relation: hierarchique
+    canal: aucun
+    dans_logiciel: non
+    mecanismes: []
 
-coordination:
-  niveau: 3
-  justification: >-
-    Une demande explicite est prevue d'un role vers un autre : "nous vous invitons à vous
-    rapprocher de votre administrateur afin qu'il vous donne les droits nécessaires". C'est
-    une transmission nommee entre deux roles, mais le mecanisme reste hors logiciel — aucune
-    demande n'est outillee.
-  niveau_infere: false
-  de: collaborateur bloque
-  vers: administrateur
-  objet: demande de droits dans le profil de privileges
+  - acteur:
+      role_brut: administrateur
+      role_canonique: patron
+      preuve: {niveau: explicite, source: texte,
+               citation: "Un administrateur peut modifier votre licence"}
+    destinataire:
+      role_brut: collaborateur
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "définir les privilèges de votre collaborateur"}
+    perimetre: interne
+    relation: hierarchique
+    canal: interface
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "définit les droits d'accès accordés à un collaborateur"}
+      - forme: visibilite
+        preuve: {niveau: explicite, source: texte,
+                 citation: "comparer plusieurs profils de privilèges"}
 
-resultat:
-  objet_produit: profil de privileges
-  prochaine_etape: appliquer le profil de privileges au collaborateur
+transitions_objet:
+  - objet_source: réglages du compte
+    etat_entree: null
+    action: ajouter un profil et définir les privilèges par module
+    objet_resultat: profil de privilèges
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: administrateur
+      preuve: {niveau: contextuel, source: texte,
+               citation: "Renseignez le nom du profil puis le type d’accès"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "cliquez sur le bouton “voir” de chaque module pour définir les privilèges"}
 
-complexite:
-  preconditions:
-    - etre administrateur pour creer ou modifier un profil
-  nb_etapes: 4
-  etats: []
-  exceptions:
-    - un droit accorde ne suffit pas si la licence de l'utilisateur n'inclut pas la fonctionnalite
-    - un meme profil de privileges peut etre applique a plusieurs collaborateurs
-  systemes_externes: []
+  - objet_source: profil de privilèges
+    etat_entree: null
+    action: appliquer le profil au collaborateur
+    objet_resultat: collaborateur doté de droits
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous pouvez appliquer un profil de privilèges au collaborateur"}
 
-contexte:
-  dispositif: null
-  temporalite: indifferent
-  recovery: false
-  sortie_du_logiciel: []
+regles_operationnelles:
+  - description_brute: l'accès à une fonctionnalité dépend cumulativement du profil de
+                       privilèges et de la licence
+    objet_concerne: accès aux fonctionnalités
+    condition: droit accordé dans le profil ET fonctionnalité incluse dans la licence
+    consequence: l'accès est effectif
+    preuve: {niveau: explicite, source: texte,
+             citation: "L'accès aux fonctionnalités de Sellsy dépend de deux éléments complémentaires"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "vous rapprocher de votre administrateur afin qu'il vous donne les droits nécessaires"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Article d'administration pure, hors cycle client, mais qui contient un vrai handoff — et
-    un handoff non outille : le collaborateur doit sortir du logiciel pour demander des
-    droits. C'est exactement le type de rupture que le schema A ne peut pas qualifier : le
-    champ coordination.niveau 3 ne dit pas si la transmission passe par le produit ou par un
-    coup de telephone. sortie_du_logiciel reste vide car aucun canal n'est nomme.
+  - description_brute: un droit accordé dans le profil ne suffit pas si la licence
+                       n'inclut pas la fonctionnalité
+    objet_concerne: licence
+    condition: licence ne couvrant pas la fonctionnalité
+    consequence: l'accès reste impossible malgré le droit accordé
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous ne pourrez pas accéder à la fonctionnalité si votre licence ne l'inclut pas"}
+    resolution_documentee:
+      action: faire modifier la licence par un administrateur depuis Abonnement et
+              crédits > Gestion des licences
+      acteur: administrateur
+      preuve: {niveau: explicite, source: texte,
+               citation: "Un administrateur peut modifier votre licence depuis"}
+
+  - description_brute: un profil de privilèges est de type collaborateur ou administrateur
+    objet_concerne: profil de privilèges
+    condition: création d'un profil
+    consequence: un type d'accès collaborateur ou administrateur est attribué
+    preuve: {niveau: explicite, source: texte,
+             citation: "Renseignez le nom du profil puis le type d’accès (collaborateur ou administrateur)"}
+    resolution_documentee: null
+
+  - description_brute: un même profil de privilèges peut être appliqué à plusieurs
+                       collaborateurs
+    objet_concerne: profil de privilèges
+    condition: profil existant
+    consequence: il peut être réutilisé pour d'autres collaborateurs
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous pouvez appliquer un même profil de privilèges à différents collaborateurs"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: un écran « Récapitulatif des privilèges utilisateurs » permet de
+                       comparer côte à côte les profils de plusieurs collaborateurs
+    pourquoi_notable: le produit offre une vue de l'organisation elle-même — qui peut
+                      faire quoi, comparé d'une personne à l'autre — et non seulement des
+                      objets métier ; aucun bloc du schéma ne représente un outil dont
+                      l'objet est la structure des rôles
+    termes_source: ["Récapitulatif des privilèges utilisateurs", "choisir des collaborateurs à comparer"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "comparer plusieurs profils de privilèges en cliquant sur “choisir des collaborateurs"}

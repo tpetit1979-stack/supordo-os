@@ -1,86 +1,126 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/configuration-du-compte/donner-un-acces-sellsy-a-mon-expert-comptable.md
-  rubrique_originale: Configuration du compte
-  titre: Donner un accès Sellsy à mon expert comptable
+parcours:
+  origine: interne
+  nature: administratif
 
-metier:
-  moments:
-    - administration de l'entreprise
-    - permissions
-    - cloture comptable
-  roles_bruts:
-    - expert-comptable
-    - collaborateur
-  roles_canoniques:
-    - comptabilite
-    - externe
-    - patron
-  actions:
-    - donner acces
-    - soumettre
-    - ajuster
-    - consulter
-    - modifier
-    - comptabiliser
-    - exporter
-    - desactiver
-    - supprimer
-  objets:
-    - acces expert-comptable
-    - profil de privileges
-    - facture
-    - achat
-    - document comptable
-    - export comptable
-    - fichier PDF
-  job_to_be_done: laisser le comptable travailler directement dans l'outil sans lui donner un acces de collaborateur
+interactions:
+  - acteur:
+      role_brut: null
+      role_canonique: inconnu
+      preuve: {niveau: inconnu, source: autre, citation: null}
+    destinataire:
+      role_brut: expert-comptable
+      role_canonique: comptabilite
+      preuve: {niveau: explicite, source: texte,
+               citation: "Vous pouvez donner un accès à votre compte Sellsy à votre expert-comptable."}
+    perimetre: partenaire
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: permission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Vous pouvez ensuite ajuster les privilèges de votre profil expert-comptable."}
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "il recevra par la suite un email afin de se connecter à son accès"}
+      - forme: edition_partagee
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Voir et modifier vos factures"}
 
-coordination:
-  niveau: 3
-  justification: >-
-    Transmission explicite d'un acces vers un role externe nomme, avec validation par un
-    tiers : "Une fois les informations validées par Sellsy, il recevra par la suite un email
-    afin de se connecter". Ce que le comptable fait ensuite de cet acces est liste en
-    capacites, mais aucune action precise n'est declenchee ni tracee.
-  niveau_infere: false
-  de: administrateur du compte
-  vers: expert-comptable
-  objet: acces dedie au compte Sellsy
+  - acteur:
+      role_brut: Sellsy
+      role_canonique: externe
+      preuve: {niveau: explicite, source: texte,
+               citation: "Une fois les informations validées par Sellsy"}
+    destinataire:
+      role_brut: expert-comptable
+      role_canonique: comptabilite
+      preuve: {niveau: explicite, source: texte,
+               citation: "il recevra par la suite un email afin de se connecter"}
+    perimetre: editeur
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: validation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Une fois les informations validées par Sellsy, il recevra par la suite un email"}
 
-resultat:
-  objet_produit: acces expert-comptable
-  prochaine_etape: le comptable recoit un email pour se connecter a son acces
+transitions_objet:
+  - objet_source: informations de l'expert-comptable
+    etat_entree: null
+    action: soumettre la demande puis validation par Sellsy
+    objet_resultat: accès expert-comptable
+    etat_sortie: actif
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres:
+      role: expert-comptable
+      preuve: {niveau: explicite, source: texte,
+               citation: "il recevra par la suite un email afin de se connecter à son accès"}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Renseignez les informations concernant votre expert-comptable puis cliquez"}
 
-complexite:
-  preconditions:
-    - les modules concernes (achats, comptabilisation, export) doivent etre actives sur le compte
-    - validation des informations par Sellsy
-  nb_etapes: 3
-  etats: []
-  exceptions:
-    - l'acces expert-comptable est reserve a une personne externe, pas a un collaborateur
-    - sans le droit "Acces aux fichiers", le comptable ne peut pas telecharger les PDF
-    - en cas de changement de comptable, il faut supprimer l'acces existant avant d'en creer un nouveau
-  systemes_externes: []
+  - objet_source: accès expert-comptable existant
+    etat_entree: actif
+    action: supprimer l'accès pour pouvoir en créer un nouveau
+    objet_resultat: nouvel accès expert-comptable
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: non_determinable
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devrez d'abord supprimer l'accès existant"}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: false
-  sortie_du_logiciel:
-    - email
+regles_operationnelles:
+  - description_brute: l'accès expert-comptable est réservé à une personne externe et ne
+                       peut pas être utilisé par un collaborateur de la société
+    objet_concerne: accès expert-comptable
+    condition: bénéficiaire externe à la société
+    consequence: l'accès peut être ouvert ; un collaborateur interne ne peut pas l'utiliser
+    preuve: {niveau: explicite, source: texte,
+             citation: "l’accès expert-comptable est réservé à une personne externe"}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "l'accès expert-comptable est réservé à une personne externe"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: faible
-  note: >-
-    Un des rares articles du lot ou un role externe est nomme, distingue des collaborateurs
-    et dote de droits propres. Le schema le capte correctement en roles_bruts et
-    coordination, mais l'information la plus utile — la frontiere entre interne et externe
-    est materialisee par le produit — n'a pas de champ. Le moment "cloture comptable" est
-    une invention de ma part, l'article ne nomme aucun moment du cycle.
+  - description_brute: voir et modifier les achats, comptabiliser les documents et
+                       exporter les données comptables supposent l'activation des modules
+                       correspondants
+    objet_concerne: privilèges de l'expert-comptable
+    condition: module activé sur le compte
+    consequence: les capacités correspondantes deviennent accessibles
+    preuve: {niveau: explicite, source: texte,
+             citation: "(le module doit être activé sur votre compte)"}
+    resolution_documentee: null
+
+  - description_brute: sans le droit « Accès aux fichiers », l'expert-comptable ne peut
+                       pas télécharger les fichiers PDF
+    objet_concerne: profil de privilèges
+    condition: droit « Accès aux fichiers » non accordé
+    consequence: le téléchargement des PDF échoue
+    preuve: {niveau: explicite, source: texte,
+             citation: "il sera nécessaire de lui donner le droit \"Accès aux fichiers\""}
+    resolution_documentee:
+      action: accorder le droit « Accès aux fichiers » dans la section Fonctionnalités
+              diverses de son profil de privilèges
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "disponible dans la section \"Fonctionnalités diverses\" de son profil"}
+
+  - description_brute: un changement d'expert-comptable impose de supprimer l'accès
+                       existant avant d'en créer un nouveau
+    objet_concerne: accès expert-comptable
+    condition: un accès expert-comptable existe déjà
+    consequence: aucun nouvel accès ne peut être créé avant suppression du précédent
+    preuve: {niveau: explicite, source: texte,
+             citation: "vous devrez d'abord supprimer l'accès existant"}
+    resolution_documentee:
+      action: supprimer l'accès existant depuis Réglages > Accès expert-comptable
+      acteur: null
+      preuve: {niveau: explicite, source: texte,
+               citation: "depuis \"Menu\" > \"Réglages\" > \"Accès expert-comptable\""}
+
+signaux_emergents: []

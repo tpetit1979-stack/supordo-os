@@ -1,86 +1,112 @@
-source:
-  vendor: sellsy
-  fichier: 01-discovery/concurrents/sources/sellsy/documents-de-vente/etape-2-parametrer-un-plan-de-relance.md
-  rubrique_originale: "Documents de vente "
-  titre: "Étape 2 : paramétrer un plan de relance"
+parcours:
+  origine: vente
+  nature: administratif
 
-metier:
-  moments:
-    - relance
-    - recouvrement
-    - parametrage
-  roles_bruts:
-    - referent interne du document
-    - proprietaire du document
-    - collaborateur interne
-    - contact de relance du client
-    - contact du document
-    - contact principal
-    - contact de facturation
-  roles_canoniques:
-    - bureau
-    - client
-    - comptabilite
-  actions:
-    - parametrer
-    - definir
-    - ajouter
-    - envoyer
-    - relancer
-  objets:
-    - plan de relance
-    - relance
-    - email
-    - delai d'envoi
-    - expediteur
-    - destinataire
-    - facture
-    - abonnement
-  job_to_be_done: automatiser la relance des factures impayees sans avoir a y penser
+interactions:
+  - acteur:
+      role_brut: référent interne du document, propriétaire du document ou collaborateur interne
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "L'expéditeur de l’email : à choisir entre le référent interne du document"}
+    destinataire:
+      role_brut: contact de relance du client, contact du document, contact principal
+                 ou contact de facturation
+      role_canonique: client
+      preuve: {niveau: explicite, source: texte,
+               citation: "Destinataire de la relance : à choisir entre le contact de relance du client"}
+    perimetre: client
+    relation: autre
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Destinataire de la relance : à choisir entre le contact de relance du client"}
+      - forme: automatisation
+        preuve: {niveau: explicite, source: texte,
+                 citation: "Cliquez ensuite sur “Relances automatiques”."}
 
-coordination:
-  niveau: 3
-  justification: >-
-    L'article definit explicitement un couple expediteur / destinataire configurable, et le
-    destinataire peut etre un collaborateur interne autant qu'un contact client. Mais aucune
-    action du destinataire n'est decrite : le mecanisme s'arrete a l'envoi.
-  niveau_infere: false
-  de: referent interne, proprietaire du document ou collaborateur interne
-  vers: contact de relance, contact du document, contact principal, contact de facturation ou collaborateur interne
-  objet: email de relance
+  - acteur:
+      role_brut: référent interne du document, propriétaire du document ou collaborateur interne
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "L'expéditeur de l’email : à choisir entre le référent interne du document"}
+    destinataire:
+      role_brut: collaborateur interne
+      role_canonique: bureau
+      preuve: {niveau: explicite, source: texte,
+               citation: "le contact principal, un collaborateur interne ou le contact de facturation"}
+    perimetre: interne
+    relation: pair
+    canal: email
+    dans_logiciel: oui
+    mecanismes:
+      - forme: transmission
+        preuve: {niveau: explicite, source: texte,
+                 citation: "un collaborateur interne ou le contact de facturation"}
 
-resultat:
-  objet_produit: plan de relance
-  prochaine_etape: consulter les relances associees a un document (etape 3)
+transitions_objet:
+  - objet_source: paramètres du module Facturation
+    etat_entree: null
+    action: ajouter un plan de relance et définir ses paramètres
+    objet_resultat: plan de relance
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "définir le nom de la relance, les jours et heures d’émission"}
 
-complexite:
-  preconditions:
-    - les emails de relance doivent etre rediges au prealable dans Reglages > Emails personnalises
-    - la relance automatique doit avoir ete activee (etape 1)
-  nb_etapes: 4
-  etats: []
-  exceptions:
-    - option specifique pour activer ou desactiver les relances des factures avec abonnement
-    - un nombre minimum de jours entre relances est parametrable
-  systemes_externes: []
+  - objet_source: plan de relance
+    etat_entree: paramétré
+    action: ajouter une relance avec délai, expéditeur, destinataire et email
+    objet_resultat: relance programmée
+    etat_sortie: null
+    owner_avant: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    owner_apres: {role: inconnu, preuve: {niveau: inconnu, source: autre, citation: null}}
+    continuite:
+      statut_observation: continue_documentee
+      ruptures: []
+    preuve: {niveau: explicite, source: texte,
+             citation: "Ajoutez votre première relance en cliquant sur “Ajouter une relance”."}
 
-contexte:
-  dispositif: null
-  temporalite: apres
-  recovery: false
-  sortie_du_logiciel:
-    - email
+regles_operationnelles:
+  - description_brute: les emails des relances automatiques doivent être rédigés au
+                       préalable dans les emails personnalisés
+    objet_concerne: email de relance
+    condition: email rédigé au préalable depuis Réglages > Emails personnalisés
+    consequence: l'email peut être sélectionné dans la relance
+    preuve: {niveau: explicite, source: texte,
+             citation: "doivent être rédigés au préalable depuis \"Menu\" > \"Réglages\" > \"Emails personnalisés\""}
+    resolution_documentee: null
 
-preuve:
-  statut: documented
-  citation: "L'expéditeur de l'email : à choisir entre le référent interne du document"
-  champs_inferes:
-    - metier.roles_canoniques
-    - contexte.temporalite
-  ambiguite: moyenne
-  note: >-
-    Article le plus riche en roles_bruts de tout le lot Sellsy — sept — alors que ce sont des
-    roles de PARAMETRAGE, pas des personnes qui travaillent : "contact de facturation" ou
-    "proprietaire du document" designent des emplacements dans une configuration. Le schema
-    ne distingue pas un role vecu d'un role configure, et ce type d'article va donc gonfler
-    artificiellement les statistiques de roles sur les 1 494 articles. Signal important.
+  - description_brute: un nombre minimum de jours entre les relances est paramétrable
+    objet_concerne: plan de relance
+    condition: paramétrage du plan
+    consequence: les relances respectent un intervalle minimum
+    preuve: {niveau: explicite, source: texte,
+             citation: "mais aussi le nombre minimum de jours entre les relances"}
+    resolution_documentee: null
+
+  - description_brute: les relances des factures avec abonnement peuvent être activées ou
+                       désactivées séparément
+    objet_concerne: plan de relance des factures
+    condition: option spécifique aux factures avec abonnement
+    consequence: les relances de ces factures sont activées ou désactivées
+    preuve: {niveau: explicite, source: texte,
+             citation: "Activer ou désactiver les relances pour les factures avec abonnement"}
+    resolution_documentee: null
+
+signaux_emergents:
+  - description_brute: Sellsy distingue plusieurs contacts chez un même client — contact
+                       de relance, contact du document, contact principal, contact de
+                       facturation — chacun pouvant recevoir la relance
+    pourquoi_notable: le client n'est pas un interlocuteur unique mais un ensemble de
+                      rôles distincts ; le schéma ne dispose que d'un destinataire par
+                      interaction et de la valeur canonique « client », ce qui écrase
+                      cette structure interne du côté client
+    termes_source: ["contact de relance du client", "contact du document", "contact principal", "contact de facturation"]
+    preuve: {niveau: explicite, source: texte,
+             citation: "entre le contact de relance du client, le contact du document"}
