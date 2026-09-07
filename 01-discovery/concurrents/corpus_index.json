@@ -1,0 +1,593 @@
+{
+  "generated_by": "tools/collecte/build_corpus_index.py",
+  "corpus_count": 22,
+  "corpora": [
+    {
+      "corpus_id": "tolteck_help",
+      "concurrent": "tolteck",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/tolteck/centre_aide",
+      "source_root_url": "https://help.tolteck.com/fr/",
+      "collection_method": "automatique",
+      "coverage_status": "not_collected_documented",
+      "file_count": 0,
+      "total_bytes": 0,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "Non collecté : help.tolteck.com sert un certificat TLS invalide pour ce nom d'hôte (TLS_CERTIFICATE_ERROR). Aucun contournement tenté. Cause vérifiée et documentée dans COUVERTURE.md."
+      ]
+    },
+    {
+      "corpus_id": "tolteck_marketing",
+      "concurrent": "tolteck",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/tolteck/site_marketing",
+      "source_root_url": "https://www.tolteck.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 199,
+      "total_bytes": 1998562,
+      "editorial_taxonomy": [],
+      "locales_observed": [
+        "fr-fr"
+      ],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "progbat_help",
+      "concurrent": "progbat",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/progbat/centre_aide",
+      "source_root_url": "https://docv5.progbat.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 190,
+      "total_bytes": 461182,
+      "editorial_taxonomy": [
+        "assistance",
+        "conformite",
+        "le-menu-principal",
+        "les-options",
+        "pour-bien-demarrer",
+        "presentation-generale"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "progbat_marketing",
+      "concurrent": "progbat",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/progbat/site_marketing",
+      "source_root_url": "https://www.progbat.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 50,
+      "total_bytes": 374834,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "batikko_help",
+      "concurrent": "batikko",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/batikko/centre_aide",
+      "source_root_url": "https://batikko.com/documentation",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 14,
+      "total_bytes": 65366,
+      "editorial_taxonomy": [
+        "guides"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "batikko_marketing",
+      "concurrent": "batikko",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/batikko/site_marketing",
+      "source_root_url": "https://batikko.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 46,
+      "total_bytes": 326001,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [
+        {
+          "path": "01-discovery/concurrents/sources/batikko/site_marketing/privacy-policy.md",
+          "motif": "Politique de confidentialité du site",
+          "status": "certain"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "corpus_id": "leobati_help",
+      "concurrent": "leobati",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/leobati/centre_aide",
+      "source_root_url": "https://www.leobati.fr/bati/guide",
+      "collection_method": "automatique",
+      "coverage_status": "not_collected_documented",
+      "file_count": 0,
+      "total_bytes": 0,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "Non collecté : /bati/guide est une application à onglets JavaScript sur URL unique, absente du sitemap du site. Cause vérifiée et documentée dans COUVERTURE.md."
+      ]
+    },
+    {
+      "corpus_id": "leobati_marketing",
+      "concurrent": "leobati",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/leobati/site_marketing",
+      "source_root_url": "https://www.leobati.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 70,
+      "total_bytes": 257818,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "axonaut_help",
+      "concurrent": "axonaut",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/axonaut",
+      "source_root_url": "https://support.axonaut.com/",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 127,
+      "total_bytes": 885414,
+      "editorial_taxonomy": [
+        "axonaut-et-votre-secteur-activite",
+        "centralisez-gestion-emails-courriers",
+        "centralisez-gestion-sav",
+        "commandes-clients-fournisseurs",
+        "compte-pro-cartes",
+        "configurer-votre-compte",
+        "connectez-axonaut",
+        "creez-campagnes-marketing",
+        "creez-depenses-facilement",
+        "etat-tresorerie-temps-reel",
+        "gerez-rentabilite-projets",
+        "gerez-ressources-humaines",
+        "gerez-stock-temps-reel",
+        "gerez-vos-devis",
+        "gerez-vos-factures",
+        "gerez-vos-produits",
+        "gerez-votre-comptabilite",
+        "optimisez-gestion-commerciale"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "axonaut_marketing",
+      "concurrent": "axonaut",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/axonaut/site_marketing",
+      "source_root_url": "https://axonaut.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 50,
+      "total_bytes": 328132,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "axonaut_documents",
+      "concurrent": "axonaut",
+      "type": "documents",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/axonaut/_assets_pdf",
+      "source_root_url": "https://axonaut.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 4,
+      "total_bytes": 7571833,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "Fichiers binaires (PDF) téléchargés tels quels, jamais convertis en texte."
+      ]
+    },
+    {
+      "corpus_id": "costructor_help",
+      "concurrent": "costructor",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/costructor",
+      "source_root_url": "https://support.costructor.co/fr/",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 112,
+      "total_bytes": 218924,
+      "editorial_taxonomy": [
+        "abonnement",
+        "achats",
+        "chantiers",
+        "debuter-sur-costructor",
+        "equipe-collaborateurs",
+        "gestion-dentreprise",
+        "imports-exports",
+        "securite",
+        "site-internet",
+        "ventes"
+      ],
+      "locales_observed": [
+        "fr"
+      ],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "costructor_marketing",
+      "concurrent": "costructor",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/costructor/site_marketing",
+      "source_root_url": "https://costructor.co/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 181,
+      "total_bytes": 1525539,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [
+        {
+          "path": "01-discovery/concurrents/sources/costructor/site_marketing/cookies.md",
+          "motif": "Politique cookies du site",
+          "status": "certain"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "corpus_id": "inter-fast_help",
+      "concurrent": "inter-fast",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/inter-fast",
+      "source_root_url": "https://help.inter-fast.co/fr/",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 221,
+      "total_bytes": 2447400,
+      "editorial_taxonomy": [
+        "application-mobile",
+        "application-web",
+        "debuter-avec-interfast",
+        "equipe",
+        "finances",
+        "fluides-frigorigenes",
+        "mon-entreprise",
+        "operations",
+        "outils"
+      ],
+      "locales_observed": [
+        "fr"
+      ],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "inter-fast_marketing",
+      "concurrent": "inter-fast",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/inter-fast/site_marketing",
+      "source_root_url": "https://inter-fast.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 799,
+      "total_bytes": 6865913,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "openfire_zendesk",
+      "concurrent": "openfire",
+      "type": "aide",
+      "source_platform": "zendesk",
+      "root_path": "01-discovery/concurrents/sources/openfire",
+      "source_root_url": "https://support.openfire.fr/hc/fr",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 127,
+      "total_bytes": 785597,
+      "editorial_taxonomy": [
+        "bien-debuter",
+        "configurer-openfire",
+        "guides-videos",
+        "utiliser-openfire"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "openfire_odoo",
+      "concurrent": "openfire",
+      "type": "documentation",
+      "source_platform": "odoo",
+      "root_path": "01-discovery/concurrents/sources/openfire/documentation_2",
+      "source_root_url": "https://documentation.openfire.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 213,
+      "total_bytes": 658868,
+      "editorial_taxonomy": [
+        "knowsystem",
+        "profile",
+        "slides",
+        "website"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "Corpus documentaire distinct du corpus 'aide' du même concurrent. Aucune fusion, aucune comparaison implicite : voir COUVERTURE.md."
+      ]
+    },
+    {
+      "corpus_id": "openfire_marketing",
+      "concurrent": "openfire",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/openfire/site_marketing",
+      "source_root_url": "https://openfire.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 166,
+      "total_bytes": 1162044,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "sellsy_help",
+      "concurrent": "sellsy",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/sellsy",
+      "source_root_url": "https://help.sellsy.com/fr/",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 462,
+      "total_bytes": 2380393,
+      "editorial_taxonomy": [
+        "app-mobile-sellsy-crm",
+        "catalogue-produits-et-services",
+        "configuration-du-compte",
+        "conseils-d-utilisation",
+        "crm-et-prospection",
+        "documents-de-vente",
+        "facturation-electronique",
+        "gestion-des-donnees",
+        "integrations-et-api",
+        "module-achats",
+        "module-marketing",
+        "module-stocks",
+        "module-support",
+        "module-tresorerie",
+        "paiements",
+        "rapports-et-pilotage",
+        "repertoire",
+        "sellsy-automatisations",
+        "sellsy-ia",
+        "suivi-financier"
+      ],
+      "locales_observed": [
+        "fr"
+      ],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "sellsy_marketing",
+      "concurrent": "sellsy",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/sellsy/site_marketing",
+      "source_root_url": "https://go.sellsy.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 882,
+      "total_bytes": 5663592,
+      "editorial_taxonomy": [],
+      "locales_observed": [
+        "en",
+        "es"
+      ],
+      "analysis_exclusions": [
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/conditions-generales.md",
+          "motif": "CGV du logiciel Sellsy",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/conditions-generales-offre-promotionnelle.md",
+          "motif": "CGV d'une offre promotionnelle",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/conditions-generales-programme-partenaire.md",
+          "motif": "CGV programme partenaire",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/conditions-generales-programme-revendeur.md",
+          "motif": "CGV programme revendeur",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/confidentialite-des-donnees.md",
+          "motif": "Politique de confidentialité",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/securite-des-donnees.md",
+          "motif": "Politique de sécurité des données",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/politique-de-divulgation-de-vulnerabilite.md",
+          "motif": "Politique de sécurité (vulnerability disclosure)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/en/legal-information/general-terms-and-conditions.md",
+          "motif": "CGV (version anglaise)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/en/legal-information/legal-notice.md",
+          "motif": "Mentions légales (version anglaise)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/en/legal-information/data-privacy.md",
+          "motif": "Politique de confidentialité (version anglaise)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/en/legal-information/data-security.md",
+          "motif": "Politique de sécurité (version anglaise)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/en/legal-information/vulnerability-disclosure-policy.md",
+          "motif": "Politique de sécurité, vulnerability disclosure (version anglaise)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/sellsy/site_marketing/informations-legales/bareme-remise-programme-revendeur.md",
+          "motif": "Barème commercial classé sous le répertoire légal, pas lui-même un document juridique",
+          "status": "ambiguous"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "corpus_id": "vertuoza_help",
+      "concurrent": "vertuoza",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/vertuoza",
+      "source_root_url": "https://intercom-help.eu/vertuoza/fr/",
+      "collection_method": "historique",
+      "coverage_status": "collected",
+      "file_count": 433,
+      "total_bytes": 750284,
+      "editorial_taxonomy": [
+        "application-mobile",
+        "beta",
+        "bibliotheque-de-prix",
+        "contacts",
+        "crm",
+        "demarrer",
+        "devis",
+        "documents",
+        "faq-foires-aux-questions",
+        "fiches-techniques",
+        "finance",
+        "gestion-de-chantier",
+        "gestion-des-interventions",
+        "notifications",
+        "parametres",
+        "planning",
+        "rh",
+        "statistiques",
+        "stock",
+        "tableau-de-bord",
+        "taches",
+        "vertuowork"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "index.md et erreurs.md (racine) exclus du comptage : notes de session de scraping, pas des articles d'aide.",
+        "Corpus historique : partage sa racine physique avec les autres corpus du même concurrent (site_marketing/, etc., exclus du périmètre de ce corpus par construction du générateur)."
+      ]
+    },
+    {
+      "corpus_id": "vertuoza_marketing",
+      "concurrent": "vertuoza",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/vertuoza/site_marketing",
+      "source_root_url": "https://www.vertuoza.com/fr-fr",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 1213,
+      "total_bytes": 10524450,
+      "editorial_taxonomy": [],
+      "locales_observed": [
+        "fr-be",
+        "fr-ch",
+        "fr-fr",
+        "nl-be",
+        "nl-nl"
+      ],
+      "analysis_exclusions": [
+        {
+          "path": "01-discovery/concurrents/sources/vertuoza/site_marketing/nl-be/privacybeleid.md",
+          "motif": "Politique de confidentialité (néerlandais, Belgique)",
+          "status": "certain"
+        },
+        {
+          "path": "01-discovery/concurrents/sources/vertuoza/site_marketing/nl-nl/privacybeleid.md",
+          "motif": "Politique de confidentialité (néerlandais, Pays-Bas)",
+          "status": "certain"
+        }
+      ],
+      "notes": []
+    }
+  ]
+}

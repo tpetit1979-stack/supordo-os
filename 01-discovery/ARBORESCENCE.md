@@ -11,6 +11,22 @@ Deux mots reviennent tout du long :
 - **« Nouveau »** : collecté automatiquement les 06 et 07/09/2026 par un
   programme (`tools/collecte/collecte.py`).
 
+**L'arborescence physique décrite ci-dessous est un héritage de collecte
+et une commodité de lecture humaine — ce n'est pas un contrat que les
+futurs outils d'analyse doivent lire pour deviner la nature d'un
+corpus.** Quatre documents, quatre rôles différents, à ne pas confondre :
+
+- **`tools/collecte/sources.yaml`** → intention/configuration de collecte
+  (où collecter, selon quelles règles).
+- **Le disque (`sources/`)** → le snapshot brut réellement collecté.
+- **`01-discovery/concurrents/corpus_index.json`** → la représentation
+  canonique, machine-lisible et générée (jamais écrite à la main), de ce
+  snapshot pour les outils. Produit par
+  `tools/collecte/build_corpus_index.py`, à régénérer après toute
+  nouvelle collecte.
+- **`01-discovery/concurrents/sources/COUVERTURE.md`** → l'audit humain
+  détaillé de la couverture et des anomalies.
+
 ---
 
 ## 1. Tableau des sources par concurrent
