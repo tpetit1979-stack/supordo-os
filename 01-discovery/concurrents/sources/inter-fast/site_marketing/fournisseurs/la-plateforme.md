@@ -1,0 +1,107 @@
+---
+url: https://inter-fast.fr/fournisseurs/la-plateforme
+url_finale: https://inter-fast.fr/fournisseurs/la-plateforme
+date_collecte: 2026-09-07
+destination: site_marketing
+---
+
+# Vos articles La Plateforme du Bâtiment
+
+directement dans vos devis
+
+                  Avec l'extension Chrome InterFast, ajoutez n'importe quel produit du catalogue La Plateforme du Bâtiment à vos devis et factures en un clic : désignation, photo, prix d'achat et prix de vente calculé avec votre marge.
+
+- Bouton « Ajouter à InterFast » sur chaque fiche produit La Plateforme du Bâtiment
+- Prix d'achat, photo et description importés automatiquement
+- Prix de vente calculé selon votre taux de marge
+- Articles réutilisables dans votre bibliothèque de prix
+
+La Plateforme du Bâtiment est compatible avec l'extension Chrome InterFast
+
+## Qui est La Plateforme du Bâtiment ?
+
+La Plateforme du Bâtiment est une enseigne du groupe Saint-Gobain créée en 1998, exclusivement réservée aux professionnels du bâtiment. Son concept : des dépôts en libre-service, implantés en centre-ville et en périphérie des grandes agglomérations, accessibles avec une carte professionnelle et ouverts avec de larges horaires, dès 6 h du matin en semaine.
+
+Près de 70 magasins accueillent artisans et petites entreprises dans une douzaine de régions françaises. Sous le même toit, maçons, peintres, carreleurs, menuisiers, plombiers et électriciens trouvent gros œuvre, second œuvre, électricité, plomberie et outillage, disponibles immédiatement.
+
+Pour un artisan, laplateforme.com sert souvent de base de chiffrage : les prix et les stocks de votre dépôt s'affichent sur chaque fiche produit. C'est exactement là que l'extension Chrome InterFast intervient.
+
+### La Plateforme du Bâtiment en bref
+
+- Près de 70 dépôts réservés aux pros
+- Ouvert dès 6 h du matin en semaine
+- Gros œuvre, second œuvre, outillage
+- Compatible extension InterFast
+
+[Visiter le site La Plateforme du Bâtiment](https://www.laplateforme.com/)
+
+## Pourquoi utiliser l'extension Chrome InterFast avec La Plateforme du Bâtiment ?
+
+Fini la ressaisie manuelle des références : vous chiffrez vos devis tous corps d'état à la vitesse de votre navigation.
+
+### Zéro ressaisie
+
+La désignation exacte, la photo et le prix d'achat de chaque article La Plateforme du Bâtiment sont importés tels quels dans votre devis. Plus d'erreur de référence ni de copier-coller.
+
+### Marge maîtrisée
+
+InterFast applique votre taux de marge par défaut sur le prix d'achat La Plateforme du Bâtiment pour calculer le prix de vente. Vous vendez au bon prix, systématiquement.
+
+### Bibliothèque enrichie
+
+Chaque article importé peut rejoindre votre [bibliothèque de prix](https://inter-fast.fr/fonctionnalites/logiciel-base-articles) pour être réutilisé dans vos prochains [devis](https://inter-fast.fr/fonctionnalites/logiciel-devis) et factures.
+
+## Comment ça marche ?
+
+### Naviguez sur laplateforme.com
+
+Ouvrez la fiche du produit qui vous intéresse et cliquez sur le bouton **« Ajouter à InterFast »** affiché par l'extension.
+
+### Composez votre sélection
+
+Ajoutez autant d'articles que nécessaire, même depuis plusieurs sites fournisseurs : tout s'accumule dans le panier de l'extension.
+
+Votre sélection d'articles
+### Importez dans votre devis
+
+Dans InterFast, cliquez sur **« Importer la sélection »** : vos lignes de devis sont créées avec prix d'achat, prix de vente et photos.
+
+## Extension Chrome InterFast + La Plateforme du Bâtiment : vos questions
+
+## 
+                        
+                          [Comment ajouter un article La Plateforme du Bâtiment dans un devis InterFast ?]
+                        
+                      
+
+                      ## 
+                        
+                          [Le prix de vente est-il calculé automatiquement ?]
+                        
+                      
+
+                      ## 
+                        
+                          [Faut-il un compte La Plateforme du Bâtiment pour utiliser l'extension ?]
+                        
+                      
+
+                      ## 
+                        
+                          [Puis-je enregistrer les articles La Plateforme du Bâtiment dans ma bibliothèque de prix ?]
+                        
+                      
+
+                      ## 
+                        
+                          [L'extension Chrome InterFast est-elle gratuite ?]
+                        
+                      
+
+                      ## Chiffrez vos devis avec les articles La Plateforme du Bâtiment, sans ressaisie
+
+[Créer un compte gratuit](https://app.inter-fast.fr/register)
+
+### Plus de 20 000 pros du bâtiment nous font confiance
+
+Partout en France 🇫🇷 et en Belgique 🇧🇪, il y a forcément un dirigeant près de chez vous qui pilote déjà son activité avec InterFast.

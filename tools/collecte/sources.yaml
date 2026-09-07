@@ -1,0 +1,116 @@
+# Registre des sources pour le chantier collecte.
+#
+# doc_config decrit la TOPOLOGIE de la documentation par rapport au site :
+#   sous_domaine   -> doc sur un sous-domaine du meme domaine que site
+#   domaine_separe -> doc sur un domaine registrable different de site
+#   integre        -> doc sur un chemin (doc_prefixe) du domaine de site
+#   absente        -> pas de centre de documentation public identifie
+#   a_verifier     -> non confirme, ne pas crawler avant resolution
+#
+# doc_collecte decrit la COLLECTABILITE technique (orthogonal a doc_config) :
+#   standard     -> crawl HTML/sitemap classique
+#   spa_onglets  -> contenu charge en JS sur une URL unique, crawl HTML insuffisant
+#   a_verifier   -> non teste
+
+- nom: tolteck
+  site: https://www.tolteck.com/
+  doc: https://help.tolteck.com/fr/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: false
+  marketing_fait: false
+
+- nom: progbat
+  site: https://www.progbat.com/
+  doc: https://docv5.progbat.com/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: false
+  marketing_fait: false
+
+- nom: batikko
+  site: https://batikko.com/
+  doc: https://batikko.com/documentation
+  doc_config: integre
+  doc_prefixe: /documentation
+  doc_collecte: standard
+  aide_fait: false
+  marketing_fait: false
+  note: "www.batikko.com redirige (301) vers batikko.com : domaine canonique sans www."
+
+- nom: leobati
+  site: https://www.leobati.fr/
+  doc: https://www.leobati.fr/bati/guide
+  doc_config: integre
+  doc_prefixe: /bati/guide
+  doc_collecte: spa_onglets
+  aide_fait: false
+  marketing_fait: false
+  note: "guide en onglets JS sur URL unique ; crawl HTML insuffisant ; mecanisme d'impression/PDF a investiguer"
+
+- nom: axonaut
+  site: https://axonaut.com/
+  doc: https://support.axonaut.com/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+
+- nom: costructor
+  site: https://costructor.co/
+  doc: https://support.costructor.co/fr/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+
+- nom: inter-fast
+  site: https://inter-fast.fr/
+  doc: https://help.inter-fast.co/fr/
+  doc_config: domaine_separe
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+  note: "doc hebergee sur un domaine distinct (.co) du site principal (.fr), pas un sous-domaine ; sans incidence, centre_aide deja collecte"
+
+- nom: openfire
+  site: https://openfire.fr/
+  doc: https://support.openfire.fr/hc/fr
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+  note: "URL documentaire canonique du corpus deja collecte (127 articles, Zendesk). Un second sous-domaine documentation.openfire.fr existe (plateforme distincte, sitemap propre, page d'accueil 'Home | OpenFire'), non reflete dans le corpus aide_fait=true."
+  sources_secondaires:
+    - id: documentation_2
+      doc: https://documentation.openfire.fr/
+      doc_config: sous_domaine
+      dest: documentation_2
+      doc_collecte: standard
+      note: "Seconde documentation openfire, plateforme Odoo distincte du corpus Zendesk existant (centre_aide/, aide_fait=true). Verifie le 06/09/2026 : robots.txt standard, sitemap de 214 URLs, 54 liens internes reels dans le HTML de la page d'accueil, aucun marqueur de rendu JS bloquant. Ne remplace pas et ne fusionne pas avec centre_aide/ : les deux corpus restent separes jusqu'a arbitrage. Collecte dans sources/openfire/documentation_2/."
+
+- nom: sellsy
+  site: https://go.sellsy.com/
+  doc: https://help.sellsy.com/fr/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+  note: "www.sellsy.com redirige en 301 vers go.sellsy.com, destination declaree le 06/09/2026 apres verification (robots.txt standard, sitemap declare, 145 liens internes dans le HTML servi)"
+
+- nom: vertuoza
+  site: https://www.vertuoza.com/fr-fr
+  doc: https://intercom-help.eu/vertuoza/fr/
+  doc_config: domaine_separe
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: true
+  marketing_fait: false
+  note: "doc hebergee sur une plateforme tierce (intercom-help.eu), pas un sous-domaine de vertuoza.com ; sans incidence, centre_aide deja collecte"
