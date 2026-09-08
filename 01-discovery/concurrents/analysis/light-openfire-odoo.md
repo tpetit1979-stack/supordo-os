@@ -91,6 +91,29 @@ Journal tenu en continu ci-dessous ; vide si rien à signaler sur un lot.
   Google) — il s'agit de la documentation produit elle-même expliquant à
   l'utilisateur comment configurer *son propre* compte, non d'une tentative
   d'obtention de secret par la source. Aucun `INCIDENT_SECURITE_SOURCE`.
+- **2026-09-09 — Correction d'un doublon lexical démontré :
+  `integration_tierce` → `integrations`.** Un audit indépendant des dix
+  valeurs de `capacites_transverses` absentes du §4 de SCHEMA-LIGHT.md a
+  établi la preuve mécanique suivante : la même fonctionnalité réelle (la
+  signature électronique Yousign) était codée `integrations` au document
+  #55 (`configuration-262.md`) et `integration_tierce` au document #156
+  (`mise-en-place-de-la-signature-electronique-261.md`) — même objet, deux
+  formulations lexicales. Erreur mécanique démontrée au sens de
+  SCHEMA-LIGHT.md §4 (« ne pas créer de doublon lexical d'une capacité
+  existante »). Correction : substitution de `integration_tierce` par
+  `integrations` sur les 3 lignes concernées (#88
+  `eldotravo-267.md`, #156 `mise-en-place-de-la-signature-electronique-261.md`,
+  #202 `synchronisation-google-agenda-269.md`). Aucune ligne n'a résulté
+  avec `integrations` en double ni avec plus de 3 capacités. Aucune autre
+  ligne, aucun autre champ n'a été touché. Les sept autres valeurs
+  nouvelles identifiées par le même audit (`comptabilite`, `crm`,
+  `geolocalisation`, `reporting`, `facturation`, `personnalisation`,
+  `multi-societe`) sont conservées telles quelles — concepts distincts
+  démontrés. Les deux cas jugés ambigus par l'audit (`tarification` vis-à-vis
+  de `catalogue`, `marketing_et_communication` vis-à-vis de `communication`)
+  restent en l'état, non tranchés : leur arbitrage exigerait une définition
+  écrite du périmètre de `catalogue` et de `communication`, absente de
+  SCHEMA-LIGHT.md, question explicitement différée.
 
 ## Sorties LIGHT
 
@@ -187,7 +210,7 @@ Journal tenu en continu ci-dessous ; vide si rien à signaler sur un lot.
 | 85 | knowsystem/definir-ses-conditions-tarifaires-169.md | 412 | définition des conditions tarifaires par marque, catégorie ou article | devis | tarification | oui | non | oui | oui | non | reference_configuration |
 | 86 | knowsystem/demandes-dintervention-78.md | 874 | création et structuration d'une demande d'intervention (types, planification, facturation) | chantier-intervention | planning, facturation, geolocalisation | oui | oui | oui | non | non | reference_configuration |
 | 87 | knowsystem/ecritures-comptables-et-pieces-comptables-275.md | 1001 | gestion des écritures et pièces comptables (automatisation, saisie, import) | facturation | comptabilite, automatisation | oui | oui | oui | oui | non | procedure |
-| 88 | knowsystem/eldotravo-267.md | 466 | configuration et utilisation du connecteur EldoTravo (collecte d'avis clients) | chantier-intervention | marketing_et_communication, integration_tierce | oui | non | oui | oui | non | reference_configuration |
+| 88 | knowsystem/eldotravo-267.md | 466 | configuration et utilisation du connecteur EldoTravo (collecte d'avis clients) | chantier-intervention | marketing_et_communication, integrations | oui | non | oui | oui | non | reference_configuration |
 | 89 | knowsystem/employes-65.md | 487 | paramétrage des fiches employés (poste, horaires, RH, compétences) | indetermine | planning, mobile | oui | oui | oui | oui | non | reference_configuration |
 | 90 | knowsystem/enregistrer-un-paiement-161.md | 669 | enregistrement, catégorisation et régularisation des paiements de factures | facturation | paiement, comptabilite | oui | oui | oui | non | oui | procedure |
 
@@ -260,7 +283,7 @@ Journal tenu en continu ci-dessous ; vide si rien à signaler sur un lot.
 | 153 | knowsystem/menu-de-la-comptabilite-et-tableau-de-bord-174.md | 1518 | présentation des menus comptables et du tableau de bord (ventes, achats, caisse, banque, à-nouveaux) | facturation | comptabilite, paiement | oui | oui | oui | non | non | reference_configuration |
 | 154 | knowsystem/mettre-a-jour-un-article-centralise-168.md | 430 | mise à jour et archivage des articles depuis une base tarifaire centralisée fournisseur | devis | tarification | oui | non | oui | oui | non | procedure |
 | 155 | knowsystem/migration-des-sav-291.md | 258 | migration des anciens SAV vers les demandes d'intervention | chantier-intervention | — | oui | non | non | non | non | procedure |
-| 156 | knowsystem/mise-en-place-de-la-signature-electronique-261.md | 563 | mise en place et utilisation de la signature électronique (Yousign) sur les devis | devis | integration_tierce, automatisation | oui | non | oui | oui | non | procedure |
+| 156 | knowsystem/mise-en-place-de-la-signature-electronique-261.md | 563 | mise en place et utilisation de la signature électronique (Yousign) sur les devis | devis | integrations, automatisation | oui | non | oui | oui | non | procedure |
 | 157 | knowsystem/modele-de-courriers-182.md | 331 | création et paramétrage de modèles de courriers PDF (impression, remplissage automatique) | indetermine | automatisation | oui | non | non | oui | non | reference_configuration |
 | 158 | knowsystem/modeles-de-commentaire-186.md | 228 | création et mise en forme des modèles de commentaires de devis | devis | — | oui | non | non | non | non | reference_configuration |
 | 159 | knowsystem/modeles-dintervention-73.md | 690 | configuration des modèles d'intervention (facturation, questionnaire, rapport) | chantier-intervention | planning, facturation, mobile | oui | oui | oui | non | non | reference_configuration |
@@ -309,7 +332,7 @@ Journal tenu en continu ci-dessous ; vide si rien à signaler sur un lot.
 | 199 | knowsystem/saisir-un-inventaire-57.md | 912 | saisie et validation d'un inventaire physique (ajustement de stock) | achat | gestion_stock | oui | oui | oui | oui | non | procedure |
 | 200 | knowsystem/secteurs-70.md | 386 | configuration des secteurs géographiques pour la planification des tournées | chantier-intervention | planning, geolocalisation | oui | oui | oui | non | non | reference_configuration |
 | 201 | knowsystem/sequences-des-journaux-278.md | 562 | configuration des séquences de numérotation des journaux comptables | facturation | comptabilite | oui | non | oui | non | non | reference_configuration |
-| 202 | knowsystem/synchronisation-google-agenda-269.md | 595 | configuration de la synchronisation Google Agenda (API Google, identifiants OAuth) | chantier-intervention | planning, integration_tierce | oui | non | non | oui | non | procedure |
+| 202 | knowsystem/synchronisation-google-agenda-269.md | 595 | configuration de la synchronisation Google Agenda (API Google, identifiants OAuth) | chantier-intervention | planning, integrations | oui | non | non | oui | non | procedure |
 | 203 | knowsystem/taxes-193.md | 840 | configuration des taxes (TVA, intracommunautaire, autoliquidation sous-traitance BTP) | facturation | comptabilite | oui | oui | oui | oui | non | reference_configuration |
 | 204 | knowsystem/telechargement-et-connexion-93.md | 225 | installation, connexion et mise à jour de l'application mobile | indetermine | mobile | oui | non | oui | non | non | procedure |
 | 205 | knowsystem/terminer-une-intervention-95.md | 502 | clôture d'une intervention (saisie des temps, compte-rendu, statut) | chantier-intervention | mobile, planning | oui | oui | oui | non | non | procedure |
@@ -360,12 +383,13 @@ politique_legale 1 · marketing_dans_aide 1.
 
 **`capacites_transverses`** (tally des valeurs non vides, ordre
 décroissant, top 10 sur les 212 lignes — vocabulaire ouvert, max 3 par
-document) : automatisation 47 · comptabilite 35 · planning 31 · paiement 27
-· gestion_stock 24 · crm 17 · tarification 14 · geolocalisation 13 ·
-marketing_et_communication 12 · reporting 11 (+ mobile 11, facturation 11,
-integrations 10, catalogue 8, personnalisation 7, documents 6,
-conformite_reglementaire 5, roles 3, recherche 3, integration_tierce 3,
-communication 3, securite_compte 1, presence_en_ligne 1, multi-societe 1).
+document ; recalculé après correction du 2026-09-09, cf. Incidents) :
+automatisation 47 · comptabilite 35 · planning 31 · paiement 27 ·
+gestion_stock 24 · crm 17 · tarification 14 · integrations 13 ·
+geolocalisation 13 · marketing_et_communication 12 (+ reporting 11, mobile
+11, facturation 11, catalogue 8, personnalisation 7, documents 6,
+conformite_reglementaire 5, roles 3, recherche 3, communication 3,
+securite_compte 1, presence_en_ligne 1, multi-societe 1).
 
 ## Cas que LIGHT représente mal
 
