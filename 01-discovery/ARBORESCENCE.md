@@ -349,6 +349,16 @@ sont les fichiers de cache (`.bin`, `.json`), déjà expliqués en §3.
 5. `tools/collecte/sources.yaml` — la liste exacte des dix concurrents
    et de leurs adresses, avec les particularités de chacun.
 
+**Documents post-V3 (non couverts ci-dessus, à lire pour l'état courant
+de l'industrialisation) :**
+- `docs/decisions/0006-limites-analysis-c.md` — limites établies sur H1
+  après Analysis C et H1_SOURCE_TEST, prérequis non encore tranchés.
+- `01-discovery/concurrents/analysis/h1-source-test-faq.md` — résultat
+  du test de capacité du genre FAQ/dépannage.
+- `01-discovery/concurrents/analysis/pilote-light-corpus-inedit.md` —
+  premier pilote réel du schéma LIGHT sur corpus inédit, verdict et
+  limites.
+
 **Ce qui n'a pas de raison d'être claire dans cette arborescence :**
 - Pourquoi seuls trois concurrents sur dix ont un dossier
   `extracted/` alors que dix ont un dossier `sources/` — la réponse

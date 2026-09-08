@@ -8,6 +8,21 @@ documenté et traçable : ce qui a été collecté chez chaque concurrent,
 depuis quelle adresse, par quelle méthode, et avec quelles limites
 connues.
 
+## Par où commencer
+
+1. `01-discovery/ARBORESCENCE.md` — le dépôt et son organisation.
+2. `docs/decisions/` — les décisions actées (numérotées 0001 à 0006),
+   hypothèses métier et axes de recherche.
+3. `01-discovery/concurrents/sources/COUVERTURE.md` — état détaillé et
+   certifié de la collecte, concurrent par concurrent.
+4. `01-discovery/concurrents/analysis/SCHEMA-V2.md` — le contrat
+   d'extraction (V2 gelé + extensions V3 validées).
+5. `01-discovery/concurrents/analysis/REGISTRE-CP.md` — les cas
+   problématiques connus du schéma, non résolus.
+6. `docs/decisions/0006-limites-analysis-c.md` et
+   `01-discovery/concurrents/analysis/pilote-light-corpus-inedit.md` —
+   état actuel : limites connues sur H1 et dernier pilote LIGHT validé.
+
 ## Les quatre niveaux du corpus concurrentiel
 
 Quatre documents jouent des rôles différents. Ne pas les confondre :
