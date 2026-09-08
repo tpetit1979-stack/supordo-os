@@ -79,6 +79,8 @@ ou fusionné pendant ce chantier (contrôle git en fin de document).
 |---|---|---|
 | centre_aide | **Collecté, complet** | 190 URLs sitemap = 190 fichiers. Exact. |
 | site_marketing | **Collecté, complet** | 51 URLs sitemap = 50 fichiers + 1 exclusion (`mentions-legales`). Exact. Le faux positif initial sur `/compte-cle-en-main` (exclu à tort par un ancien regex matchant `compte` en préfixe) a été corrigé et la page récupérée ; 0 sur-inclusion résiduelle détectée. |
+| Plateforme documentaire | Note | La documentation `centre_aide` est servie via GitBook (`docv5.progbat.com`). GitBook y expose `llms.txt` et `llms-full.txt` — constatés lors d'un diagnostic le 2026-09-08, potentiellement utiles pour une future collecte. Non exploités par la collecte actuelle. |
+| Pages sans corps documentaire | Constat | 5 pages `centre_aide/le-menu-principal/bibliotheque/elements/*` (`fournitures`, `location`, `main-doeuvre`, `outillage`, `sous-traitance`) vérifiées le 2026-09-08 : pas de corps documentaire substantiel dans la source elle-même (confirmé par l'export GitBook natif et `llms-full.txt`, pas un défaut de rendu JS côté collecte). Ce constat ne démontre ni un défaut de collecte, ni une absence fonctionnelle dans ProGBat. |
 
 ## axonaut *(centre_aide historique non touché)*
 

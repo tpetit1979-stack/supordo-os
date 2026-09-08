@@ -355,9 +355,17 @@ de l'industrialisation) :**
   après Analysis C et H1_SOURCE_TEST, prérequis non encore tranchés.
 - `01-discovery/concurrents/analysis/h1-source-test-faq.md` — résultat
   du test de capacité du genre FAQ/dépannage.
+- `01-discovery/concurrents/analysis/SCHEMA-LIGHT.md` — contrat canonique
+  de production LIGHT, à lire intégralement avant tout nouveau run.
 - `01-discovery/concurrents/analysis/pilote-light-corpus-inedit.md` —
   premier pilote réel du schéma LIGHT sur corpus inédit, verdict et
-  limites.
+  limites (40 documents).
+- `01-discovery/concurrents/analysis/light-costructor-help.md` —
+  production LIGHT complète, corpus Costructor (94 documents).
+- `01-discovery/concurrents/analysis/light-axonaut-help.md` —
+  production LIGHT complète, corpus Axonaut (119 documents).
+- `01-discovery/concurrents/analysis/light-progbat-help.md` —
+  production LIGHT complète, corpus ProGBat (186 documents).
 
 **Ce qui n'a pas de raison d'être claire dans cette arborescence :**
 - Pourquoi seuls trois concurrents sur dix ont un dossier

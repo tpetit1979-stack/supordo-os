@@ -70,12 +70,21 @@ fichiers utilisables.
 
 ## Production LIGHT
 
-Toute production LIGHT doit utiliser le protocole canonique du dépôt.
-Ne jamais redéfinir ou modifier les règles LIGHT dans un prompt
-spécifique à un concurrent.
+Le contrat canonique est `01-discovery/concurrents/analysis/SCHEMA-LIGHT.md`.
+Toute production LIGHT doit s'y conformer. Ne jamais redéfinir ou modifier
+les règles LIGHT dans un prompt spécifique à un concurrent.
+
+**Toute production LIGHT commence par la lecture intégrale de
+SCHEMA-LIGHT.md. Ne pas reprendre le protocole par imitation d'un fichier
+`light-*.md` existant.**
 
 Les paramètres d'exécution (lots, checkpoints, Git, reprise) peuvent
 varier sans modifier le protocole d'extraction.
+
+Les runs antérieurs à SCHEMA-LIGHT.md (pilote, Costructor, Axonaut,
+ProGBat) restent historiques et non conformes sur plusieurs points
+recensés dans SCHEMA-LIGHT.md §11 (Compatibilité historique) — ils ne
+sont pas réécrits rétroactivement.
 
 ## Principe de suffisance décisionnelle
 
