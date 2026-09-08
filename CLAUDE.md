@@ -82,9 +82,10 @@ Les paramètres d'exécution (lots, checkpoints, Git, reprise) peuvent
 varier sans modifier le protocole d'extraction.
 
 Les runs antérieurs à SCHEMA-LIGHT.md (pilote, Costructor, Axonaut,
-ProGBat) restent historiques et non conformes sur plusieurs points
-recensés dans SCHEMA-LIGHT.md §11 (Compatibilité historique) — ils ne
-sont pas réécrits rétroactivement.
+ProGBat) restent historiques et présentent plusieurs divergences par
+rapport au contrat canonisé a posteriori, recensées dans
+SCHEMA-LIGHT.md §11 (Compatibilité historique). Ils ne sont pas
+réécrits rétroactivement.
 
 ## Principe de suffisance décisionnelle
 
