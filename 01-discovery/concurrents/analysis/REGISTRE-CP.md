@@ -1,11 +1,15 @@
-# Registre des cas problématiques — CP-1 à CP-18
+# Registre des cas problématiques — CP-1 à CP-22
 
-> Ce registre est un index de travail pour l'arbitrage post-Pilotes A+B.
-> Il ne constitue ni une nouvelle analyse ni une proposition de V3.
+> Ce registre est un index de travail pour l'arbitrage post-Pilotes A+B,
+> complété après le crash-test externe de V3 (Analysis C). Il ne
+> constitue ni une nouvelle analyse ni une proposition de V4.
 
-Les descriptions détaillées restent dans leur mini-audit d'origine :
+Les descriptions détaillées restent dans leur document d'origine :
 `mini-audit-V2.md` §10 pour CP-1 à CP-13, `mini-audit-B.md` §4 pour
-CP-14 à CP-18. Aucun CP n'est ici reformulé, fusionné ni résolu.
+CP-14 à CP-18, la section « CP-19 à CP-22 » ci-dessous pour les quatre
+cas issus d'Analysis C (pas de fichier d'audit dédié dans ce dépôt — la
+source est l'article cité et sa citation, comme pour tout fait de ce
+registre). Aucun CP n'est ici reformulé, fusionné ni résolu.
 
 ---
 
@@ -63,6 +67,10 @@ arbitrer. Les deux colonnes ne se déduisent pas l'une de l'autre.
 | CP-16 | une rupture assumée et motivée est indiscernable d'une lacune | mini-audit-B | 1 | H1 | structurel | 2 |
 | CP-17 | un acteur appartenant à plusieurs périmètres simultanément n'est pas représentable | mini-audit-B | 1 | fidélité factuelle | isolé | 4 |
 | CP-18 | une interaction conditionnée par un seuil, un état, un rôle, une durée, un abonnement, un réglage ou une donnée n'est pas représentable | mini-audit-B | 7 formes distinctes documentées en B | H3 | structurel | 1 |
+| CP-19 | un signataire au-delà de deux (`acteur`/`destinataire`) n'est pas représentable | Analysis C (fork stress-test) | 1 | fidélité factuelle | isolé | 4 |
+| CP-20 | un objet dont l'état est un agrégat automatique de plusieurs objets-enfants n'a pas d'emplacement dans `transitions_objet` | Analysis C (fork stress-test, lecture flottante) | 2 | fidélité factuelle | récurrent | 4 |
+| CP-21 | `dans_logiciel: non` confond une action hors logiciel et un acteur sans compte utilisateur | Analysis C (fork stress-test, lecture flottante) | 1 | fidélité factuelle | isolé | 4 |
+| CP-22 | `perimetre` n'a pas de valeur pour un tiers réglementaire | Analysis C (fork diversité) | 1 | fidélité factuelle | isolé | 4 |
 
 ---
 
@@ -154,3 +162,107 @@ pas l'une de l'autre.
 proviennent toutes des dix articles du Pilote B, échantillon biaisé par
 construction. Sa promotion en `structurel` tient à son effet sur H3, non
 à sa fréquence, et ne préjuge pas de sa prévalence dans le corpus étendu.
+
+---
+
+## CP-19 à CP-22 — issus d'Analysis C (crash-test externe de V3, 37
+articles Axonaut/Costructor/OpenFire/ProGBat, 2026-09-08)
+
+Ces quatre cas n'ont pas été recherchés : ils sont apparus par le
+protocole de lecture flottante (relecture de la source sans le schéma en
+tête, question unique : qu'est-ce qui est important ici que l'extraction
+n'a pas naturellement fait ressortir ?) ou par relecture directe d'un
+mécanisme de signature. Aucun ne provient d'un fichier d'audit dédié dans
+ce dépôt — leur trace est l'article source cité et sa citation, comme
+pour tout autre fait de ce registre.
+
+### CP-19 — un signataire au-delà de deux n'est pas représentable
+
+**Description factuelle.** `interactions.acteur`/`destinataire` est une
+paire ; un document signé par trois parties distinctes (maître d'ouvrage,
+entreprise, maître d'œuvre) ne peut désigner qu'un acteur et un
+destinataire — le troisième signataire n'a nulle part où aller.
+
+**Cas/source.** Costructor, PV de réception de travaux
+(`chantiers/comment-creer-un-pv-de-reception-de-travaux-408xa.md`) — trois
+signataires nommés explicitement dans l'article.
+
+**Impact.** Un signataire est silencieusement omis ou artificiellement
+fusionné avec un autre — un trou, pas une affirmation fausse sur les deux
+rôles effectivement codés.
+
+**Statut : isolé** (1 cas). **Priorité 4.**
+
+**Bloquant : NON.** Ne touche aucune des hypothèses H1/H2/H3 actuellement
+testées.
+
+### CP-20 — un objet-conteneur à état agrégé n'a pas d'emplacement
+
+**Description factuelle.** `transitions_objet` représente des passages
+point-à-point (`objet_source` → `objet_resultat` via une `action`). Un
+objet dont l'état dérive automatiquement de plusieurs objets-enfants
+(devis, factures, bons de commande et de livraison rattachés à une
+« commande » ; devis/factures/rapports rattachés à un « chantier » vu
+depuis un portail client) n'a pas de représentation : ce n'est pas un
+passage mais une architecture d'agrégation.
+
+**Cas/source.** Axonaut,
+`commandes-clients-fournisseurs/fonctionnement-dune-commande-client.md` ;
+Costructor,
+`chantiers/comment-fonctionne-le-portail-clientchantier-17oxarx.md` —
+deux éditeurs indépendants, tous deux trouvés par lecture flottante.
+
+**Impact.** Champs structurés muets sur ce point ; le phénomène ne serait
+capturable qu'en texte libre (`signaux_emergents`), sans structure
+comparable entre concurrents.
+
+**Statut : récurrent** (2 occurrences, 2 concurrents indépendants — la
+récurrence est notée mais, comme pour CP-3/CP-6/CP-17, ne suffit pas seule
+à qualifier `structurel` : aucune affirmation fausse n'est produite,
+c'est un trou). **Priorité 4.**
+
+**Bloquant : NON.**
+
+### CP-21 — identité sans accès produit confondue avec une action hors logiciel
+
+**Description factuelle.** `dans_logiciel: non` sert à la fois pour « ce
+qui se passe hors du logiciel » et pour « un acteur qui n'a tout
+simplement pas de compte utilisateur ». Un « personnel » peut exister dans
+le système (assignable, traçable) sans jamais avoir de compte — ces deux
+faits sont différents et se confondent aujourd'hui dans une seule valeur.
+
+**Cas/source.** Axonaut,
+`configurer-votre-compte/droits-responsabilites-utilisateurs-a-quoi-ca-correspond-2.md`
+— trouvé par lecture flottante.
+
+**Impact.** Un trou de nuance, pas une affirmation fausse : les deux
+situations restent codées identiquement, aucune n'est niée.
+
+**Statut : isolé** (1 cas). **Priorité 4.**
+
+**Bloquant : NON.**
+
+### CP-22 — `perimetre` n'a pas de valeur pour un tiers réglementaire
+
+**Description factuelle.** `interactions.perimetre` prévoit
+`interne | client | partenaire | editeur | inconnu`. Une « Plateforme
+Agréée » (tiers réglementaire de la facturation électronique) ne
+correspond nommément à aucune des cinq valeurs.
+
+**Cas/source.** OpenFire, corpus de configuration/facturation
+électronique — trouvé par relecture directe, pas par lecture flottante.
+
+**Impact.** Codable en `partenaire` par extension ou `inconnu` sans
+affirmer de faux, mais aucune des deux ne le nomme correctement.
+
+**Statut : isolé** (1 cas). **Priorité 4.**
+
+**Bloquant : NON.**
+
+---
+
+**Aucun des quatre ne modifie le statut ou la priorité des CP-1 à CP-18.**
+Aucun n'a été corrigé par cette mise à jour — ils restent **ouverts, non
+bloquants**, conformément au critère déjà établi dans ce registre
+(l'occurrence, rare ou récurrente, n'élève le statut à `structurel` que
+si le codage forcé produit une affirmation fausse, pas un trou).

@@ -13,6 +13,21 @@ un corpus dont la première moitié et la seconde ne sont pas comparables.
 
 ---
 
+> **Statut de ce document (mise à jour du 2026-09-08, après Analysis C).**
+> Le contrat ci-dessous, jusqu'à « Ce que ce schéma ne prétend pas
+> mesurer », est le **contrat V2, gelé tel quel** — il a produit les 40
+> YAML des Pilotes A et B et reste inchangé, pour ne pas rendre ces 40
+> fichiers non comparables entre eux.
+>
+> La section **« V3 — extensions validées »**, ajoutée en fin de
+> document, rassemble les corrections arbitrées après le Pilote B, le
+> `REGISTRE-CP.md` et le crash-test externe (Analysis C, 37 articles
+> Axonaut/Costructor/OpenFire/ProGBat). **V3 s'applique aux extractions
+> futures ; les 40 YAML existants ne sont pas migrés** — leur migration
+> éventuelle reste une décision séparée, non prise ici.
+
+---
+
 ## Règle fondamentale
 
 > Toute information métier ou produit potentiellement significative
@@ -499,3 +514,168 @@ analysée**.
 Formulation interdite : « X n'a pas la fonctionnalité Y ».
 Formulation exigée : « La fonctionnalité Y n'a pas été trouvée dans les
 articles analysés de X ».
+
+---
+
+## V3 — Extensions validées après Analysis C
+
+**Statut : validé pour l'industrialisation future (verdict
+`V3_INDUSTRIALISABLE`, crash-test externe sur 37 articles
+Axonaut/Costructor/OpenFire/ProGBat, 2026-09-08). S'applique aux
+extractions futures uniquement — les 40 YAML des Pilotes A et B restent
+en V2, non migrés.**
+
+Comme pour V2, aucune règle ci-dessous ne s'ajuste pendant une extraction
+en cours. Un candidat non prévu ici s'accumule en « Cas problématiques »
+ou dans `REGISTRE-CP.md`, jamais ajouté à chaud.
+
+### V3.1 — Provenance (nouveau bloc racine, obligatoire)
+
+```yaml
+source:
+  corpus_id:
+  chemin_relatif:
+  url:
+  id:
+```
+
+`id = <corpus_id>::<chemin_relatif>` — **déterministe, jamais un UUID
+aléatoire**, recalculable à l'identique depuis `corpus_index.json` et
+l'arborescence disque. Vérifié mécaniquement sans ambiguïté sur les 40
+pilotes et sur les 37 articles d'Analysis C (77/77 résolus au total, 0
+collision, 0 introuvable, 0 ambiguïté).
+
+### V3.2 — Objets canoniques (`objet_source` / `objet_resultat`)
+
+```yaml
+objet_source:
+  valeur_brute:
+  type_canonique:
+  qualificatif_libre:
+objet_resultat:
+  valeur_brute:
+  type_canonique:
+  qualificatif_libre:
+```
+
+- `valeur_brute` est **toujours** conservée, sans reformulation.
+- `type_canonique` peut être une valeur unique, une **liste** (objet
+  composé, ex. « devis ou bon de commande »), ou `null`.
+- **`null` vaut toujours mieux qu'une fausse canonisation.** Un objet non
+  canonisable n'est jamais forcé dans le type le plus proche.
+- `qualificatif_libre` porte ce qui reste hors du type et hors de
+  `etat_entree`/`etat_sortie` (ne pas dupliquer un état déjà porté par ces
+  deux champs).
+
+**`SEED_V3_PILOTE`** — vocabulaire nommé explicitement. **Ce n'est ni une
+ontologie SUPORDO, ni un modèle de données, ni une taxonomie figée.** Il a
+été construit uniquement à partir des objets rencontrés dans les 40
+pilotes :
+
+> facture, facture d'acompte, facture de solde, facture d'abonnement,
+> devis, ligne de devis, avenant, chantier, suivi de chantier,
+> intervention, rapport, rapport d'intervention, rapport de visite avant
+> devis, pointage, feuille de temps, règlement, avoir, document, document
+> de vente, profil, profil utilisateur, planning, PV de réception, fil,
+> fil du chantier, fil d'activité, commande, commande fournisseur, bon de
+> commande, client, contact, mouvement de stock, stock, état d'avancement,
+> paiement, licence, signature — **35 valeurs.**
+
+- **Règle d'ajout** : un terme n'entre dans `SEED_V3_PILOTE` que s'il
+  apparaît déjà comme nom de tête d'un `objet_source`/`objet_resultat` du
+  lot en cours d'extraction — jamais anticipé.
+- **Règle de refus** : aucun terme n'est ajouté **pendant** l'extraction
+  d'un lot (même discipline que R5 sur les ruptures). Les candidats
+  s'accumulent en file d'attente, fusionnés seulement entre deux lots.
+- Analysis C a produit une liste de candidats non encore arbitrés (dont
+  « demande de prix », confirmé chez deux éditeurs indépendants —
+  Costructor et OpenFire) — **aucun n'est intégré au seed par cette mise
+  à jour.** Leur arbitrage reste à faire séparément.
+
+### V3.3 — Conditionnalité (`condition_activation`)
+
+```yaml
+condition_activation:          # LISTE, 0 à N — attachable à une
+                                # interaction OU une transitions_objet
+  - description_brute:
+    type_canonique: seuil_montant | duree | etat_objet | role |
+                     niveau_abonnement | reglage_a_la_creation |
+                     presence_donnee | inconnu
+    valeur:
+    preuve: {niveau, source, citation}
+```
+
+Les 7 valeurs (+ `inconnu`) sont closes pour l'instant — confirmées sur
+les Pilotes A/B **et** sur Analysis C (le patron « seuil chiffré
+déclenchant une validation hiérarchique » a été retrouvé indépendamment
+chez InterFast — 500 € — et OpenFire — 5 000 €). Rattachée directement au
+mécanisme ou à la transition qu'elle conditionne, jamais seulement décrite
+en `regles_operationnelles.condition` de façon déconnectée. **Aucun
+enrichissement de ce vocabulaire dans cette mise à jour**, malgré deux
+candidats relevés par Analysis C (réglage togglable en permanence ;
+condition d'antériorité de saisie) — accumulés, non arbitrés.
+
+### V3.4 — Validation et effet d'état
+
+```yaml
+mecanismes:
+  - forme: validation
+    preuve: {niveau, source, citation}     # cite le GESTE
+    effet_etat_documente: oui | non | inconnu
+    preuve_effet_etat: {niveau, source, citation}
+```
+
+Règles strictes, sans exception :
+
+- `oui` **uniquement** si un changement d'état est **explicitement**
+  documenté.
+- `non` **uniquement** si l'**absence** d'effet est explicitement
+  documentée.
+- **Silence → `inconnu`.** Jamais `non` par défaut, jamais `oui` par
+  optimisme.
+- Toute nuance de confiance (« l'effet semble impliqué mais la
+  formulation reste faible ») s'exprime via `preuve_effet_etat.niveau`
+  (`explicite`/`contextuel`/`infere`/`inconnu`, champ déjà défini plus
+  haut) — **elle ne crée jamais de 4e valeur de l'enum.**
+
+**Garde-fous conservés, non négociables** : signature ≠ validation,
+acceptation ≠ validation, approbation ≠ changement d'état automatique,
+statut ≠ action. Un geste seul (signer, cliquer) suffit à qualifier
+`forme: validation` ; l'effet d'état est un fait séparé, qui peut rester
+`inconnu` sans invalider le mécanisme.
+
+### V3.5 — Ruptures étendues
+
+```yaml
+ruptures:
+  - type: ressaisie | sortie_logiciel | reconstruction_contexte |
+          non_propagation | rupture_temporelle
+    preuve: {niveau, source, citation}
+    assumee_motivee: oui | non | inconnu
+    preuve_intention: {niveau, source, citation}
+```
+
+- `non_propagation` et `rupture_temporelle` s'ajoutent aux 3 types V2.
+- `assumee_motivee: oui` **seulement** si l'intention/la justification de
+  l'éditeur est explicitement énoncée ; `non` **seulement** si l'absence
+  d'intention est explicitement énoncée ; **sinon `inconnu`**. Silence ≠
+  intention, dans un sens comme dans l'autre.
+- **Rupture uniquement sur preuve positive — silence ≠ rupture** (R5,
+  inchangée). Aucun sous-type ambigu n'est forcé : un cas qui hésite entre
+  deux types reste consigné en cas problématique (voir CP-8,
+  `REGISTRE-CP.md`), pas arbitré à la légère.
+
+**Réserve empirique à conserver explicitement** : les corrections
+apportées à CP-14 et CP-16 (péremption temporelle, rupture assumée) ont
+été **conçues et arbitrées, mais pas encore validées sur du matériel
+neuf**. Le crash-test externe (Analysis C, 37 articles) n'a rencontré
+**aucune** rupture documentée, quel que soit son type. `non_propagation`
+et `rupture_temporelle` restent donc à exercer sur les premiers lots
+d'industrialisation avant d'être considérés éprouvés.
+
+### V3.6 — Ce que V3 ne change pas
+
+Toutes les règles R1 à R7, les 8 valeurs de `forme`, la discipline
+`regles_operationnelles`/`signaux_emergents`, et les CP-1 à CP-22 non
+explicitement corrigés ci-dessus restent inchangés et ouverts (voir
+`REGISTRE-CP.md`).
