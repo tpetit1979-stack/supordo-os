@@ -50,6 +50,16 @@ contenu) sur les 186 inédits : **57 978 mots.**
   calibrage ci-dessus (voir Résultat mécanique final). Aucune ligne du
   tableau n'a été modifiée ; seule cette annonce préalable est corrigée
   pour rester honnête sur la méthode réellement suivie.
+- **2026-09-08 — correction narrative sur les 5 pages `bibliotheque/
+  elements/*` classées `autre`.** Interprétation initiale (section « Cas
+  que LIGHT représente mal ») : défaut de collecte probable / rendu
+  JavaScript non capturé par le collecteur. Vérification ultérieure :
+  interprétation réfutée par diagnostic ciblé (export `.md` natif
+  GitBook, export agrégé `llms-full.txt`, comparaison à notre collecte)
+  — les pages n'ont pas de corps documentaire dans la source elle-même.
+  Diagnostic retenu : `ISSUE_A_PAGE_SANS_CONTENU_DOCUMENTAIRE`. Impact :
+  correction narrative uniquement — aucune ligne du tableau LIGHT et
+  aucun agrégat n'ont été modifiés.
 
 ## Sorties LIGHT
 
@@ -333,10 +343,10 @@ troisième corpus, le constat de densité réglementaire déjà noté ci-dessus.
 contre 1/94 pour Costructor et 3/119 pour Axonaut) — décomposition
 mécanique de ces 28 documents :
 - **14** sont des stubs de navigation purs (fil d'Ariane/menu applicatif
-  sans corps d'article — vraisemblablement une page rendue en JavaScript
-  que le collecteur n'a pas su capturer sous cette forme précise ;
-  concentrés dans `le-menu-principal/bibliotheque/elements/*`, une
-  sous-arborescence entière).
+  sans corps d'article), concentrés dans
+  `le-menu-principal/bibliotheque/elements/*`, une sous-arborescence
+  entière — absence de contenu confirmée dans la source elle-même, pas un
+  défaut de collecte (voir « Cas que LIGHT représente mal » ci-dessous).
 - **9** portent explicitement la mention « Cette documentation est en
   cours d'élaboration... » ou « Cet article est en cours de rédaction... »
   — un défaut de complétude assumé par l'éditeur, pas un problème de
@@ -390,15 +400,25 @@ quelques pages dédiées (`la-panicroom.md`, service de recouvrement).
 **Nouveaux cas observés sur ce corpus (non rencontrés, ou rencontrés
 autrement, sur Costructor et Axonaut) :**
 
-- **Sous-arborescence structurellement vide.** L'intégralité de
-  `le-menu-principal/bibliotheque/elements/` (5 pages sur 6 : éléments,
-  fournitures, location, main d'œuvre, outillage, sous-traitance) ne
-  contient aucun corps d'article exploitable, seulement une coquille de
-  navigation. Ce n'est pas un document isolé « quasi vide » comme le cas
-  Pennylane de Costructor, mais une rubrique entière structurellement
-  absente du corpus collecté — LIGHT le documente correctement (`autre`,
-  5 booléens `non`) mais ne peut pas signaler qu'il s'agit d'un défaut de
-  collecte plutôt que d'un choix éditorial de l'entreprise.
+- **Sous-arborescence sans contenu documentaire (`bibliotheque/
+  elements/`).** 5 des 6 pages de cette rubrique (fournitures, location,
+  main d'œuvre, outillage, sous-traitance) ne contiennent aucun corps
+  d'article, seulement un titre et une coquille de navigation ; la
+  6e (`elements.md`) porte l'encart « documentation en cours
+  d'élaboration ». Vérification menée le 2026-09-08 : plusieurs modes
+  d'observation concordent — l'export `.md` natif de la plateforme
+  GitBook, l'export agrégé `llms-full.txt` de GitBook, et notre collecte
+  locale du 06/09 — pour montrer que ces pages n'ont pas de corps
+  documentaire substantiel dans la source elle-même. Ce n'est donc pas un
+  défaut de collecte démontré. Ce n'est pas non plus la preuve d'une
+  absence fonctionnelle dans ProGBat : des articles voisins
+  (`gestion-des-ouvrages.md`, `les-ouvrages-composes.md`) mentionnent les
+  fournitures, la main d'œuvre, la location, la sous-traitance et
+  l'outillage comme des composants réels du chiffrage. LIGHT documente
+  correctement ces pages (`autre`, 5 booléens `non`) mais ne peut pas, par
+  construction, distinguer une absence de rédaction d'une absence de
+  fonctionnalité — la limite reste réelle, seule son interprétation était
+  erronée.
 - **Documentation en reconstruction assumée.** 9 documents affichent
   littéralement « en cours de rédaction/d'élaboration » — signal explicite
   que ProGBat retravaille sa documentation (probablement suite à une
