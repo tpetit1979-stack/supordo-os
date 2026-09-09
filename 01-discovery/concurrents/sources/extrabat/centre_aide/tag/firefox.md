@@ -1,0 +1,30 @@
+---
+url: https://servicescompris.extrabat.com/tag/firefox
+url_finale: https://servicescompris.extrabat.com:443/tag/firefox/
+date_collecte: 2026-09-09
+destination: centre_aide
+---
+
+Suite à la mise à jour récente du navigateur Firefox, le Plugin d’impression JS Print n’est plus compatible.
+
+Voila pourquoi vous ne pouvez plus imprimer comme avant.
+
+Nous sommes en train de mettre en place une alternative.
+
+En attendant, afin de pouvoir effectuer vos impressions, voici la démarche à suivre :
+
+1° Sur la pièce commerciale, quand vous voulez imprimer, une fenêtre de message d’erreur s’ouvre : cliquez sur « Ne pas installer. »
+
+2° Ouvrir le menu de Firefox
+
+3° Cliquez sur « Imprimer » puis « Mise en page. »
+
+4° Dans « Marges, entêtes et pieds de page, » mettez tout à « vide. »
+
+Puis dans « Formats et options, » cochez « adapter la taille de la page » et « imprimer fond de page. »
+
+5° Quand vous avez fait cette manipulation (à ne faire qu’à la première impression), cliquez sur Ctrl + P afin de lancer le module d’impression.
+
+### Si extrabat vous fait télécharger le PDF au lieu de l’afficher il faut aller dans
+
+Puis préférences => choisir « Portable Document Format » et sélectionner « Aperçu dans Firefox, » et valider.

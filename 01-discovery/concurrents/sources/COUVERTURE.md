@@ -132,6 +132,45 @@ collecte seule.
 | site_marketing | **Collecté, complet** | 1289 URLs sitemap = 1211 FETCHED (log) + 2 fichiers confirmés sur disque avec ligne de log perdue (écriture concurrente) + 3 exclusions (`politique-de-confidentialite` ×3 locales fr) + 73 HTTP 404 (liens morts dans leur propre sitemap, articles de blog listés pour des locales fr-be/fr-ch où ils n'existent pas) = 1289, exact une fois le disque utilisé (1213 fichiers réels). |
 | Sur-inclusion réelle | **2 pages** : `nl-be/privacybeleid.md` et `nl-nl/privacybeleid.md` — la politique de confidentialité de vertuoza en néerlandais (« Privacybeleid »), non exclue car la liste d'exclusion ne couvre que le français (`politique-de-confidentialite`) et l'anglais implicite (`privacy`), pas le néerlandais. Les 3 variantes françaises (`fr-fr`, `fr-be`, `fr-ch`) ont, elles, correctement été exclues. Gap de couverture linguistique du vocabulaire d'exclusion, pas une régression de ce chantier. Le premier passage d'audit avait conclu à tort « 0 sur-inclusion » sur ce concurrent (3 candidats identifiés étaient bien des faux positifs — articles de blog éditoriaux sur les mentions légales obligatoires, pas les CGU/CGV de vertuoza — mais la recherche n'avait pas couvert les locales néerlandaises). |
 
+## extrabat
+
+Collecte réelle du 09/09/2026, via `collecte.py --concurrent extrabat` (aucun paramètre non prévu). Vérifications préalables (domaine canonique, robots.txt, SPA, liens HTML) faites manuellement avant le lancement — non automatisées dans le code.
+
+| Destination | Statut | Détail certifié |
+|---|---|---|
+| centre_aide | **Collecté, quasi complet** | Découverte : crawl de secours profondeur 4 (aucune ligne `Sitemap:` déclarée dans `robots.txt` de `servicescompris.extrabat.com`, malgré l'existence réelle d'un `sitemap_index.xml` sur le serveur — même mécanisme que tolteck). 2077 candidats découverts par le crawl = **1670 fichiers FETCHED** + 3 EXCLUDED (segments `login`, `compte`, `cgv` — coïncidence avec des slugs de tag, pas de vraies pages de connexion/compte/CGV) + 1 HTTP_ERROR (404) + 21 SKIP_EXISTING (doublons de schéma http/https vers un fichier déjà écrit dans ce même run, `canonicalize()` ne normalisant pas le schéma) + 382 actifs binaires non-PDF jamais journalisés par construction (images `/content/uploads/...`, cf. `collecte.py` l. 658-659). Réconciliation manuelle contre le sitemap réel non déclaré (§ ci-dessous) : exacte à 1 URL près. |
+| site_marketing | **Collecté, complet** | Découverte : sitemap déclaré dans `robots.txt` de `www.extrabat.com` (`sitemaps.xml`). 37 URLs sitemap = 35 FETCHED + 1 EXCLUDED (`mentions-legales`) + 1 SKIP_EXISTING (`/rendez-vous` redirige vers `/demo`, déjà collecté). Exact, 0 reste. |
+
+### Réconciliation manuelle par source
+
+**centre_aide** (`servicescompris.extrabat.com`, sitemap réel non déclaré dans robots.txt, récupéré manuellement le 09/09/2026 : `sitemap_index.xml` → 4 sous-sitemaps `post-sitemap.xml` (1023), `page-sitemap.xml` (2), `e-landing-page-sitemap.xml` (0), `category-sitemap.xml` (63) = 1088 URLs brutes, 996 après déduplication par canonicalisation) :
+
+- 996 URLs sitemap pertinentes
+- 553 sont des pièces jointes média (`/content/uploads/...`, images) — jamais collectées par construction (`has_binary_ext`), non une lacune
+- 1670 fichiers effectivement collectés (chiffre du crawl profondeur 4, périmètre différent du sitemap — le crawl découvre aussi des pages hors sitemap, notamment les 1069 archives `/tag/` et 15 `/page/N/`, absentes du sitemap Yoast)
+- Recoupement sitemap ↔ corpus/journal : sur les 996 URLs sitemap, **1 seule reste inexpliquée après exclusion des médias** : `https://servicescompris.extrabat.com/test` — page WordPress orpheline (répond HTTP 200, existe réellement) jamais atteinte par le crawl profondeur 4, non liée depuis aucune page explorée en profondeur ≤4 depuis l'accueil. Cause déterminée : **page orpheline non atteinte par le crawl**, matérialité nulle (1 page de test, pas un article).
+- Les 63 URLs `category-sitemap.xml` n'utilisent pas de préfixe `/category/` distinct (base de catégorie WordPress supprimée) : elles se confondent avec des chemins de premier niveau ordinaires et ont été normalement découvertes et collectées par le crawl, sans traitement spécial nécessaire.
+
+**site_marketing** (`www.extrabat.com`, sitemap déclaré dans robots.txt) : réconciliation déjà exacte via le mécanisme du script lui-même (37 = 35 + 1 + 1, voir tableau ci-dessus) — pas de sitemap parallèle à vérifier manuellement, un sitemap étant déjà déclaré.
+
+**Total Extrabat** : 1670 (centre_aide) + 35 (site_marketing) = **1705 fichiers**.
+
+### Dette signalée — pages `/tag/` et `/page/N/` (décision actée, non exclues à ce stade)
+
+**1069 fichiers sous `centre_aide/tag/`** et **15 fichiers sous `centre_aide/page/`** (1084 fichiers, 65 % du corpus centre_aide) sont des pages d'archive/pagination WordPress, pas des articles documentaires. Diagnostic read-only du 09/09/2026 (échantillon de 10 `/tag/` + 5 `/page/`, 3 comparaisons directes tag↔article) : conclusion **INDEX_NAVIGATION_SEULEMENT** — les pages `/tag/` à article unique sont des doublons intégraux, caractère pour caractère, de l'article qu'elles référencent (25/25, 6/6, 2/2 blocs de 200 caractères identiques sur les 3 comparaisons) ; les pages `/tag/` multi-articles et `/page/N/` sont des index à extraits courts, aucun contenu propre. Décision actée : **collectées telles quelles** (comportement non modifié du script), **non supprimées, non exclues à ce stade**. Un audit séparé de canonicalité/déduplication est prévu avant toute décision d'exclusion analytique ou tout run LIGHT sur ce corpus. `EXCLUDED_SEGMENTS` ne couvre ni `tag` ni `page` — dette à ajouter à la liste de dette du collecteur (§ Dette du collecteur, ci-dessous) si une exclusion structurelle est un jour actée.
+
+### Page juridique entrée au titre de la dette d'exclusion connue
+
+**1 fichier** : `site_marketing/politique-rgpd.md` (`www.extrabat.com/politique-rgpd`) — politique de protection des données personnelles d'Extrabat France SAS elle-même (texte juridique complet, coordonnées `contact@extrabat.com`), non couverte par `EXCLUDED_SEGMENTS` (qui ne contient ni `rgpd` ni `politique-rgpd`). Gap de vocabulaire du même type que ceux déjà recensés pour sellsy/costructor/vertuoza, pas une régression propre à cette collecte. Non supprimé.
+
+**Vérifiés et écartés (faux positifs, contenu éditorial légitime)** : `centre_aide/rgpd.md` et `centre_aide/le-rgpd-tout-savoir-sur-le-reglement-general-sur-la-protection-des-donnees.md` — articles d'aide expliquant aux clients d'Extrabat comment utiliser les fonctionnalités RGPD du logiciel (liens vers la CNIL, description du widget RGPD), pas la politique de confidentialité d'Extrabat elle-même. Correctement collectés. `centre_aide/tag/rgpd.md` déjà comptée dans la dette `/tag/` ci-dessus.
+
+### Anomalies constatées, non corrigées
+
+1. **Faux positifs `EXCLUDED_SEGMENTS` sur des slugs de tag homonymes.** `/tag/login`, `/tag/compte`, `/tag/cgv` ont été exclus non pas parce que ce sont des pages de connexion/compte/CGV, mais parce que leur slug de tag correspond littéralement à un segment de la liste d'exclusion. Sans conséquence documentaire (ce sont de toute façon des pages d'archive `/tag/`, déjà hors périmètre utile), mais signale que `EXCLUDED_SEGMENTS` ne distingue pas le rôle d'un segment de chemin de sa simple valeur textuelle.
+2. **`canonicalize()` ne normalise pas le schéma http/https**, produisant des candidats dupliqués (ex. `http://.../de` et `https://.../de`) dans la liste de découverte. Sans conséquence sur le corpus final (`SKIP_EXISTING` absorbe le doublon au sein du même run), mais gonfle artificiellement les compteurs `discovered`/candidats.
+3. **Couplage structurel confirmé** entre traversée (discovery) et conservation (écriture) dans `is_excluded_path()` : aucun mécanisme actuel ne permet d'exclure `/tag/`ou`/page/` de la sortie sans aussi les exclure de la traversée du crawl de secours — cf. diagnostic du 09/09/2026, aucune modification apportée à `collecte.py` en conséquence (hors périmètre de cette mission).
+
 ---
 
 ## Fichiers présents dans le snapshot mais à exclure des analyses de contenu

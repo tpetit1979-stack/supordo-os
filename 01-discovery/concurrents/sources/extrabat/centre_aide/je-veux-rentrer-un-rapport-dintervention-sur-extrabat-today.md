@@ -1,0 +1,28 @@
+---
+url: https://servicescompris.extrabat.com/je-veux-rentrer-un-rapport-dintervention-sur-extrabat-today
+url_finale: https://servicescompris.extrabat.com:443/je-veux-rentrer-un-rapport-dintervention-sur-extrabat-today/
+date_collecte: 2026-09-09
+destination: centre_aide
+---
+
+Lorsque vous cliquez sur la pastille de votre rendez-vous, celui-ci affiche :
+
+- Le nom du prospect/client,
+- Le type de rendez-vous,
+- Le nombre de km ainsi que votre temps de trajet,
+- le téléphone (fixe, portable,etc..),
+- le mail,
+- ainsi que les instructions de travail pour les techniciens et les notes pour les commerciaux,
+
+En haut à droite, vous avez un crayon qui vous permet de rentrer un rapport d’intervention
+
+1. Soit en mode vocal en cliquant sur le micro en bas à droite sous votre clavier,
+2. Soit par le clavier si vous êtes en déconnecté (le mode vocal passe par Siri ou ok google mais il faut être connecté au réseau).
+
+Votre rapport d’intervention sera automatiquement synchronisé dans votre planning chantier, votre fiche sav, votre fiche de contrat de services ou dans le champ Notes concernant les commerciaux
+
+Si vous voulez supprimer le rapport d’intervention, vous cliquez sur la corbeille en haut à droite
+
+PS : si vous n’avez pas de connexion internet lors de la saisie d’un rapport, celui-ci s’enregistrera dans le **Hors connexion**
+
+et vous n’aurez qu’à relancer le ou les rapports lorsque vous aurez le réseau.

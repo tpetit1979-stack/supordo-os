@@ -1,6 +1,6 @@
 {
   "generated_by": "tools/collecte/build_corpus_index.py",
-  "corpus_count": 22,
+  "corpus_count": 24,
   "corpora": [
     {
       "corpus_id": "tolteck_help",
@@ -587,6 +587,57 @@
           "status": "certain"
         }
       ],
+      "notes": []
+    },
+    {
+      "corpus_id": "extrabat_help",
+      "concurrent": "extrabat",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/extrabat/centre_aide",
+      "source_root_url": "https://servicescompris.extrabat.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 1670,
+      "total_bytes": 2333408,
+      "editorial_taxonomy": [
+        "agenda-2",
+        "application",
+        "astuces",
+        "de",
+        "dossier-client",
+        "en",
+        "es",
+        "gestion-commerciale",
+        "les-bonnes-pratiques",
+        "non-classe",
+        "page",
+        "parametrage",
+        "tag",
+        "video"
+      ],
+      "locales_observed": [
+        "de",
+        "en",
+        "es"
+      ],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "extrabat_marketing",
+      "concurrent": "extrabat",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/extrabat/site_marketing",
+      "source_root_url": "https://www.extrabat.com/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 35,
+      "total_bytes": 93266,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
       "notes": []
     }
   ]

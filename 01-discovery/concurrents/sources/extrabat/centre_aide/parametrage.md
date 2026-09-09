@@ -1,0 +1,38 @@
+---
+url: https://servicescompris.extrabat.com/parametrage
+url_finale: https://servicescompris.extrabat.com:443/parametrage/
+date_collecte: 2026-09-09
+destination: centre_aide
+---
+
+**– Étape 1 (côté Logiciel Extrabat)** 
+
+Vous cliquez sur l’icône *« Préférences Utilisateurs »* (qui se trouve en haut à droite entre Messages et Déconnexion).
+
+Au niveau du menu Agenda, vous cliquez sur le bouton « *Activer la synchronisation* » afin qu’il se mette en position Oui.
+
+ **– Étape 2 ( Côté Smartphone Apple)**
+
+1. Aller dans « Réglages »
+2. Aller sur l’application « Calendrier »
+3. Aller dans « Comptes »
+4. Choisir « Ajouter un compte »
+5. Choisir « Autre »
+6. Choisir « Ajouter un compte CalDAV » *(Attention ne pas sélectionner CardDAV mais CalDAV)*
+7. Saisir les informations suivantes (voir Étape 1):
+
+
+- Adresse du serveur : https://synchro.extrabat.com/*********/
+- Nom d’utilisateur : ************
+- Mot de passe : ******
+- Description : Agenda Extrabat (par exemple)
+
+**Les quatre erreurs les plus courantes :**
+
+– oublier le » / » à la fin de la ligne de l’adresse du Serveur,
+
+– ne pas prendre le bon mot de passe mais prendre son mot de passe d’authentification,
+
+– oublier de mettre son agenda Extrabat par défaut dans son smartphone ou tablette (lorsqu’on revient sur l’application Calendrier),
+
+– oublier d’activer Alertes par défaut /Événements / 1h00 avant par exemple afin de recevoir une notification de rendez-vous avec le nom du client, son adresse, ses téléphones ainsi que son e-mail.

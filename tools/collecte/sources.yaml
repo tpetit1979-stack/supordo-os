@@ -114,3 +114,13 @@
   aide_fait: true
   marketing_fait: false
   note: "doc hebergee sur une plateforme tierce (intercom-help.eu), pas un sous-domaine de vertuoza.com ; sans incidence, centre_aide deja collecte"
+
+- nom: extrabat
+  site: https://www.extrabat.com/
+  doc: https://servicescompris.extrabat.com/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: false
+  marketing_fait: false
+  note: "extrabat.com (sans www) redirige en 301 vers www.extrabat.com, domaine canonique. Aucune ligne Sitemap: declaree dans le robots.txt de servicescompris.extrabat.com, alors qu'un sitemap_index.xml existe bien sur le serveur (200, WordPress) : collecte.py ne le decouvrira pas via robots.txt et basculera automatiquement en crawl de secours profondeur 4, meme mecanisme que tolteck. Verification manuelle du 09/09/2026 : robots.txt 200 standard, 62 hrefs internes / 40 chemins distincts dans le HTML brut de l'accueil documentaire, aucun marqueur de rendu JS bloquant (_next, __NUXT__, __NEXT_DATA__, conteneur vide), pas de bascule cross-domaine."

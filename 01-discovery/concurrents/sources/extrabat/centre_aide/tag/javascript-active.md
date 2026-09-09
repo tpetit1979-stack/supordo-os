@@ -1,0 +1,8 @@
+---
+url: https://servicescompris.extrabat.com/tag/javascript-active
+url_finale: https://servicescompris.extrabat.com:443/tag/javascript-active/
+date_collecte: 2026-09-09
+destination: centre_aide
+---
+
+Comment activer JavaScript sous Android Il vous faut aller dans « Paramètres » en cliquant sur les trois petits points en haut à droite puis Sur les paramètres du site, vérifier que le javascript est activé.

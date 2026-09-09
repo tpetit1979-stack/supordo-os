@@ -1,0 +1,46 @@
+---
+url: https://servicescompris.extrabat.com/de/terminkalender
+url_finale: https://servicescompris.extrabat.com:443/de/terminkalender/
+date_collecte: 2026-09-09
+destination: centre_aide
+---
+
+– Schritt 1 (auf der Seite der Extrabat-Software)
+
+Sie klicken auf das Symbol „Benutzereinstellungen“ (das sich oben rechts zwischen Nachrichten und Abmelden befindet).
+
+Im Menü Agenda klicken Sie auf die Schaltfläche „Synchronisierung aktivieren“, um sie auf „Ja“ zu stellen.
+
+– Schritt 2 ( Android-Smartphone-Seite)
+
+Sie müssen die kostenlose OpenSync-App herunterladen, die im Google Play Store erhältlich ist.
+
+Nach der Installation öffnen Sie die App :
+
+Klicken Sie auf die Schaltfläche „+“, um ein Konto zu erstellen, und wählen Sie die Option „Mit URL und Benutzername anmelden“.
+
+Diese Informationen sind in Ihren Benutzereinstellungen, Abschnitt Kalender, verfügbar.
+
+Als Nächstes müssen Sie die Serveradresse, Ihren Benutzernamen und Ihr Synchronisationspasswort eingeben.
+
+Serveradresse: https://synchro.extrabat.com/caldav.php/*********/
+
+Benutzername : ************
+
+Passwort: ******
+
+SSL verwenden: JA (muss angekreuzt sein).
+
+Nachdem Sie auf „Anmelden“ geklickt haben, können Sie Ihr Konto benennen (z. B. Agenda Extrabat), damit Sie es leicht von Ihrem Terminkalender unterscheiden können.
+
+In einem letzten Schritt können Sie den gewünschten Terminkalender ankreuzen:
+
+Und schließlich erhalten Sie eine Benachrichtigung, um der Anwendung „OpenSync“ den Zugriff auf Ihren Terminkalender zu erlauben. Diese Genehmigung ist notwendig, damit Ihre Termine in der Anwendung „Kalender“ auf Ihrem Telefon sichtbar sind.
+
+Von den Einstellungen der Anwendung aus können Sie die Synchronisationsfrequenz, die standardmäßig 4 Stunden beträgt, über den Abschnitt „Kalendersynchronisationsintervall“ ändern.
+
+Die beiden häufigsten Fehler :
+
+– das „/“ am Ende der Zeile mit der Adresse des Servers vergessen,
+
+– nicht das richtige Passwort, sondern das Authentifizierungspasswort nehmen,
