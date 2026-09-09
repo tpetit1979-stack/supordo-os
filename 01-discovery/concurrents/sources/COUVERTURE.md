@@ -170,6 +170,33 @@ Collecte réelle du 09/09/2026, via `collecte.py --concurrent extrabat` (aucun p
 1. **Faux positifs `EXCLUDED_SEGMENTS` sur des slugs de tag homonymes.** `/tag/login`, `/tag/compte`, `/tag/cgv` ont été exclus non pas parce que ce sont des pages de connexion/compte/CGV, mais parce que leur slug de tag correspond littéralement à un segment de la liste d'exclusion. Sans conséquence documentaire (ce sont de toute façon des pages d'archive `/tag/`, déjà hors périmètre utile), mais signale que `EXCLUDED_SEGMENTS` ne distingue pas le rôle d'un segment de chemin de sa simple valeur textuelle.
 2. **`canonicalize()` ne normalise pas le schéma http/https**, produisant des candidats dupliqués (ex. `http://.../de` et `https://.../de`) dans la liste de découverte. Sans conséquence sur le corpus final (`SKIP_EXISTING` absorbe le doublon au sein du même run), mais gonfle artificiellement les compteurs `discovered`/candidats.
 3. **Couplage structurel confirmé** entre traversée (discovery) et conservation (écriture) dans `is_excluded_path()` : aucun mécanisme actuel ne permet d'exclure `/tag/`ou`/page/` de la sortie sans aussi les exclure de la traversée du crawl de secours — cf. diagnostic du 09/09/2026, aucune modification apportée à `collecte.py` en conséquence (hors périmètre de cette mission).
+4. **`url_finale` porte un port `:443` explicite** (ex. `https://servicescompris.extrabat.com:443/...`) pour la totalité des fichiers `centre_aide`, jamais normalisé par `canonicalize()` (qui ne touche ni au schéma ni au port). Sans conséquence sur le nommage des fichiers (`compute_output_path` ne dépend que du chemin, pas de l'hôte), mais une future comparaison d'URL brute entre `url` et `url_finale` doit en tenir compte.
+
+### Exclusions d'analyse (périmètre d'analyse ≠ périmètre de collecte, 09/09/2026)
+
+Suite à la décision actée de conserver `/tag/` et `/page/N/` sur disque (ci-dessus), un audit de canonicalité/déduplication a été conduit avant tout run LIGHT sur ce corpus. **Aucun fichier de `sources/` n'a été supprimé, déplacé ou modifié** — `sources/` reste le snapshot de preuve intégral. Seul `corpus_index.json` distingue désormais, via `analysis_exclusions`, le périmètre de collecte (1670 fichiers `centre_aide`) du périmètre d'analyse.
+
+**Méthode (par empreinte, sans lecture fichier par fichier)** : hash du corps de texte (frontmatter retiré, espaces normalisés) de chacun des 1670 fichiers `centre_aide`, regroupement par hash identique. Un groupe contenant au moins un fichier hors `/tag/` et hors `/page/` confirme un doublon exact, exclusion sans perte. Pour les groupes composés uniquement de fichiers `/tag/`ou`/page/` (contenu potentiellement unique), vérification par confinement (le corps est-il une sous-chaîne d'un article existant, y compris après retrait d'un éventuel en-tête `## [titre](lien)` propre au gabarit d'archive) — seuls ces cas ont fait l'objet d'une lecture réelle.
+
+**Preuve de non-perte (étape bloquante)** :
+- Sur 1169 fichiers `/tag/` (dont 100 sous `/de`, `/es`, `/en` — archives de tag localisées, absentes d'un simple comptage par dossier `centre_aide/tag/`) : 1112 doublons confirmés (998 par hash exact, 109 par confinement direct, 5 par confinement après retrait d'en-tête), 48 pages dont l'extraction a capturé le menu de navigation du site à la place du contenu réel (gabarit cassé pour ces tags précis — texte non documentaire, sans perte d'information puisqu'aucune réponse n'y est de toute façon présente), et **9 fichiers dont le contenu ne se retrouve nulle part ailleurs dans le corpus** : `tag/bibliotheque.md`, `tag/commande.md`, `tag/courrier.md`, `tag/creer-un-modele-de-courrier.md`, `tag/export-2.md`, `tag/inventaire.md`, `tag/stock.md`, `tag/moteur-de-recherche.md`, `tag/outils.md`. Contenu réel et substantiel (procédures complètes), lu individuellement. Cause de l'absence d'un article canonique séparé : **NON DÉTERMINABLE** — aucune ligne `HTTP_ERROR`, `ROBOTS_DENIED` ou `EXCLUDED` ne correspond à une URL candidate pour ce contenu dans `collecte.log`, et le crawl profondeur 4 (2077 candidats) n'a découvert aucune page séparée le portant. Hypothèse la plus probable, non vérifiable sans nouvelle collecte : contenu jamais publié sous son propre permalien, ou page supprimée côté site avec persistance de la relation de tag. **Ces 9 fichiers ne sont PAS exclus du périmètre d'analyse.**
+- Sur 46 fichiers `/page/N/` (hors `/tag/`, hors sous-arbres de langue) : 26 résolus (17 par hash, 9 par confinement — pages d'archive chronologiques multi-articles, contenu déjà présent ailleurs par fragments), et **1 fichier dont le contenu ne se retrouve nulle part ailleurs** : `gestion-commerciale/page/7.md`, identique caractère pour caractère à `tag/commande.md` — même cause NON DÉTERMINABLE que ci-dessus, **non exclu**.
+- 20 des 21 fichiers `/page/N/` restants après ces résolutions sont des pages d'index chronologiques multi-articles (contenu agrégé déjà présent ailleurs par fragments, cf. diagnostic INDEX_NAVIGATION_SEULEMENT du tour précédent) — safe à exclure.
+
+**403 et collecte incomplète (étape 2)** : recherche stricte `HTTP 403` (avec espace, pour éviter les faux positifs de microsecondes d'horodatage ou de segments d'URL contenant la sous-chaîne « 403 ») dans `collecte.log` : **0 occurrence**, tous concurrents confondus. Le seul `HTTP_ERROR` du run extrabat reste le 404 déjà documenté. La réconciliation déjà écrite plus haut n'est pas affectée.
+
+**Exclusions ajoutées** (mécanisme `analysis_exclusions` de `build_corpus_index.py`, motif distinct de `LEGAL_EXCLUSIONS` — inférées mécaniquement depuis `url_finale`, appliquées au seul concurrent `extrabat`, aucun autre corpus touché) :
+
+| Motif | Définition | Fichiers exclus |
+|---|---:|---:|
+| `LANGUE_NON_FRANCAISE` | premier segment de chemin `de`/`es`/`en` (sous-arbre entier, tag/page inclus) | 223 |
+| `ARCHIVE_TAXONOMIE` | segment `tag`, hors langue, hors les 9 exceptions ci-dessus | 1060 |
+| `PAGINATION` | segment `page`+numéro, hors langue, hors tag, hors l'exception ci-dessus | 40 |
+| **Total exclusions d'analyse** | | **1323** |
+
+**`extrabat_help` : `file_count` (périmètre de collecte) = 1670 avant comme après — inchangé, aucun fichier supprimé.** Périmètre d'analyse (collecte − exclusions) = 1670 − 1323 = **347** (337 articles français réels + 9 pages `/tag/` + 1 page `/page/` préservées comme uniques copies de leur contenu).
+
+`build_corpus_index.py` régénéré (24 corpus, 8 règles validées) ; `test_build_corpus_index.py` : **19/19 passent, aucune modification de test nécessaire** (le nouveau mécanisme utilise une constante séparée de `LEGAL_EXCLUSIONS`, sans effet sur `test_16_certain_1_ambiguous`).
 
 ---
 

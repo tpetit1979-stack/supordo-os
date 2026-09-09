@@ -125,6 +125,83 @@ LEGAL_EXCLUSIONS = [
     ("sellsy/site_marketing/informations-legales/bareme-remise-programme-revendeur.md", "Barème commercial classé sous le répertoire légal, pas lui-même un document juridique", "ambiguous"),
 ]
 
+# --------------------------------------------------------------------- #
+# Exclusions d'analyse MECANIQUES (motifs distincts de LEGAL_EXCLUSIONS #
+# ci-dessus, qui reste reserve aux pages juridiques/conformite).        #
+# --------------------------------------------------------------------- #
+# Retrait du perimetre d'ANALYSE (pas de collecte : aucun fichier de
+# sources/ n'est deplace, renomme ou modifie) de trois familles de
+# pages inferees mecaniquement depuis l'URL en frontmatter
+# (url_finale) de chaque fichier, pas depuis son chemin de sortie :
+#   ARCHIVE_TAXONOMIE    -> segment de chemin "tag" (archive WordPress)
+#   PAGINATION           -> segment de chemin "page" + un numero
+#   LANGUE_NON_FRANCAISE -> premier segment de chemin dans _LANG_CODES
+# Priorite : un chemin /de/tag/... releve de LANGUE_NON_FRANCAISE, pas
+# d'ARCHIVE_TAXONOMIE (le sous-arbre de langue est exclu en bloc).
+#
+# Applicable uniquement aux concurrents listes dans
+# ANALYTICAL_EXCLUSION_PRESERVE ci-dessous (portee explicite de la
+# mission ayant introduit ce mecanisme le 09/09/2026 : extrabat
+# uniquement). Ne s'applique a aucun autre concurrent tant qu'il n'est
+# pas ajoute ici avec ses propres exceptions verifiees.
+#
+# ANALYTICAL_EXCLUSION_PRESERVE liste, par concurrent, les chemins que
+# la regle mecanique ci-dessus classerait normalement en ARCHIVE_TAXONOMIE
+# ou PAGINATION mais qui en sont explicitement exceptes : verifie par
+# empreinte (hash du corps + recherche de confinement dans tout le
+# corpus) le 09/09/2026 sur extrabat, ce sont les SEULES pages /tag/ ou
+# /page/N/ dont le contenu n'a ete retrouve NULLE PART ailleurs dans le
+# corpus (ni doublon exact, ni extrait contenu dans un article
+# existant) -- donc les uniques copies de ce contenu documentaire.
+# Cause de l'absence de leur article canonique propre : NON DETERMINABLE
+# (aucune erreur HTTP, aucun ROBOTS_DENIED, aucune exclusion journalisee
+# pour une URL qui leur correspondrait ; le crawl profondeur 4 n'a pas
+# trouve de page separee portant ce contenu). Voir COUVERTURE.md.
+ANALYTICAL_EXCLUSION_PRESERVE: dict[str, set[str]] = {
+    "extrabat": {
+        "centre_aide/tag/bibliotheque.md",
+        "centre_aide/tag/commande.md",
+        "centre_aide/tag/courrier.md",
+        "centre_aide/tag/creer-un-modele-de-courrier.md",
+        "centre_aide/tag/export-2.md",
+        "centre_aide/tag/inventaire.md",
+        "centre_aide/tag/stock.md",
+        "centre_aide/tag/moteur-de-recherche.md",
+        "centre_aide/tag/outils.md",
+        "centre_aide/gestion-commerciale/page/7.md",
+    },
+}
+
+_LANG_CODES = {"de", "es", "en"}
+_FRONT_URLFINALE_FOR_EXCL_RE = re.compile(r"^url_finale:\s*(\S+)\s*$", re.MULTILINE)
+
+
+def analytical_exclusions_for(concurrent: str, corpus_root: Path) -> list[dict]:
+    if concurrent not in ANALYTICAL_EXCLUSION_PRESERVE or not corpus_root.exists():
+        return []
+    preserve = ANALYTICAL_EXCLUSION_PRESERVE[concurrent]
+    out = []
+    for fp in sorted(corpus_root.rglob("*.md")):
+        relroot = str(fp.relative_to(SOURCES_DIR / concurrent)).replace("\\", "/")
+        if relroot in preserve:
+            continue
+        m = _FRONT_URLFINALE_FOR_EXCL_RE.search(read_front(fp))
+        if not m:
+            continue
+        segs = [s for s in urlsplit(m.group(1)).path.split("/") if s]
+        if not segs:
+            continue
+        if segs[0] in _LANG_CODES:
+            motif = "LANGUE_NON_FRANCAISE"
+        elif "tag" in segs:
+            motif = "ARCHIVE_TAXONOMIE"
+        elif "page" in segs and any(s.isdigit() for s in segs):
+            motif = "PAGINATION"
+        else:
+            continue
+        out.append({"path": rel(fp), "motif": motif, "status": "certain"})
+    return out
+
 
 def load_sources_yaml() -> list[dict]:
     return yaml.safe_load(SOURCES_YAML.read_text(encoding="utf-8"))
@@ -277,7 +354,7 @@ def build_index() -> list[Corpus]:
                 collection_method="automatique", coverage_status=status,
                 file_count=len(files), total_bytes=sum(p.stat().st_size for p in files),
                 editorial_taxonomy=taxo, locales_observed=locales_observed(files),
-                analysis_exclusions=exclusions_for(nom, centre_aide_dir),
+                analysis_exclusions=exclusions_for(nom, centre_aide_dir) + analytical_exclusions_for(nom, centre_aide_dir),
                 notes=notes,
             ))
         elif not aide_fait:
