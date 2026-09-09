@@ -1,6 +1,6 @@
 {
   "generated_by": "tools/collecte/build_corpus_index.py",
-  "corpus_count": 24,
+  "corpus_count": 27,
   "corpora": [
     {
       "corpus_id": "tolteck_help",
@@ -7255,6 +7255,79 @@
       "locales_observed": [],
       "analysis_exclusions": [],
       "notes": []
+    },
+    {
+      "corpus_id": "obat_help",
+      "concurrent": "obat",
+      "type": "aide",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/obat/centre_aide",
+      "source_root_url": "https://aide.obat.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 274,
+      "total_bytes": 1032180,
+      "editorial_taxonomy": [
+        "comment-acc-c3-a9der-c3-a0-votre-biblioth-c3-a8que-batichiffrage-depuis-l-c3-a9diteur-de-devis",
+        "comment-acc-c3-a9der-c3-a0-votre-biblioth-c3-a8que-depuis-l-c3-a9diteur-de-facture",
+        "comment-ajouter-des-c3-a9l-c3-a9ments-de-fourniture",
+        "comment-ajouter-des-c3-a9l-c3-a9ments-de-fourniture-et-de-main-d-c5-93uvre-c3-a0-vos-devis",
+        "comment-ajouter-des-c3-a9l-c3-a9ments-de-fourniture-main-d-c5-93uvre-ouvrage-danciens-devis-depuis-l-c3-a9diteur-de-facture",
+        "comment-ajouter-des-chantiers-devises-dans-le-calendrier",
+        "comment-ajouter-un-client-c3-a0-votre-devis",
+        "comment-ajouter-un-ouvrage-sur-vos-devis",
+        "comment-ajouter-un-saut-de-page-sur-vos-devis",
+        "comment-ajouter-une-remise-globale-ou-ligne-par-ligne-sur-vos-devis",
+        "comment-ajouter-une-retenue-de-garantie-sur-vos-devis",
+        "comment-ajouter-une-section-c3-a0-votre-devis",
+        "comment-cr-c3-a9er-un-raccourcis-obat-sur-le-bureau",
+        "comment-dupliquer-une-facture-finale",
+        "comment-exporter-les-lignes-de-vos-devis",
+        "comment-modifier-la-num-c3-a9rotation-de-vos-factures",
+        "configuration-de-votre-planning",
+        "entreprise-eurl",
+        "hcms",
+        "import-externe-excel",
+        "micro-entreprise",
+        "visualiser-votre-calendrier-en-vue-journali-c3-a8re"
+      ],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "obat_marketing",
+      "concurrent": "obat",
+      "type": "marketing",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/obat/site_marketing",
+      "source_root_url": "https://www.obat.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 695,
+      "total_bytes": 8389965,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": []
+    },
+    {
+      "corpus_id": "obat_documents",
+      "concurrent": "obat",
+      "type": "documents",
+      "source_platform": null,
+      "root_path": "01-discovery/concurrents/sources/obat/_assets_pdf",
+      "source_root_url": "https://www.obat.fr/",
+      "collection_method": "automatique",
+      "coverage_status": "collected",
+      "file_count": 10,
+      "total_bytes": 851637,
+      "editorial_taxonomy": [],
+      "locales_observed": [],
+      "analysis_exclusions": [],
+      "notes": [
+        "Fichiers binaires (PDF) téléchargés tels quels, jamais convertis en texte."
+      ]
     }
   ]
 }

@@ -124,3 +124,13 @@
   aide_fait: false
   marketing_fait: false
   note: "extrabat.com (sans www) redirige en 301 vers www.extrabat.com, domaine canonique. Aucune ligne Sitemap: declaree dans le robots.txt de servicescompris.extrabat.com, alors qu'un sitemap_index.xml existe bien sur le serveur (200, WordPress) : collecte.py ne le decouvrira pas via robots.txt et basculera automatiquement en crawl de secours profondeur 4, meme mecanisme que tolteck. Verification manuelle du 09/09/2026 : robots.txt 200 standard, 62 hrefs internes / 40 chemins distincts dans le HTML brut de l'accueil documentaire, aucun marqueur de rendu JS bloquant (_next, __NUXT__, __NEXT_DATA__, conteneur vide), pas de bascule cross-domaine."
+
+- nom: obat
+  site: https://www.obat.fr/
+  doc: https://aide.obat.fr/
+  doc_config: sous_domaine
+  doc_prefixe: null
+  doc_collecte: standard
+  aide_fait: false
+  marketing_fait: false
+  note: "obat.fr redirige en 302 vers www.obat.fr, domaine canonique. Aucune ligne Sitemap: declaree dans le robots.txt de aide.obat.fr, alors qu'un sitemap.xml existe bien sur le serveur (200, XML). Pour la cible concernee par cette absence de declaration, verifier lors du run que collecte.py bascule effectivement sur son crawl de secours profondeur 4 ; ne pas extrapoler ce comportement a l'autre host. Verification manuelle du 09/09/2026 : robots.txt 200, plateforme HubSpot detectee (scripts hs-*) mais contenu HTML statique servi normalement, aucun rendu client bloquant, aucun marqueur SPA, pas de bascule cross-domaine. Trois sous-domaines identifies le 09/09/2026 et NON COLLECTES : travaux.obat.fr, education.obat.fr, partenariats.obat.fr. Hors perimetre declare (site + doc uniquement), jamais atteints par le crawl puisque hosts_for() limite la portee au host declare. Nature du contenu non verifiee. Cas comparable a openfire : un editeur peut porter plusieurs proprietes documentaires ou editoriales distinctes."

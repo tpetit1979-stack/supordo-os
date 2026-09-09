@@ -198,6 +198,67 @@ Suite à la décision actée de conserver `/tag/` et `/page/N/` sur disque (ci-d
 
 `build_corpus_index.py` régénéré (24 corpus, 8 règles validées) ; `test_build_corpus_index.py` : **19/19 passent, aucune modification de test nécessaire** (le nouveau mécanisme utilise une constante séparée de `LEGAL_EXCLUSIONS`, sans effet sur `test_16_certain_1_ambiguous`).
 
+## obat
+
+Collecte réelle du 09/09/2026, via `collecte.py --concurrent obat`. Une première tentative (aide.obat.fr + www.obat.fr) a été tuée par le système (mémoire insuffisante) alors que le crawl profondeur 4 démarrait sur `www.obat.fr` ; `centre_aide` était déjà intégralement traité à ce moment (390/390 candidats). La reprise (`SKIP_EXISTING`) a sauté `centre_aide` sans le retraiter et complété `site_marketing` seul. Vérifications préalables (domaine canonique, robots.txt, plateforme, liens HTML) faites manuellement avant le lancement — non automatisées dans le code.
+
+| Destination | Statut | Détail certifié |
+|---|---|---|
+| centre_aide | **Collecté, quasi complet** | 274 fichiers. Découverte : crawl de secours profondeur 4 (aucune ligne `Sitemap:` déclarée dans le robots.txt de `aide.obat.fr`, bien qu'un `sitemap.xml` existe réellement sur le serveur, 200/XML, urlset direct). 391 candidats découverts par le crawl = 274 FETCHED + 101 SKIP_EXISTING (doublons `?hsLang=fr`, `canonicalize()` ne filtre pas ce paramètre) + 14 HTTP 404 + 1 PDF. Réconciliation manuelle contre le sitemap réel non déclaré (§ ci-dessous) : 248/249 URLs retrouvées, 1 orpheline expliquée. |
+| site_marketing | **Collecté — exhaustivité NON VÉRIFIABLE** | 695 fichiers + 9 PDF. Découverte : crawl de secours profondeur 4, mais pour une raison différente de aide.obat.fr — `www.obat.fr` ne publie **aucun sitemap à aucun emplacement usuel** (`/sitemap.xml`, `/sitemap_index.xml`, `/wp-sitemap.xml` tous testés en 404 le 09/09/2026, plateforme confirmée WordPress + PHP + MySQL, absence de plugin SEO ou sitemap natif désactivé — cause probable, non vérifiable de l'extérieur). **Cas identique à tolteck : aucune réconciliation externe possible.** Comptes bruts uniquement : 934 candidats découverts = 695 FETCHED + 186 SKIP_EXISTING (doublons `?sort=oldest/most-read/a-z/z-a` sur une vingtaine de pages catégorie/topic du blog, `canonicalize()` ne filtre pas `sort`) + 6 HTTP 404 + 9 PDF + 2 EXCLUDED (`login`, `cgv`) + 3 EXCLUDED_APRES_REDIRECTION (`/app`→`/login`, `/connect/google`→accounts.google.com/…/signin, `/app?target_ui=tools`→`/login`) + 1 ROBOTS_DENIED (`/app/referral`, `Disallow: /app/`) = 902 candidats expliqués sur 934 ; écart de 32 non journalisé par construction — actifs binaires non-PDF (`has_binary_ext`), jamais loggés dans ce cas de figure (même comportement que documenté pour extrabat), matérialité nulle. **Aucun chiffre ci-dessus n'est présenté comme preuve de complétude.** |
+
+### Les deux hosts basculent en crawl profondeur 4, pour des raisons différentes — ne pas confondre
+
+- `aide.obat.fr` : sitemap **existant mais non déclaré** dans robots.txt → réconciliation externe possible et faite (voir ci-dessous).
+- `www.obat.fr` : sitemap **réellement absent**, à tout emplacement testé → aucune réconciliation externe possible, exhaustivité non vérifiable, même situation que tolteck (site_marketing).
+
+### Réconciliation manuelle — centre_aide uniquement
+
+`aide.obat.fr/sitemap.xml` récupéré manuellement le 09/09/2026 : urlset direct (pas un index), 249 URLs uniques.
+
+- 248 des 249 URLs sitemap retrouvées parmi les 274 fichiers collectés (comparaison par chemin d'URL, indépendante du nom de fichier sur disque).
+- **1 URL sitemap inexpliquée** : `https://aide.obat.fr/kb-search-results` — répond HTTP 200 (non vérifié en direct, seule son absence du crawl est établie), jamais atteinte par le crawl profondeur 4 depuis l'accueil (page de résultats de recherche HubSpot, probablement générée dynamiquement et non liée statiquement). Cause déterminée : **page orpheline non atteinte par le crawl**, matérialité nulle (page utilitaire, pas un article).
+- **26 fichiers collectés absents du sitemap** : 24 pages de navigation/catégorie du centre d'aide HubSpot (ex. `devis.md`, `factures.md`, `planning.md`, `chantier.md`, `astuces.md`, `comptabilite.md`, `contacts.md`, `multi-user.md`, `pilotage.md`, `mon-abonnement.md`, etc. — pages courtes, 269 à 3641 octets, texte d'introduction propre à chacune, pas des doublons entre elles), 1 page utilitaire sans contenu documentaire (`hcms/mem/logout.md`, page de déconnexion HubSpot, cf. anomalies), et quelques articles réels non repris dans le sitemap pour une raison non déterminable (`lassistant-ia-dobat.md`, `la-consultation-bancaire-sur-obat.md`, `assistante-devis-vocal.md`, etc.). Ces 26 fichiers sont un **surplus** du crawl par rapport au sitemap, pas une perte : le corpus `centre_aide` est plus complet que le seul sitemap ne le suggérerait.
+- 22 fichiers correspondent à des slugs HubSpot contenant un caractère `/` littéral dans le titre de l'article (ex. « Comment ajouter un client à votre devis/factures »), écrits par `collecte.py` dans une sous-arborescence (`comment-ajouter-un-client-c3-a0-votre-devis/factures.md`) plutôt qu'à plat. Vérifié un par un via le `url_finale` du frontmatter : aucune perte, simple effet de la segmentation de chemin par `compute_output_path()`.
+
+**Collisions `?hsLang=fr` et `?sort=` : absorbées sans perte.** La réconciliation sitemap ci-dessus (248/249, le seul manquant étant une page orpheline non liée à un doublon de paramètre) démontre que les doublons de requête n'ont fait disparaître aucun contenu distinct sur `centre_aide`. Sur `site_marketing`, sans sitemap pour vérifier de la même façon, le raisonnement est structurel : `SKIP_EXISTING` ne saute que l'écriture d'un fichier déjà présent, jamais sa première tentative de récupération — une page listant plusieurs tris (`?sort=…`) est donc toujours récupérée au moins une fois avant qu'une variante ultérieure soit sautée.
+
+### 403 stricts, PARSE_ERROR, contenus vides
+
+Recherche stricte `HTTP 403` (avec espace) sur l'ensemble du log obat : **0 occurrence**. `PARSE_ERROR` : **0 occurrence**. Quelques fichiers très courts mais non vides repérés (`hcms/mem/logout.md` 236 octets, `site_marketing/resetting.md` 249 octets, `centre_aide/astuces.md` 269 octets) — ce sont des pages utilitaires (déconnexion, réinitialisation de mot de passe) ou des pages catégorie courtes, pas des échecs d'extraction.
+
+### Pages juridiques entrées au titre de la dette d'exclusion connue
+
+**2 fichiers** : `site_marketing/confidentialite.md` (politique de confidentialité d'Obat SAS) et `site_marketing/legal.md` (mentions légales d'Obat SAS : raison sociale, capital, RCS, TVA) — non couverts par `EXCLUDED_SEGMENTS` (qui ne contient ni `confidentialite` ni `legal`, seulement `privacy` et `mentions-legales`). Gap de vocabulaire du même type que ceux déjà recensés pour costructor/sellsy/vertuoza/extrabat, pas une régression propre à cette collecte. Non supprimés.
+
+**Vérifiés et écartés (faux positifs, contenu éditorial légitime)** : `blog/cgv-batiment.md` (article expliquant ce que doivent contenir des CGV dans le bâtiment en général, pas les CGV d'Obat) et `blog/mentions-obligatoires-devis.md` (article sur les mentions obligatoires d'un devis BTP). Un PDF `cgv-batiment-obat.pdf` existe également parmi les ressources téléchargeables du blog (`wp-content/uploads/2020/06/CGV_Batiment_Obat.pdf`) ; sa nature (CGV propre à Obat vs modèle téléchargeable pour artisans, aux côtés d'autres modèles de devis dans le même dossier) n'a pas été tranchée — laissé **ambigu**, non compté dans les 2 ci-dessus, comparable au cas du barème sellsy.
+
+### /blog/author/* et PDF
+
+**6 pages `/blog/author/*`** (`laurie`, `mathilde`, `franck`, `flo`, `editorial-team`, `marianick-tobat-fr`) — archives auteur, correctement classées sous `site_marketing/blog/author/`, 0,7 % du corpus marketing, repérées dès le dry run. **9 PDF** sous `_assets_pdf/` proviennent de `blog/wp-content/uploads/` (modèles de devis, mandat de débours, CGV bâtiment) ; 1 PDF supplémentaire (`mandat-de-debours`) collecté côté `centre_aide` lors du premier passage (avant l'interruption) — 10 PDF au total, tous binaires, jamais convertis en texte.
+
+### Sous-domaines identifiés, non collectés
+
+Trois sous-domaines identifies le 09/09/2026 et NON COLLECTES : travaux.obat.fr, education.obat.fr, partenariats.obat.fr. Hors perimetre declare (site + doc uniquement), jamais atteints par le crawl puisque hosts_for() limite la portee au host declare. Nature du contenu non verifiee. Cas comparable a openfire : un editeur peut porter plusieurs proprietes documentaires ou editoriales distinctes. Vérification du 09/09/2026 : les trois répondent HTTP 200 (existence confirmée, contenu non exploré).
+
+### Contenu ressemblant à une instruction adressée à une IA
+
+**3 détections** (`INJECTION_RE`), toutes vérifiées individuellement, **toutes des faux positifs, aucune exécutée** : deux occurrences du paramètre de tracking `?utm_source=chatgpt.com` dans des liens sortants (`blog/nouveautes-btp-2026.md`, `blog/gestion-rh-btp.md`), et une occurrence de l'expression administrative française « donnant lieu à une nouvelle instruction » (`blog/qualification-opqibi.md`, sens bureaucratique du mot « instruction », sans rapport avec une IA). Contenu stocké tel quel dans les trois cas, comme prévu par le script.
+
+### Exclusions d'analyse
+
+**Aucune exclusion créée.** Le dry run puis la collecte réelle n'ont fait apparaître aucun motif d'archive, de taxonomie, de pagination ou de langue dépassant 1 % du corpus (à comparer aux 78 % du cas extrabat). Les pages de catégorie/navigation trouvées (`devis.md`, `factures.md`, etc. côté centre_aide ; une vingtaine de pages topic côté blog) contiennent chacune un texte d'introduction propre et distinct, pas un contenu dupliqué d'un article existant — la méthode par empreinte n'a pas été nécessaire. `obat` n'est pas ajouté à `ANALYTICAL_EXCLUSION_PRESERVE`.
+
+### Anomalies constatées, non corrigées
+
+1. **`canonicalize()` ne filtre ni `?hsLang=` (HubSpot) ni `?sort=`/`?campaign=`** (paramètres propres à obat), produisant les collisions décrites ci-dessus. Absorbées sans perte par `SKIP_EXISTING`, mais gonflent artificiellement les compteurs de candidats — même famille d'anomalie que le défaut de normalisation de schéma http/https déjà documenté pour extrabat.
+2. **Vocabulaire d'exclusion incomplet pour les pages juridiques**, cette fois `confidentialite` et `legal` (voir ci-dessus) — même famille de gap que costructor/sellsy/vertuoza/extrabat.
+3. **1 page utilitaire HubSpot sans contenu documentaire collectée** : `centre_aide/hcms/mem/logout.md` (page de déconnexion, 236 octets). `EXCLUDED_SEGMENTS` couvre les variantes de « login » mais pas « logout ». Cas isolé (1 fichier), pas une famille — aucune exclusion créée pour autant.
+4. **1 page utilitaire similaire côté site_marketing** : `site_marketing/resetting.md` (réinitialisation de mot de passe, 249 octets). Même gap de vocabulaire (« reset »/« resetting » absent de `EXCLUDED_SEGMENTS`).
+5. **32 candidats du crawl `site_marketing` non expliqués individuellement dans le log** — actifs binaires non-PDF (`has_binary_ext`), jamais journalisés par construction (`collecte.py` l. 658-659). Sans conséquence documentaire, même comportement que documenté pour extrabat.
+6. **Log EXCLUDED pré-redirection étiqueté sous le label de cible (`obat:site_marketing`) plutôt que sous la destination résolue (`site_marketing`)**, contrairement à `ROBOTS_DENIED` et aux événements post-classement. Cosmétique, sans impact sur le corpus, repéré lors de la réconciliation.
+7. **Interruption mémoire du 09/09/2026** : le premier lancement de `collecte.py --concurrent obat` a été tué par le système d'exploitation (mémoire insuffisante) au moment où il entamait le crawl profondeur 4 sur `www.obat.fr`, après avoir intégralement traité `centre_aide`. Reprise sans perte via `SKIP_EXISTING` : aucun fichier `centre_aide` retraité, `site_marketing` complété en une seconde exécution. Cause du pic mémoire non déterminée avec certitude (corrélée au volume du crawl profondeur 4, 934 URLs, mémoire consommée par le graphe de découverte en mémoire vive — hypothèse non vérifiée).
+
 ---
 
 ## Fichiers présents dans le snapshot mais à exclure des analyses de contenu
