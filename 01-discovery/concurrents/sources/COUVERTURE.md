@@ -239,7 +239,11 @@ Recherche stricte `HTTP 403` (avec espace) sur l'ensemble du log obat : **0 occu
 
 ### Sous-domaines identifiés, non collectés
 
-Trois sous-domaines identifies le 09/09/2026 et NON COLLECTES : travaux.obat.fr, education.obat.fr, partenariats.obat.fr. Hors perimetre declare (site + doc uniquement), jamais atteints par le crawl puisque hosts_for() limite la portee au host declare. Nature du contenu non verifiee. Cas comparable a openfire : un editeur peut porter plusieurs proprietes documentaires ou editoriales distinctes. Vérification du 09/09/2026 : les trois répondent HTTP 200 (existence confirmée, contenu non exploré).
+Trois sous-domaines identifies le 09/09/2026 et NON COLLECTES : travaux.obat.fr, education.obat.fr, partenariats.obat.fr. Hors perimetre declare (site + doc uniquement), jamais atteints par le crawl puisque hosts_for() limite la portee au host declare. Cas comparable a openfire : un editeur peut porter plusieurs proprietes documentaires ou editoriales distinctes.
+
+**FAIT ÉTABLI** (09/09/2026) : les trois répondent HTTP 200 et portent les titres de page d'accueil suivants — `travaux.obat.fr` : « Trouver un artisan qualifié près de chez vous pour vos travaux | Obat » ; `education.obat.fr` : « Obat - Education » ; `partenariats.obat.fr` : « Devenez partenaires avec Obat ! ».
+
+**NON ÉTABLI** : la nature réelle de leur contenu, leur volume, leur articulation avec le produit, et le modèle commercial qu'ils suggèrent. Aucun n'a été exploré au-delà de son titre.
 
 ### Contenu ressemblant à une instruction adressée à une IA
 
