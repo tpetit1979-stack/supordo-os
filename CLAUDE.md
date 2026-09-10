@@ -4,7 +4,7 @@
 
 - Carte humaine du dépôt : `01-discovery/ARBORESCENCE.md`
 - Doctrine générale du corpus concurrentiel : `README.md`
-- Décisions actées : `docs/decisions/` (numérotées, 0001 à 0006)
+- Décisions actées : `docs/decisions/` (numérotées, 0001 à 0007)
 - Registre méthodologique/recherche : `01-discovery/concurrents/analysis/REGISTRE-CP.md` et `01-discovery/concurrents/analysis/SCHEMA-V2.md`
 
 ## Sessions Claude Code et continuité

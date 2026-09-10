@@ -11,7 +11,7 @@ connues.
 ## Par où commencer
 
 1. `01-discovery/ARBORESCENCE.md` — le dépôt et son organisation.
-2. `docs/decisions/` — les décisions actées (numérotées 0001 à 0006),
+2. `docs/decisions/` — les décisions actées (numérotées 0001 à 0007),
    hypothèses métier et axes de recherche.
 3. `01-discovery/concurrents/sources/COUVERTURE.md` — état détaillé et
    certifié de la collecte, concurrent par concurrent.
