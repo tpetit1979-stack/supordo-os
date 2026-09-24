@@ -335,6 +335,38 @@ sont les fichiers de cache (`.bin`, `.json`), déjà expliqués en §3.
 
 ---
 
+## 8. Le Product Blueprint et sa couche d'exécution canonique
+
+**Hors du périmètre de collecte décrit ci-dessus**, le dépôt contient aussi
+`docs/product-blueprint-antigravity/` — le travail de conception produit
+dérivé de ce corpus, destiné au futur build Google Antigravity. Cette
+arborescence n'a pas vocation à décrire son contenu en détail (voir le
+`README.md` du dossier lui-même), mais son existence et sa structure doivent
+être enregistrées ici, pour la même raison que ce document existe : ne pas
+laisser un lecteur reconstruire l'état du dépôt à partir d'une carte
+incomplète.
+
+- `docs/product-blueprint-antigravity/00`-`15` — recherche, preuves,
+  historique méthodologique, audit indépendant adverse (`15-RED-TEAM-GATE.md`,
+  verdict `NOT_READY` au 23/09/2026). Ne constituent plus directement le
+  contrat transmis à un agent de construction.
+- `docs/product-blueprint-antigravity/16`-`19` — **couche d'exécution
+  canonique**, corrigée après l'audit. `16-CANONICAL-EXECUTION-INDEX.md` est
+  le point d'entrée (ordre de précédence, table de supersession, registre
+  unique des décisions ouvertes) ; `17` porte les tranches de construction et
+  leurs conditions de déblocage ; `18` le contrat opérationnel Antigravity/
+  Windows réel ; `19` le modèle de packet transmis à un agent pour une
+  tranche donnée.
+- `docs/integration-blueprints/e-invoicing-accounting/` — annexe spécialisée
+  sur la facturation électronique et l'interopérabilité comptable,
+  explicitement tenue hors du périmètre `16`-`19` tant qu'elle n'a pas été
+  réalignée elle-même.
+
+Aucun de ces trois ensembles ne fait partie du corpus concurrentiel décrit
+dans le reste de ce document — ils en sont un produit dérivé.
+
+---
+
 ## Pour reprendre ce projet dans six mois
 
 **Les cinq fichiers à lire en premier, dans l'ordre :**
@@ -366,6 +398,11 @@ de l'industrialisation) :**
   production LIGHT complète, corpus Axonaut (119 documents).
 - `01-discovery/concurrents/analysis/light-progbat-help.md` —
   production LIGHT complète, corpus ProGBat (186 documents).
+
+**Pour le travail de construction produit lui-même (postérieur à cette
+arborescence)** : `docs/product-blueprint-antigravity/README.md` en premier,
+qui renvoie vers `16-CANONICAL-EXECUTION-INDEX.md` comme point d'entrée
+autoritaire — voir §8 ci-dessus.
 
 **Ce qui n'a pas de raison d'être claire dans cette arborescence :**
 - Pourquoi seuls trois concurrents sur dix ont un dossier
