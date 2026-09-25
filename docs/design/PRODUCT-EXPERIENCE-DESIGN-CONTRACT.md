@@ -1666,7 +1666,7 @@ Living Dossier (§2.B) restent valides quel que soit le sens retenu,
 mais leur contenu exact en dépend.
 
 **Règle d'évolution** : identique à `20` §18 — toute modification doit
-distinguer un raffinement de `PRINCIPLE` déjà canonique (sans
+distinguer un raffinement de `CANONICAL_PRINCIPLE` déjà canonique (sans
 arbitrage), une nouvelle `SUPORDO_DECISION` (arbitrage PO requis,
 tracée dans `0007`/`16`), ou une `ARCHITECTURE_DECISION` dérivée d'un
 invariant déjà acté. Une valeur `SUPORDO_BASELINE_TO_VALIDATE` ne
