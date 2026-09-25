@@ -1423,7 +1423,7 @@ les seuils chiffrés que `20` ne fixe pas volontairement.
 | Navigation clavier | Toute action accessible sans souris | Identique — non négociable, aucun écart terrain |
 | Focus visible | Indicateur de focus présent | Indicateur de focus renforcé (contraste élevé, visible en extérieur) |
 | Contraste texte | AA — 4.5:1 texte normal, 3:1 grand texte | AA sur tout texte, viser AAA (7:1) sur les actions primaires et montants critiques — extérieur/soleil (`20` §9) |
-| Taille de cible | 24×24px CSS minimum (WCAG 2.2 AA) | 44–48px minimum sur toute action principale en `FIELD_DENSITY` (§7) |
+| Taille de cible | 24×24px CSS minimum (WCAG 2.2 AA) | [CANONICAL_PRINCIPLE] cible tactile confortable et accessible sur toute action terrain importante en `FIELD_DENSITY` (§7) — [EXPERIENCE_HYPOTHESIS] (`SUPORDO_BASELINE_TO_VALIDATE`) 44–48px comme valeur de départ, non encore stabilisée |
 | Zoom | Contenu utilisable jusqu'à 200% de zoom sans perte | Identique, testé en priorité sur les écrans Devis/Facture (denses) |
 | Réduction de mouvement | Respect de `prefers-reduced-motion` | Identique (§5) |
 | UI persistante (headers/bars sticky) | Ne doit jamais masquer l'élément focus actif | Identique — vérifié explicitement à chaque révision d'ActionBar/PageHeader |
