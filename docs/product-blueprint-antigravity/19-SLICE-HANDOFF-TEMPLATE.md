@@ -108,6 +108,19 @@ encore OPEN dans 16 — remonter au PO à la place.>
 
 # FRONTEND CONTRACT
 
+<Si cette tranche comporte une composante UI : conformité obligatoire à
+`20-APPLICATION-UX-ARCHITECTURE-CONTRACT.md`. Pour chaque écran métier
+nouveau ou modifié par cette tranche, renseigner au minimum (20 §7) :
+
+```
+USER_GOAL / ENTRY_CONTEXT / PRIMARY_INFORMATION / PRIMARY_ACTION /
+SECONDARY_ACTIONS / CONTEXT_TO_PRESERVE / NEXT_SUPPORTED_ACTION /
+EMPTY_STATE / LOADING_STATE / ERROR_STATE / SUCCESS_FEEDBACK
+```
+
+Ne pas recopier `20` ici — uniquement les valeurs propres à cette tranche.
+Si aucune composante UI : écrire "Aucune UI dans cette tranche.">
+
 # BACKEND CONTRACT
 
 # SUPABASE / DATA

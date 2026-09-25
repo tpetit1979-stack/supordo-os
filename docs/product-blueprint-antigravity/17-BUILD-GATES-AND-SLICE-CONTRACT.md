@@ -6,6 +6,11 @@ mais **ce document fait foi** en cas d'écart (`16` §2). Chaque tranche
 ci-dessous reprend `12` et `13` par référence compacte, corrigée où `15`
 l'exige.
 
+**Toute tranche comportant une composante UI doit en outre respecter
+`20-APPLICATION-UX-ARCHITECTURE-CONTRACT.md`** (continuité de contexte,
+anti-CRUD, anatomie d'écran, responsive, contrat de validation) — non
+répété tranche par tranche ci-dessous, référencé une fois ici.
+
 ## 0. GLOBAL_BUILD_GATE
 
 Conditions nécessaires **avant le tout premier `IMPLEMENT` Antigravity**,
@@ -199,6 +204,14 @@ Inchangé — voir `12` T3, `13` §T3, à l'exception de :
 
 Reprend `12` T4, avec un ajout :
 
+- **CONTRAT DE DONNÉES OBLIGATOIRE** : le modèle canonique Facture (identité
+  vendeur/acheteur en lien + snapshot, quatre concepts d'adresse distincts,
+  lignes à un seul taux de TVA chacune, numérotation, références croisées,
+  discriminant natif/importé) est défini par
+  `docs/integration-blueprints/e-invoicing-accounting/01-E-INVOICING-
+  CANONICAL-DOMAIN.md` §2, condensé dans `06-ANTIGRAVITY-HANDOFF-PACK.md`
+  §15 (bloc `T4` explicite). **À lire avant toute migration Facture** — ce
+  n'est pas une option, `T4` ne doit pas réinventer ce contrat.
 - **STRUCTURAL GATES (ajout)** : **GO-07** — test de numérotation Facture
   sous concurrence (émission simultanée, absence de trou et de doublon),
   garanti au niveau séquence base (pas un `MAX()+1` applicatif). **Le statut
@@ -215,6 +228,11 @@ Reprend `12` T4, avec un ajout :
 
 - **PURPOSE** : seul mécanisme de correction d'une facture numérotée (L1/L2,
   `0007`), sans lequel `T4` livre un système sans recours.
+- **CONTRAT DE DONNÉES** : lien bidirectionnel direct Facture↔Avoir et
+  matrice de recovery détaillée (« refus ⇒ avoir » jamais automatique sans
+  vérification des préconditions réelles) dans
+  `docs/integration-blueprints/e-invoicing-accounting/01` §2.7/§4ter/§6
+  cas 6, condensés dans `06` §15 (bloc `T-AVOIR` explicite).
 - **USER JOB** : corriger une facture erronée sans jamais la réécrire.
 - **DEPENDENCIES** : `T4`.
 - **BLOCKING DECISIONS** : aucune nouvelle — L1/L2 déjà `LEGAL_CITÉ`.

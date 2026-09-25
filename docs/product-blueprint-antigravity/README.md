@@ -13,20 +13,22 @@ indépendant adverse (`15-RED-TEAM-GATE.md`, verdict `NOT_READY`). Ces
 documents prouvent et expliquent — **ils ne constituent plus directement le
 contrat donné à Antigravity.**
 
-**`16`→`19` = CANONICAL EXECUTION LAYER.** Courte, autoritaire, corrigée après
+**`16`→`20` = CANONICAL EXECUTION LAYER.** Courte, autoritaire, corrigée après
 audit. `16-CANONICAL-EXECUTION-INDEX.md` est le point d'entrée : ordre de
 précédence, supersession map, registre unique des décisions ouvertes.
 `17-BUILD-GATES-AND-SLICE-CONTRACT.md` porte les tranches et les gates.
 `18-ANTIGRAVITY-WINDOWS-OPERATING-CONTRACT.md` remplace `14` comme contrat
 opérationnel réel. `19-SLICE-HANDOFF-TEMPLATE.md` est le moule de chaque
-packet de tranche.
+packet de tranche. `20-APPLICATION-UX-ARCHITECTURE-CONTRACT.md` est le
+contrat UX applicatif : comment transformer les objets et workflows métier
+en interface cohérente, indépendamment de tout outil ou framework.
 
 **DO NOT GIVE `00`→`15` DIRECTLY TO ANTIGRAVITY.** Antigravity reçoit un
-`SLICE PACKET` dérivé de `16`→`19` (via `docs/slices/<SLICE_ID>/`, format
+`SLICE PACKET` dérivé de `16`→`20` (via `docs/slices/<SLICE_ID>/`, format
 `19`), jamais le dossier `00`→`15` en bloc.
 
 ```
-DOCUMENTATION CANONIQUE (16→19)
+DOCUMENTATION CANONIQUE (16→20)
         ↓
    SLICE PACKET (19 rempli)
         ↓
@@ -146,6 +148,7 @@ verticale de lancement.
 | `17-BUILD-GATES-AND-SLICE-CONTRACT.md` | Tranches corrigées (Lieu réintégré, Avoir/Planning réintégrés, candidats corrigés), matrice GO reclassifiée |
 | `18-ANTIGRAVITY-WINDOWS-OPERATING-CONTRACT.md` | Contrat opérationnel réel, PRE-FLIGHT Windows, statut ENFORCED/CONSULTATIF par mécanisme |
 | `19-SLICE-HANDOFF-TEMPLATE.md` | Modèle exact de packet de tranche, format `docs/slices/<SLICE_ID>/` |
+| `20-APPLICATION-UX-ARCHITECTURE-CONTRACT.md` | Contrat UX applicatif canonique : continuité de contexte, anti-CRUD, anatomie d'écran, responsive, navigation, CORE UX vs VERTICAL UX — tool-agnostic |
 
 ## Discipline de preuve appliquée
 

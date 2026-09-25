@@ -9,12 +9,12 @@ source qui l'a justifiée, jamais une réécriture sans preuve.
 `00`→`15` sont **RESEARCH / HISTORY / EVIDENCE / AUDIT** — ils restent
 inchangés, ils prouvent, ils ne s'exécutent pas directement.
 
-`16`→`19` sont la **CANONICAL EXECUTION LAYER** — la seule couche qui peut être
+`16`→`20` sont la **CANONICAL EXECUTION LAYER** — la seule couche qui peut être
 transformée en `SLICE PACKET` (`19`) transmis à `supordo-app`, puis à Google
 Antigravity ou à tout développeur humain.
 
 ```
-DOCUMENTATION CANONIQUE (16→19)
+DOCUMENTATION CANONIQUE (16→20)
         ↓
    SLICE PACKET (19 rempli)
         ↓
@@ -24,12 +24,13 @@ DOCUMENTATION CANONIQUE (16→19)
 ```
 
 **Antigravity ne reçoit jamais `00`→`15` directement.** Voir `17` pour le
-détail des tranches et `18` pour le contrat opérationnel Windows.
+détail des tranches, `18` pour le contrat opérationnel Windows, et `20` pour
+le contrat UX applicatif — toute tranche à composante UI doit le respecter.
 
 ## 2. Ordre de précédence
 
 1. `0007-contraintes-acquises.md` — reste opposable, jamais réécrit ici.
-2. `16`-`19` (ce document et ses trois suites) — priment sur toute lecture
+2. `16`-`20` (ce document et ses quatre suites) — priment sur toute lecture
    antérieure de `00`→`15` en cas de contradiction.
 3. `15-RED-TEAM-GATE.md` — audit adverse, source de la majorité des
    corrections ci-dessous ; **une trouvaille de `15` n'est pas automatiquement
