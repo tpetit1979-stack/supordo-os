@@ -2,6 +2,13 @@
 
 `STATUS = CANONICAL_PRODUCT_EXPERIENCE_CONTRACT`
 
+Ce statut porte sur le **contenant** — ce document comme couche de
+gouvernance transversale — pas automatiquement sur chaque affirmation
+qu'il contient. Voir « Statut des règles » ci-dessous : trois
+catégories internes distinguent une règle stable, une hypothèse de
+composition à valider, et un exemple dépendant d'une capacité non
+livrée.
+
 Contrainte transversale, **pas une couche canonique numérotée** de
 `16`→`20` (`docs/product-blueprint-antigravity/`). Ce document ne
 remplace, ne supersède, ne modifie et ne réinterprète ni
@@ -75,8 +82,10 @@ navigateur avant d'être considérée stable (§12).
 Pour un agent qui doit décider vite, sans relire le document entier :
 
 ```
-Que préserver ?          — les 5 signatures (§2) et tout [PRINCIPLE]
-                            hérité de BRAND/20 (voir Relation ci-dessus).
+Que préserver ?          — les 5 signatures (§2) et tout
+                            [CANONICAL_PRINCIPLE] hérité de BRAND/20
+                            (voir Relation ci-dessus et Statut des
+                            règles).
 Que éviter ?              — GENERIC_SAAS_SMELL (§1) et chaque
                             [ANTI_PATTERN] du document, chacun avec un
                             critère d'audit.
@@ -84,8 +93,13 @@ Desktop ou terrain ?      — §7 (OFFICE_DENSITY/FIELD_DENSITY) + §8
                             (seuils 360/390/768/1280) ; la zone
                             768–1279 est une zone de transition `OPEN`
                             (§7, §14), pas encore un troisième mode.
-Quelle action primaire ?  — §3 (hiérarchie des 5 tiers) + §2.C (Next
-                            Action Strip) : une seule à la fois.
+Quelle action primaire ?  — §3 (hiérarchie des tiers, y compris
+                            `ALTERNATIVE_VALID_ACTIONS`) + §2.C : une
+                            zone décisionnelle principale, une ou
+                            plusieurs actions selon les branches métier
+                            réellement valides — jamais une hiérarchie
+                            inventée entre elles quand le domaine n'en
+                            fournit pas.
 Comment écrire ?          — §4 (règles + exemples canoniques par objet
                             et par état).
 Quelle motion ?            — §5 (échelle + doctrine d'easing), déclinée
@@ -97,50 +111,108 @@ SUPORDO" ?                — l'écran porte-t-il au moins une des 5
                             "sidebar + cards interchangeable") ?
 ```
 
+## Statut des règles
+
+Introduit après l'audit visuel réel Antigravity du 2026-09-25, qui a
+montré que ce document présentait par endroits une hypothèse de
+composition ou un exemple dépendant d'une capacité non livrée comme
+une règle stable. Trois catégories, désormais explicites :
+
+```
+[CANONICAL_PRINCIPLE]     — règle SUPORDO stable et opposable. Traduit
+                             un principe déjà canonique de BRAND/20
+                             (ou une règle de gouvernance universelle,
+                             ex. hiérarchie des actions §3, règles de
+                             microcopy §4) sans inventer de composition
+                             visuelle nouvelle.
+
+[EXPERIENCE_HYPOTHESIS]   — hypothèse de composition/interaction à
+                             valider dans le sandbox de prototypes
+                             (§14, concept-1/2/3) avant stabilisation.
+                             Rien ne devient stable uniquement parce
+                             qu'il figure dans ce document.
+
+[FUTURE_CAPABILITY_EXAMPLE] — exemple illustratif dépendant d'une
+                             capacité qui n'existe pas encore côté
+                             produit, ou d'une décision `OPEN` (`16`
+                             §6). Ne décrit jamais un comportement
+                             actuel de SUPORDO.
+```
+
+**Règle de classification par défaut** — pour qu'aucune ambiguïté ne
+reste implicite, le statut par défaut de chaque section est fixé ici ;
+un marqueur local prévaut quand il est présent :
+
+- §1 (principes), §3 (hiérarchie des actions, hors sous-section
+  benchmark), §4 (règles de microcopy), §10, §11 — `[CANONICAL_PRINCIPLE]`
+  par défaut : ce sont des règles de gouvernance, pas des compositions
+  spécifiques.
+- §2 (les 5 signatures, en bloc), §3 sous-section « Étude de référence »,
+  §5/§6 (toute valeur `SUPORDO_BASELINE_TO_VALIDATE`), §7/§8 (formes de
+  composition/densité concrètes), §9 (les 16 contrats de composant, en
+  bloc) — `[EXPERIENCE_HYPOTHESIS]` par défaut, même quand le mot-clé
+  n'est pas répété à chaque ligne : ce sont des compositions et
+  interactions concrètes, pas encore éprouvées dans un navigateur réel.
+- Tout exemple de microcopy ou de champ `INFORMATION`/`WHEN_VISIBLE`
+  mentionnant une capacité non livrée (paiement/encaissement, marge,
+  photos, Chantier, Intervention en tant qu'objet distinct) porte un
+  marqueur `[FUTURE_CAPABILITY_EXAMPLE]` local — jamais silencieux.
+
+[CANONICAL_PRINCIPLE] Une preuve visuelle réelle (`REAL BROWSER
+EVIDENCE` — captures/enregistrements produits selon §12, y compris
+depuis le sandbox `concept-1/2/3`) peut valider, invalider ou raffiner
+une `[EXPERIENCE_HYPOTHESIS]`. Elle ne peut jamais, à elle seule,
+modifier un `[CANONICAL_PRINCIPLE]` : tout changement d'une règle
+canonique qui revient sur une décision produit reste soumis à arbitrage
+PO (`20` §18), qu'il vienne d'un audit visuel ou de toute autre source.
+
 ---
 
 ## 1. Product Experience Principles
 
-[PRINCIPLE] **Workflow before screen.** Une vue n'existe pas pour
-représenter un objet ou une table ; elle existe pour faire avancer un
-workflow métier réel (devis → accepté → chantier, RDV → intervention →
-facture). Rejoint et applique l'anti-CRUD de `20` §6 au niveau
+[CANONICAL_PRINCIPLE] **Workflow before screen.** Une vue n'existe pas
+pour représenter un objet ou une table ; elle existe pour faire avancer
+un workflow métier réel — ex. réel et livré : Devis → accepté →
+Facturation directe (`T4`) ou Acompte (`T5`). `[FUTURE_CAPABILITY_
+EXAMPLE]` : Devis → Chantier/Intervention reste un exemple illustratif
+tant que ces objets ne sont pas livrés et que `Q8`/`Q17`/`Q18` restent
+`OPEN` (`16` §6). Rejoint et applique l'anti-CRUD de `20` §6 au niveau
 composition d'écran.
 
-[PRINCIPLE] **Context before navigation.** L'utilisateur ne doit jamais
+[CANONICAL_PRINCIPLE] **Context before navigation.** L'utilisateur ne doit jamais
 avoir à renaviguer pour retrouver un contexte déjà établi. La navigation
 est un dernier recours, pas le mécanisme par défaut de continuité —
 application directe de `20` §3 au niveau interaction.
 
-[PRINCIPLE] **Action before decoration.** Chaque élément visuel doit
+[CANONICAL_PRINCIPLE] **Action before decoration.** Chaque élément visuel doit
 soit porter de l'information, soit permettre une action. Un élément qui
 ne fait ni l'un ni l'autre est retiré, pas justifié.
 
-[PRINCIPLE] **Density without clutter.** Une densité d'information
+[CANONICAL_PRINCIPLE] **Density without clutter.** Une densité d'information
 élevée est un objectif pour le bureau (§7), pas un prétexte à
 l'entassement. La densité vient de la suppression de l'inutile, jamais
 de la réduction d'espacement en dessous du seuil de confort tactile.
 
-[PRINCIPLE] **Progressive disclosure.** L'essentiel apparaît d'abord ;
+[CANONICAL_PRINCIPLE] **Progressive disclosure.** L'essentiel apparaît d'abord ;
 le détail existe à un clic/tap, jamais imposé par défaut — application
 au niveau composant de `20` §8.
 
-[PRINCIPLE] **Field ergonomics.** Toute décision de composition doit
+[CANONICAL_PRINCIPLE] **Field ergonomics.** Toute décision de composition doit
 rester valide pour un utilisateur terrain : une main, gants possibles,
 lumière extérieure, connexion incertaine, interruption fréquente (§7,
 §8).
 
-[PRINCIPLE] **Perceived speed.** L'interface doit *paraître* immédiate
+[CANONICAL_PRINCIPLE] **Perceived speed.** L'interface doit *paraître* immédiate
 même quand une opération réseau ne l'est pas — feedback avant
 confirmation serveur lorsque c'est sûr (§5, §11).
 
-[PRINCIPLE] **One coherent interaction language.** Un pattern
+[CANONICAL_PRINCIPLE] **One coherent interaction language.** Un pattern
 d'interaction (comment on édite, comment on confirme, comment on
 annule) ne varie jamais d'un objet métier à l'autre sans raison métier
 explicite. Un utilisateur qui a appris à éditer un Client sait éditer un
 Lieu.
 
-[PRINCIPLE] **No generic SaaS aesthetic.** SUPORDO ne doit être
+[CANONICAL_PRINCIPLE] **No generic SaaS aesthetic.** SUPORDO ne doit être
 confondable avec aucun CRM/SaaS générique produit par un gabarit IA ou
 un thème shadcn par défaut. Voir `GENERIC_SAAS_SMELL` ci-dessous.
 
@@ -202,6 +274,14 @@ communique aucune information d'état ou de relation spatiale — voir §5.
 
 ## 2. SUPORDO Signatures
 
+`STATUS = [EXPERIENCE_HYPOTHESIS]` — les cinq signatures ci-dessous
+(comme leurs champs `DESKTOP_BEHAVIOR`/`MOBILE_BEHAVIOR`/`MOTION`) sont
+des hypothèses de composition/interaction à éprouver dans le sandbox de
+prototypes (§14) avant stabilisation, pas des règles déjà validées par
+un navigateur réel. Seul leur principe d'existence (pourquoi cette
+signature sert le produit) relève de la doctrine `CANONICAL_PRINCIPLE`
+de §1.
+
 Cinq signatures, reconnaissables indépendamment du thème visuel — elles
 définissent le **comportement** de SUPORDO, pas seulement son style.
 Une implémentation qui change la palette mais conserve ces cinq
@@ -255,16 +335,21 @@ de ce document.
 ```
 PURPOSE             — rendre lisible en un seul endroit l'historique
                       métier complet d'un Client ou d'un Lieu : RDV,
-                      photos, devis, accord, facture, avoir,
-                      intervention — sans reconstitution manuelle par
+                      devis, accord, facture, avoir (réels, `T-PLANNING`/
+                      `T1`/`T3`/`T4`/`T-AVOIR`) — `[FUTURE_CAPABILITY_
+                      EXAMPLE]` photos et intervention en tant qu'objet
+                      distinct (aucun stockage photo ni objet
+                      Intervention livré à ce jour ; `Q8`/`Q17`/`Q18`
+                      restent `OPEN`) — sans reconstitution manuelle par
                       l'utilisateur.
 WHEN_VISIBLE        — sur la fiche Client et la fiche Lieu (`20` §6,
                       fiche d'objet `DOMAIN_CORE`) ; en aperçu réduit
                       sur les écrans où le Client/Lieu est identifié
                       en contexte.
 INFORMATION         — événements ordonnés chronologiquement, typés
-                      (devis, RDV, facture, avoir, intervention), état
-                      de chacun visible sans ouverture.
+                      (RDV, devis, facture, avoir — réels), état de
+                      chacun visible sans ouverture. Photos/intervention :
+                      voir `[FUTURE_CAPABILITY_EXAMPLE]` ci-dessus.
 PRIMARY_ACTION      — ouvrir l'objet source de l'événement, contexte
                       préservé (retour possible sans perte, `20` §3
                       EXAMPLE Devis→RDV).
@@ -290,20 +375,30 @@ ANTI_PATTERN        — un historique tronqué à un seul type d'objet
 ### C. NEXT ACTION STRIP
 
 ```
-PURPOSE             — exposer une action primaire unique,
-                      contextualisée selon l'état métier réel de
-                      l'objet — application directe de `20` §5
-                      (Next-Action Doctrine) au niveau composant.
+PURPOSE             — exposer la zone décisionnelle principale de
+                      l'écran, contextualisée selon l'état métier réel
+                      de l'objet — application directe de `20` §5
+                      (Next-Action Doctrine) au niveau composant. Ne
+                      suppose pas une action unique : voir §3
+                      `ALTERNATIVE_VALID_ACTIONS` quand plusieurs
+                      branches métier sont également valides.
 WHEN_VISIBLE        — sur tout écran d'objet dont l'état détermine une
-                      suite logique (Devis brouillon → "Envoyer le
-                      devis" ; Devis accepté → "Planifier
-                      l'intervention" si la capacité existe déjà,
-                      jamais sinon).
-INFORMATION         — le seul verbe d'action pertinent pour l'état
-                      courant ; pas de liste d'actions possibles
-                      mélangées.
-PRIMARY_ACTION      — une seule action à la fois — voir §3
-                      `PRIMARY_ACTION` pour le contrat de placement.
+                      suite logique. Exemple réel et livré : Devis
+                      accepté → "Facturer directement" (`T4`) et
+                      "Créer un acompte" (`T5`) affichées comme
+                      `ALTERNATIVE_VALID_ACTIONS` de poids égal, sans
+                      hiérarchie inventée entre elles. `[FUTURE_
+                      CAPABILITY_EXAMPLE]` : "Planifier une
+                      intervention" resterait un exemple illustratif
+                      tant que Chantier/Intervention ne sont pas livrés
+                      (`Q8`/`Q17`/`Q18` `OPEN`).
+INFORMATION         — le ou les verbes d'action pertinents pour l'état
+                      courant (§3) ; jamais une liste non filtrée
+                      d'actions sans rapport avec l'état.
+PRIMARY_ACTION      — une action recommandée uniquement si le domaine
+                      fournit réellement une raison de la recommander ;
+                      sinon, les `ALTERNATIVE_VALID_ACTIONS` valides
+                      cohabitent sans hiérarchie arbitraire — voir §3.
 DESKTOP_BEHAVIOR    — positionnée en zone haute/droite de l'écran
                       d'objet, toujours visible sans scroll (au-dessus
                       du pli).
@@ -313,12 +408,14 @@ MOBILE_BEHAVIOR     — ancrée en bas d'écran, cible tactile ≥ 44px
 MOTION              — apparition/disparition liée au changement d'état
                       métier anime en feedback de succès (§5, ≤400 ms
                       non bloquant), jamais en boucle ou répétitive.
-MICROCOPY           — verbe métier précis ("Envoyer le devis", pas
-                      "Continuer" ni "Suivant").
+MICROCOPY           — verbe métier précis ("Facturer directement",
+                      "Créer un acompte" — pas "Continuer" ni
+                      "Suivant").
 ANTI_PATTERN        — un bouton menant vers une capacité non construite
-                      (`20` §5 ANTI_PATTERN), ou plusieurs actions de
-                      poids visuel égal se disputant le statut de
-                      primaire.
+                      (`20` §5 ANTI_PATTERN), ou une hiérarchie visuelle
+                      inventée entre deux `ALTERNATIVE_VALID_ACTIONS`
+                      également valides quand le domaine ne tranche pas
+                      laquelle est "meilleure" (§3).
 ```
 
 ### D. TERRAIN MODE
@@ -330,9 +427,13 @@ PURPOSE             — offrir sur mobile une composition organisée
                       qui · pourquoi · action immédiate.
 WHEN_VISIBLE        — toute vue "Aujourd'hui"/Planning/terrain
                       consultée en largeur mobile (< 768px, §8).
-INFORMATION         — RDV/intervention du jour uniquement par défaut ;
-                      lieu, client, devis lié — jamais de KPI en tête
-                      (`20` §12).
+INFORMATION         — RDV du jour uniquement par défaut (réel,
+                      `T-PLANNING` — types `visit`/`work`/`maintenance`/
+                      `other`) ; lieu, client, devis lié — jamais de KPI
+                      en tête (`20` §12). `[FUTURE_CAPABILITY_EXAMPLE]` :
+                      "intervention" comme objet distinct du RDV reste
+                      hors périmètre tant que `Q8`/`Q17`/`Q18` sont
+                      `OPEN`.
 PRIMARY_ACTION      — action directe liée à la tâche du moment (appel,
                       itinéraire, ouverture du devis lié) — pas de
                       formulaire multi-étape en entrée.
@@ -346,8 +447,8 @@ MOTION              — transition entre tâches du jour = state
                       transition de page complète pour rester dans le
                       même contexte terrain.
 MICROCOPY           — direct et actionnable : "Appeler Marc Dubois",
-                      "Itinéraire vers le chantier", jamais "Voir les
-                      détails".
+                      "Itinéraire vers ce lieu" (réel — adresse du
+                      `Lieu`, `T1`), jamais "Voir les détails".
 ANTI_PATTERN        — copie miniature du planning bureau sur mobile
                       (`20` §17, déjà interdit) ; capture perdue en cas
                       de coupure réseau (`04` §4, contrainte terrain).
@@ -356,18 +457,32 @@ ANTI_PATTERN        — copie miniature du planning bureau sur mobile
 ### E. FINANCIAL LANGUAGE
 
 ```
-PURPOSE             — traiter HT / TVA / TTC / marge / acompte / reste
-                      dû / payé avec un vocabulaire et une présentation
+PURPOSE             — traiter HT / TVA / TTC / acompte / solde restant
+                      à facturer avec un vocabulaire et une présentation
                       strictement cohérents partout où un montant
-                      apparaît.
-WHEN_VISIBLE        — Devis, Facture, Avoir, tout résumé financier de
-                      Chantier.
+                      apparaît (réels, `T1`/`T4`/`T5`). `[FUTURE_
+                      CAPABILITY_EXAMPLE]` : marge et statut de paiement
+                      réel ("payé"/encaissement) — T5 gère les
+                      **documents** d'acompte et de solde, jamais
+                      l'encaissement bancaire ; aucune marge n'est
+                      calculée à ce jour.
+WHEN_VISIBLE        — Devis, Facture, Avoir. `[FUTURE_CAPABILITY_
+                      EXAMPLE]` : résumé financier au niveau Chantier —
+                      cet objet n'est pas livré (`Q8`/`Q17`/`Q18`
+                      `OPEN`).
 INFORMATION         — le montant affiché indique toujours explicitement
                       sa nature (HT/TTC), jamais un nombre nu ambigu.
-PRIMARY_ACTION      — action financière engageante (émettre, encaisser
-                      un acompte) toujours distincte visuellement d'une
-                      action de consultation — voir `DESTRUCTIVE_ACTION`
-                      §3 pour les actions irréversibles adjacentes.
+                      « Reste dû »/« solde restant » désigne le solde
+                      **facturé restant à établir** (calculé depuis les
+                      documents émis, réel `T5`) — jamais un statut
+                      d'encaissement réel, qui n'existe pas encore
+                      (`[FUTURE_CAPABILITY_EXAMPLE]`).
+PRIMARY_ACTION      — action financière engageante (émettre une
+                      facture, **créer/émettre un acompte** — jamais
+                      "encaisser", capacité non livrée) toujours
+                      distincte visuellement d'une action de
+                      consultation — voir `DESTRUCTIVE_ACTION` §3 pour
+                      les actions irréversibles adjacentes.
 DESKTOP_BEHAVIOR    — tableau de lignes aligné à droite,
                       totaux/sous-totaux visuellement hiérarchisés
                       (§6 numeric typography).
@@ -385,50 +500,88 @@ ANTI_PATTERN        — afficher un total sans préciser HT/TTC ; modifier
                       interdit).
 ```
 
+**Formats de numérotation réels** (`T2`/`T4`/`T5`/`T-AVOIR`, vérifiés
+dans les migrations) — jamais d'autre format inventé :
+
+```
+Devis                    DEV-YYYY-XXXX
+Facture / Acompte / Solde  FAC-YYYY-XXXX
+Avoir                    AVO-YYYY-XXXX
+```
+
 ---
 
 ## 3. Interaction Model
 
 ### Hiérarchie des actions
 
-[PRINCIPLE] **`PRIMARY_ACTION`** — une seule par écran/contexte, portée
-par le Next Action Strip (§2.C). Poids visuel maximal (bouton plein,
-couleur brand). Ne coexiste jamais avec une seconde action de poids
-identique.
+[CANONICAL_PRINCIPLE] **Une zone décisionnelle principale, pas
+nécessairement une action unique.** Le produit peut comporter plusieurs
+branches métier légitimes au même point du parcours — cas réel et
+livré : Devis accepté → Facturation directe (`T4`) **OU** Acompte
+(`T5`). La doctrine n'impose donc pas une action unique par écran, mais
+une intention/zone décisionnelle principale claire (§2.C Next Action
+Strip) regroupant les branches valides à cet instant.
 
-[PRINCIPLE] **`CONTEXTUAL_ACTION`** — rattachée visuellement à l'objet
-qu'elle affecte (ligne de tableau, carte, panneau). Poids visuel
-intermédiaire (icône+label ou icône seule avec libellé accessible).
-Visible par défaut en densité terrain (§7, pas de hover sur tactile),
-révélée au survol/focus en densité bureau si l'espace le justifie.
+[CANONICAL_PRINCIPLE] **`PRIMARY_ACTION` (recommandée, optionnelle)** —
+une action n'est mise en avant comme recommandée que si le domaine
+métier fournit réellement une raison de la recommander à cet instant
+(ex. un acompte déjà émis rend "Créer le solde" recommandé). En
+l'absence d'une telle raison métier, aucune action n'est mise en avant
+artificiellement par le design.
 
-[PRINCIPLE] **`SECONDARY_ACTION`** — action de support (dupliquer,
-exporter, imprimer). Poids visuel faible (bouton fantôme/texte).
-Regroupée derrière un menu au-delà de 3 actions secondaires
-simultanées sur un même objet.
+[CANONICAL_PRINCIPLE] **`ALTERNATIVE_VALID_ACTIONS`** — plusieurs
+actions de poids visuel comparable peuvent coexister lorsqu'elles
+représentent de vraies branches métier distinctes, également valides à
+l'instant `T` (ex. Facturation directe / Acompte, `T4`/`T5`, toutes deux
+disponibles depuis un devis accepté). Elles ne reçoivent **jamais** une
+hiérarchie arbitraire inventée par le design : si le domaine ne tranche
+pas laquelle est "meilleure", l'interface ne le fait pas non plus. `20`
+§5 (Next-Action Doctrine) reste la source pour juger qu'une capacité
+existe réellement avant de l'exposer.
 
-[PRINCIPLE] **`DESTRUCTIVE_ACTION`** — visuellement isolée des actions
-non destructrices (espacement ou séparateur, jamais adjacente
-directe au primaire). Couleur "danger" réservée exclusivement à cet
-usage — jamais employée à titre décoratif ailleurs. Confirmation
-explicite obligatoire uniquement pour les opérations réellement
-risquées ou irréversibles (§4, règle de confirmation) — pas de
-confirmation systématique qui banalise le geste.
+[CANONICAL_PRINCIPLE] **`CONTEXTUAL_ACTION`** — rattachée visuellement
+à l'objet qu'elle affecte (ligne de tableau, carte, panneau). Poids
+visuel intermédiaire (icône+label ou icône seule avec libellé
+accessible). Visible par défaut en densité terrain (§7, pas de hover
+sur tactile), révélée au survol/focus en densité bureau si l'espace le
+justifie.
 
-[PRINCIPLE] **`GLOBAL_ACTION`** — non rattachée à un objet de l'écran
-courant (ex. "Nouveau client" depuis n'importe où). Emplacement unique
-et prévisible dans toute l'application (zone d'en-tête ou command
-menu, §3 ci-dessous) — jamais dupliquée à un endroit différent par
+[CANONICAL_PRINCIPLE] **`SECONDARY_ACTION`** — action de support
+(dupliquer, exporter, imprimer). Poids visuel faible (bouton
+fantôme/texte). Regroupée derrière un menu au-delà de 3 actions
+secondaires simultanées sur un même objet.
+
+[CANONICAL_PRINCIPLE] **`DESTRUCTIVE_ACTION`** — visuellement isolée
+des actions non destructrices (espacement ou séparateur, jamais
+adjacente directe au niveau décisionnel principal). Couleur "danger"
+réservée exclusivement à cet usage — jamais employée à titre décoratif
+ailleurs. Confirmation explicite obligatoire uniquement pour les
+opérations réellement risquées ou irréversibles (§4, règle de
+confirmation) — pas de confirmation systématique qui banalise le geste.
+
+[CANONICAL_PRINCIPLE] **`GLOBAL_ACTION`** — non rattachée à un objet de
+l'écran courant (ex. "Nouveau client" depuis n'importe où). Emplacement
+unique et prévisible dans toute l'application (zone d'en-tête ou
+command menu, ci-dessous) — jamais dupliquée à un endroit différent par
 écran.
 
-[ARCHITECTURE_DECISION] Règle de placement : le poids visuel d'une
-action doit toujours refléter sa position dans cette hiérarchie —
-aucune `SECONDARY_ACTION` ne peut recevoir un traitement visuel
-supérieur à celui d'une `PRIMARY_ACTION` sur le même écran, aucune
-`DESTRUCTIVE_ACTION` ne peut se fondre visuellement dans les actions
-neutres.
+[ARCHITECTURE_DECISION] Règle de placement (corrigée après audit
+Antigravity) : le poids visuel d'une action doit refléter sa position
+dans cette hiérarchie — `PRIMARY_ACTION` (si recommandée) et
+`ALTERNATIVE_VALID_ACTIONS` partagent le niveau décisionnel principal
+(plusieurs `ALTERNATIVE_VALID_ACTIONS` peuvent avoir un poids visuel
+égal entre elles, mais jamais supérieur à une `PRIMARY_ACTION`
+recommandée quand il y en a une) ; aucune `SECONDARY_ACTION` ne peut
+recevoir un traitement visuel supérieur à ce niveau décisionnel
+principal ; aucune `DESTRUCTIVE_ACTION` ne peut se fondre visuellement
+dans les actions neutres.
 
 ### Étude de référence — Linear, Attio, Raycast
+
+`STATUS = [EXPERIENCE_HYPOTHESIS]` — les décisions d'adoption
+ci-dessous sont des choix d'interaction concrets à éprouver dans le
+sandbox de prototypes (§14), pas des règles déjà validées.
 
 Étudiés comme **références fonctionnelles d'interaction**, jamais comme
 identité visuelle à reproduire — voir §13 pour l'analyse complète
@@ -464,39 +617,50 @@ des outils desktop de power-users, SUPORDO ne l'est pas par défaut.
 
 ### Règles
 
-[PRINCIPLE] Verbes métier concrets : "Envoyer le devis", "Planifier
-l'intervention", "Encaisser l'acompte" — jamais "Soumettre",
-"Valider", "Continuer" seuls.
+[CANONICAL_PRINCIPLE] Verbes métier concrets : "Envoyer le devis",
+"Planifier un rendez-vous" (réel), "Créer un acompte" (réel, `T5`) —
+jamais "Soumettre", "Valider", "Continuer" seuls, jamais "Encaisser"
+(aucun encaissement réel livré — `[FUTURE_CAPABILITY_EXAMPLE]`).
 
-[PRINCIPLE] Jamais "élément", "enregistrement", "objet" si un terme
-métier existe : "client", "lieu", "devis", "facture", "rendez-vous",
+[CANONICAL_PRINCIPLE] Jamais "élément", "enregistrement", "objet" si un
+terme métier existe : "client", "lieu", "devis", "facture", "rendez-vous",
 "avoir" — pas d'exception.
 
-[PRINCIPLE] État ≠ action. Un badge de statut affiche un état ("En
-attente de paiement") ; un bouton affiche une action ("Encaisser") —
-jamais un badge cliquable qui mélange les deux registres.
+[CANONICAL_PRINCIPLE] État ≠ action. Un badge de statut affiche un état
+réel ("Facture émise") ; un bouton affiche une action réelle ("Créer un
+avoir") — jamais un badge cliquable qui mélange les deux registres, et
+jamais un état de paiement ("en attente de paiement", "payé") tant que
+cette capacité n'est pas livrée (`[FUTURE_CAPABILITY_EXAMPLE]`).
 
-[PRINCIPLE] Erreur = cause + conséquence + solution. Une erreur qui ne
-donne que la cause laisse l'utilisateur bloqué ; une erreur sans
-solution n'est pas actionnable.
+[CANONICAL_PRINCIPLE] Erreur = cause + conséquence + solution. Une
+erreur qui ne donne que la cause laisse l'utilisateur bloqué ; une
+erreur sans solution n'est pas actionnable.
 
-[PRINCIPLE] Succès = résultat concret, jamais générique ("Opération
-réussie").
+[CANONICAL_PRINCIPLE] Succès = résultat concret, jamais générique
+("Opération réussie").
 
-[PRINCIPLE] Empty state = contexte + action, jamais une simple absence
-("Aucune donnée").
+[CANONICAL_PRINCIPLE] Empty state = contexte + action, jamais une
+simple absence ("Aucune donnée").
 
-[PRINCIPLE] Confirmation exigée uniquement pour les opérations
-réellement risquées (irréversibles ou à conséquence financière/légale,
-ex. émission de facture — `20` §16, `04` Zone Facturation L1) — jamais
-pour un geste anodin et réversible, sous peine de banaliser la
-confirmation elle-même.
+[CANONICAL_PRINCIPLE] Confirmation exigée uniquement pour les
+opérations réellement risquées (irréversibles ou à conséquence
+financière/légale, ex. émission de facture — `20` §16, `04` Zone
+Facturation L1) — jamais pour un geste anodin et réversible, sous peine
+de banaliser la confirmation elle-même.
 
-[PRINCIPLE] Langage court, professionnel, humain — pas de familiarité
-artificielle, pas de ton robotique.
+[CANONICAL_PRINCIPLE] Langage d'accord — le langage suit la méthode
+réellement enregistrée (`acceptance_method`, réel, `T3`) : « Accord
+client », « Accord acté », « Méthode d'accord », « Date d'accord ». Ne
+jamais présenter par défaut « signature », « signataire » ou « signé »
+comme vérité — ces termes ne sont légitimes que si `acceptance_method`
+désigne explicitement une signature (ex. signature papier scannée) ;
+sinon `[FUTURE_CAPABILITY_EXAMPLE]`.
 
-[PRINCIPLE] Aucun jargon développeur exposé à l'utilisateur (`id`,
-`null`, `enum`, noms de champs techniques).
+[CANONICAL_PRINCIPLE] Langage court, professionnel, humain — pas de
+familiarité artificielle, pas de ton robotique.
+
+[CANONICAL_PRINCIPLE] Aucun jargon développeur exposé à l'utilisateur
+(`id`, `null`, `enum`, noms de champs techniques).
 
 ### Exemples canoniques par objet
 
@@ -509,9 +673,8 @@ artificielle, pas de ton robotique.
   maintenant."
 
 **Lieu**
-- `EMPTY` — "Aucun lieu rattaché à ce client. Ajoutez l'adresse du
-  chantier pour planifier une intervention." + action "Ajouter un
-  lieu".
+- `EMPTY` — "Aucun lieu rattaché à ce client. Ajoutez une adresse pour y
+  planifier un rendez-vous." + action "Ajouter un lieu".
 - `ERROR` — "Cette adresse n'a pas pu être localisée. Vérifiez le code
   postal ou enregistrez-la sans localisation."
 - `SUCCESS` — "Lieu ajouté à la fiche de Marc Dubois."
@@ -524,27 +687,36 @@ artificielle, pas de ton robotique.
 - `SUCCESS` — "Devis envoyé à marc.dubois@email.fr le 25 septembre."
 
 **RDV**
-- `EMPTY` — "Aucun rendez-vous planifié. Planifiez une visite ou une
-  intervention." + action "Planifier un rendez-vous".
+- `EMPTY` — "Aucun rendez-vous planifié pour ce client." + action
+  "Planifier un rendez-vous" (réel, types `visit`/`work`/`maintenance`/
+  `other`, `T-PLANNING`).
 - `ERROR` — "Ce créneau chevauche un autre rendez-vous déjà planifié à
   la même adresse."
 - `SUCCESS` — "Rendez-vous confirmé le 30 septembre à 14h chez Marc
   Dubois."
 
 **Facture**
-- `EMPTY` — "Aucune facture émise pour ce devis. Facturez-le une fois
-  le chantier terminé." + action "Créer une facture".
+- `EMPTY` — "Aucune facture émise pour ce devis. Facturez-le
+  directement, ou créez d'abord un acompte." + action "Créer une
+  facture".
 - `ERROR` — "Le solde restant ne correspond pas au montant du devis.
-  Vérifiez les acomptes déjà encaissés avant d'émettre."
-- `SUCCESS` — "Facture F-2026-0042 émise. Reste dû : 450 € TTC."
+  Vérifiez les acomptes déjà émis avant d'émettre."
+- `SUCCESS` (facturation directe, réel `T4`) — "Facture FAC-2026-0042
+  émise." — aucun mécanisme d'envoi de facture n'est livré à ce jour
+  (contrairement au devis, `mark_quote_sent`, `T2`) : ne jamais écrire
+  "envoyée" pour une facture (`[FUTURE_CAPABILITY_EXAMPLE]`).
+- `SUCCESS` (acompte, réel `T5`) — "Acompte FAC-2026-0043 émis (30 %).
+  Solde restant à facturer : 315,00 € HT." — « solde restant » désigne
+  ici un montant **à facturer**, jamais un statut d'encaissement réel
+  (`[FUTURE_CAPABILITY_EXAMPLE]`, voir §2.E).
 
 **Avoir**
 - `EMPTY` — non applicable par défaut (un avoir n'a pas d'état vide
   autonome — il naît d'une correction de facture).
 - `ERROR` — "Impossible de créer un avoir supérieur au montant restant
   de la facture d'origine."
-- `SUCCESS` — "Avoir A-2026-0007 créé pour la facture F-2026-0042. Le
-  solde dû a été recalculé."
+- `SUCCESS` — "Avoir AVO-2026-0007 créé pour la facture FAC-2026-0042.
+  Le montant de la facture a été recalculé en conséquence."
 
 **Planning**
 - `EMPTY` — "Rien de prévu aujourd'hui. Planifiez un rendez-vous ou
@@ -563,14 +735,18 @@ artificielle, pas de ton robotique.
 > modifiée. Pour corriger un montant, créez un avoir."
 
 **`DESTRUCTIVE`** — suppression d'un Client, Lieu, ou ligne de devis
-non encore engagée. **Exemple illustratif du registre de langage
-uniquement** — le périmètre exact de la suppression en cascade (quels
-objets liés sont réellement supprimés) est une décision produit non
-traitée par ce document, à confirmer avant implémentation.
-> "Supprimer ce client supprimera aussi ses lieux et devis en
-> brouillon associés. Cette action est irréversible." + confirmation
-> explicite (nom du client à reconfirmer si l'historique n'est pas
-> vide).
+non encore engagée. `[FUTURE_CAPABILITY_EXAMPLE]` — exemple illustratif
+du registre de langage uniquement : le périmètre exact de la
+suppression en cascade (quels objets liés sont réellement supprimés)
+n'est établi par aucune source du corpus ni du schéma actuel — décision
+produit non traitée par ce document, à confirmer avant implémentation.
+> "Supprimer ce client ? Cette action est irréversible." + rappel
+> explicite de ce que l'utilisateur est en train de perdre (identité de
+> l'objet, pas une liste de cascade non prouvée) + confirmation
+> explicite (nom du client à reconfirmer si son historique n'est pas
+> vide). Le périmètre exact de ce qui est réellement supprimé ou
+> conservé suit la décision produit citée ci-dessus, jamais une
+> supposition de l'exemple.
 
 **`OFFLINE/FUTURE`** — capacité non encore implémentée (PWA/offline,
 `TECHNICAL-BASELINE.md`) ou perte de connexion réelle.
@@ -587,7 +763,13 @@ tenant.
 
 ## 5. Motion & Microinteractions
 
-[PRINCIPLE] Le motion communique une information (quoi vient de
+`STATUS` — la doctrine d'easing (direction, jamais les valeurs
+chiffrées) est `[CANONICAL_PRINCIPLE]` ; l'échelle en millisecondes
+ci-dessous est `[EXPERIENCE_HYPOTHESIS]` (`SUPORDO_BASELINE_TO_
+VALIDATE`) — aucune des deux catégories ne devient stable uniquement
+parce qu'elle figure dans ce document (§12).
+
+[CANONICAL_PRINCIPLE] Le motion communique une information (quoi vient de
 changer, où va le contexte, quel est le nouvel état) — il ne décore
 jamais un geste qui n'a pas besoin d'être expliqué.
 
@@ -609,17 +791,18 @@ preuve `13`/`20` §16 appliquée au motion.
 
 ### Doctrine d'easing
 
-[PRINCIPLE] Entrée (apparition) : easing "ease-out" — départ rapide,
-arrivée douce, perçu comme réactif.
-[PRINCIPLE] Sortie (disparition) : easing "ease-in" — départ doux,
-sortie rapide, ne retient pas l'attention sur un élément qui part.
-[PRINCIPLE] Transition d'état (toggle, sélection) : easing standard
-symétrique, la plus courte de l'échelle — l'utilisateur ne doit jamais
-attendre une confirmation d'état déjà décidée.
-[PRINCIPLE] Transition de panneau/contexte : easing "ease-out" plus
-long, doit préserver la sensation de continuité spatiale (le panneau
-vient "de" l'élément qui l'a déclenché, jamais un remplacement brutal
-de l'écran).
+[CANONICAL_PRINCIPLE] Entrée (apparition) : easing "ease-out" — départ
+rapide, arrivée douce, perçu comme réactif.
+[CANONICAL_PRINCIPLE] Sortie (disparition) : easing "ease-in" — départ
+doux, sortie rapide, ne retient pas l'attention sur un élément qui
+part.
+[CANONICAL_PRINCIPLE] Transition d'état (toggle, sélection) : easing
+standard symétrique, la plus courte de l'échelle — l'utilisateur ne
+doit jamais attendre une confirmation d'état déjà décidée.
+[CANONICAL_PRINCIPLE] Transition de panneau/contexte : easing
+"ease-out" plus long, doit préserver la sensation de continuité
+spatiale (le panneau vient "de" l'élément qui l'a déclenché, jamais un
+remplacement brutal de l'écran).
 
 ### Comportements spécifiques
 
@@ -659,6 +842,10 @@ fichiers, `BRAND-FOUNDATIONS.md` fait foi et ce document doit être
 corrigé en conséquence, jamais l'inverse. Ce document ne redéfinit
 aucune de ces valeurs — il définit comment les décliner en échelles
 d'exécution.
+
+`STATUS = [EXPERIENCE_HYPOTHESIS]` pour toute échelle ci-dessous —
+équivalent de `SUPORDO_BASELINE_TO_VALIDATE`, à valider dans le
+sandbox (§14) avant stabilisation.
 
 ### Échelles — toutes `SUPORDO_BASELINE_TO_VALIDATE` sauf mention contraire
 
@@ -730,7 +917,11 @@ DIALOG       — superposition centrée bureau, pour une confirmation ou
 
 ## 7. Density Modes
 
-[ARCHITECTURE_DECISION] Deux modes de densité, définis structurellement
+`STATUS = [EXPERIENCE_HYPOTHESIS]` pour la composition concrète des
+deux modes ci-dessous (formes, seuils, ratios) ; le principe qu'ils
+doivent différer structurellement est `[CANONICAL_PRINCIPLE]`.
+
+[CANONICAL_PRINCIPLE] Deux modes de densité, définis structurellement
 — pas un simple scale-down responsive d'un mode vers l'autre.
 
 ### OFFICE_DENSITY
@@ -753,10 +944,13 @@ DIALOG       — superposition centrée bureau, pour une confirmation ou
 - Actions simultanées : une action primaire visible, actions
   secondaires masquées derrière un geste explicite.
 - Layout : simple colonne, focus unique, pas de multi-panel.
-- Cibles : **44–48px minimum** sur tout élément interactif principal —
-  seuil non négociable, distinct du minimum WCAG générique (§10).
+- Cibles : [CANONICAL_PRINCIPLE] les actions terrain importantes
+  doivent avoir une cible tactile confortable, distincte du minimum
+  WCAG générique (§10). `[EXPERIENCE_HYPOTHESIS]` (`SUPORDO_BASELINE_
+  TO_VALIDATE`) : 44–48px comme valeur de départ, à confirmer par un
+  audit visuel réel avant de devenir un seuil stable.
 
-[PRINCIPLE] Le passage `OFFICE_DENSITY` → `FIELD_DENSITY` change la
+[CANONICAL_PRINCIPLE] Le passage `OFFICE_DENSITY` → `FIELD_DENSITY` change la
 *sélection* et l'*organisation* de l'information, jamais seulement sa
 taille — un tableau qui rétrécit reste un tableau raté sur mobile
 (rejoint `20` §17, copie miniature du desktop).
@@ -777,6 +971,11 @@ de l'exigence `20` §9 — reporté en `OPEN` (§14).
 ---
 
 ## 8. Adaptive Composition
+
+`STATUS = [EXPERIENCE_HYPOTHESIS]` pour la composition concrète par
+seuil ci-dessous (`reflow`/`reveal`/`hide`/`replace`/`reposition`/
+`split` appliqués à chaque largeur, panel ratios, forme de navigation)
+— rien ici n'est validé par un navigateur réel.
 
 Aux seuils déjà actés par `20` §10 (360 · 390 · 768 · desktop, étendu
 ici à 1280 comme large desktop validé par le code existant) — ce
@@ -823,7 +1022,7 @@ largeur.
 - **Table/List** : colonnes complètes, tri/filtre visibles sans menu
   supplémentaire.
 
-[PRINCIPLE] Chaque changement de seuil doit être justifiable en termes
+[CANONICAL_PRINCIPLE] Chaque changement de seuil doit être justifiable en termes
 de `reflow`/`reveal`/`hide`/`replace`/`reposition`/`split` — un
 changement de composition qui ne peut être nommé par l'un de ces six
 verbes n'est pas une décision volontaire, c'est un accident CSS.
@@ -831,6 +1030,11 @@ verbes n'est pas une décision volontaire, c'est un accident CSS.
 ---
 
 ## 9. Component Experience Contracts
+
+`STATUS = [EXPERIENCE_HYPOTHESIS]` — les 16 contrats ci-dessous sont
+des compositions/interactions concrètes à éprouver dans le sandbox
+(§14) avant stabilisation, y compris chaque valeur `STATES` qui
+mentionne un état non encore livré (marqué localement).
 
 Contrats d'expérience — **aucune implémentation attendue à ce stade**
 (`Aucun code`). Sert de spécification pour une tranche UI future, que
@@ -912,9 +1116,16 @@ PURPOSE          Communiquer un état métier (jamais une action, §4
                  état ≠ action).
 VISUAL_HIERARCHY Couleur + libellé texte toujours combinés — jamais la
                  couleur seule (`20` §15, no color-only meaning).
-STATES           Un état = une couleur/libellé fixe par objet métier
-                 (Devis brouillon/envoyé/accepté ; Facture brouillon/
-                 émise/payée/en retard).
+STATES           Un état = une couleur/libellé fixe par objet métier.
+                 Devis : brouillon/envoyé/accepté (réels, `T1`/`T2`/
+                 `T3`). Facture : brouillon/émise (réels, `T4`) —
+                 `[FUTURE_CAPABILITY_EXAMPLE]` "payée" est une valeur
+                 réservée en base (`status` CHECK) mais jamais posée
+                 par aucun mécanisme livré à ce jour ; "en retard"
+                 n'existe dans aucun schéma actuel (nécessiterait un
+                 suivi d'échéance non construit) — ni l'un ni l'autre
+                 ne doit apparaître comme un état actif avant preuve
+                 d'implémentation.
 KEYBOARD         Non interactif par défaut — si cliquable pour filtrer,
                  devient un composant de filtre distinct, pas un badge
                  déguisé.
@@ -1227,37 +1438,40 @@ s'applique par défaut.
 
 ## 11. Perceived Performance
 
-[PRINCIPLE] **Skeleton vs spinner** : skeleton pour tout chargement de
+[CANONICAL_PRINCIPLE] **Skeleton vs spinner** : skeleton pour tout chargement de
 contenu structurel identifiable à l'avance (liste, fiche) — communique
 la forme du résultat attendu. Spinner réservé aux actions courtes sans
 structure prévisible (soumission de formulaire).
 
-[PRINCIPLE] **Feedback immédiat** : toute interaction reçoit un
-accusé visuel en moins de 100ms (§5 instant feedback), indépendamment
-du temps de réponse réel du serveur.
+[CANONICAL_PRINCIPLE] **Feedback immédiat** : toute interaction reçoit
+un accusé visuel perceptible immédiatement, indépendamment du temps de
+réponse réel du serveur. `[EXPERIENCE_HYPOTHESIS]` (`SUPORDO_BASELINE_
+TO_VALIDATE`) : le seuil chiffré éventuel (§5 instant feedback,
+80–120ms) reste à valider visuellement — ce n'est pas la valeur qui est
+canonique, seule l'immédiateté perçue l'est.
 
-[PRINCIPLE] **Transitions qui préservent le contexte** : un changement
+[CANONICAL_PRINCIPLE] **Transitions qui préservent le contexte** : un changement
 d'écran ne doit jamais donner la sensation d'un rechargement complet —
 le Context Spine (§2.A) et les éléments stables restent visuellement
 continus pendant la transition (§5 context/layout transition).
 
-[PRINCIPLE] **Pas de saut de mise en page** : tout espace dont le
+[CANONICAL_PRINCIPLE] **Pas de saut de mise en page** : tout espace dont le
 contenu va se charger est réservé à l'avance (dimensions connues ou
 skeleton de taille équivalente) — aucun contenu ne doit décaler ce qui
 est déjà affiché.
 
-[PRINCIPLE] **Position de défilement préservée** : un retour en arrière
+[CANONICAL_PRINCIPLE] **Position de défilement préservée** : un retour en arrière
 (fermeture de panneau, navigation retour) restaure la position de
 défilement précédente — jamais un retour en haut de liste imposé.
 
-[PRINCIPLE] **État de formulaire préservé** : une saisie en cours ne
+[CANONICAL_PRINCIPLE] **État de formulaire préservé** : une saisie en cours ne
 doit jamais être perdue lors d'une interruption non intentionnelle
 (navigation accidentelle, perte de focus, latence réseau) — particuliè-
 rement critique en usage terrain (`04` §4). Rejoint le gap technique
 déjà identifié dans `TECHNICAL-BASELINE.md` sur l'atomicité de
 `saveQuote` — non recopié ici, référence uniquement.
 
-[PRINCIPLE] **Éviter la sensation de rechargement de page complète** :
+[CANONICAL_PRINCIPLE] **Éviter la sensation de rechargement de page complète** :
 toute navigation interne reste dans le modèle SPA déjà acté par
 `TECHNICAL-STACK-CONTRACT.md` — aucune transition ne doit imiter
 visuellement un rechargement de document complet (flash blanc,
@@ -1410,6 +1624,22 @@ WHAT_NOT_TO_COPY      Le niveau de raffinement visuel spécifique à
 ---
 
 ## 14. Décisions ouvertes & valeurs à valider
+
+### Rôle du sandbox de prototypes
+
+`src/prototypes/concept-1-rail`, `concept-2-command` et
+`concept-3-lifecycle` (`supordo-app`), accessibles via le
+`DevPrototypeSwitcher`, constituent le **laboratoire de preuve** des
+`[EXPERIENCE_HYPOTHESIS]` de ce document — pas trois architectures
+canoniques candidates. [CANONICAL_PRINCIPLE] Aucun des trois n'est
+aujourd'hui "gagnant" ; aucun ne doit être traité comme la forme de
+navigation retenue (voir `[OPEN]` ci-dessous). Une preuve visuelle
+réelle produite depuis ce sandbox (`REAL BROWSER EVIDENCE`, §12) peut
+valider, invalider ou raffiner une `[EXPERIENCE_HYPOTHESIS]` de ce
+contrat. Elle ne peut jamais, à elle seule, modifier un
+`[CANONICAL_PRINCIPLE]` — tout changement qui reviendrait sur une
+décision produit reste soumis à arbitrage PO (`20` §18), quelle que
+soit la qualité de la preuve visuelle qui le suggère.
 
 [OPEN] Toute valeur numérique marquée `SUPORDO_BASELINE_TO_VALIDATE`
 dans ce document (échelle de motion §5, échelles typographique/
